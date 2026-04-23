@@ -72,18 +72,43 @@ ai-code-review-tool/
 
 We follow a structured Git workflow to ensure code quality and stability.
 
-### 1. Branching & PR Strategy
+### 1. Git Workflow for Collaborators
 
-- **`main`**: Production-ready code (Protected).
-- **`dev`**: Active integration branch.
-- **`feature/*`**: Individual feature development.
+Follow these exact steps to contribute to the project:
 
-**Workflow Workflow:**
-1.  **Sync**: Ensure your local `dev` is up to date: `git checkout dev && git pull origin dev`.
-2.  **Branch**: Create a new feature branch: `git checkout -b feature/your-feature-name`.
-3.  **Develop**: Work and commit changes locally.
-4.  **Push**: Push to remote: `git push origin feature/your-feature-name`.
-5.  **Review**: Open a Pull Request from your feature branch to `dev`. All code must be reviewed before merging.
+1.  **Clone the Repository** (This automatically creates the project folder):
+    ```bash
+    git clone https://github.com/Sarvan-12/ai-code-review-tool.git
+    ```
+2.  **Navigate into the Project**:
+    ```bash
+    cd ai-code-review-tool
+    ```
+3.  **Switch to the `dev` Branch**:
+    ```bash
+    # Always stay updated with the remote dev branch
+    git checkout dev
+    git pull origin dev
+    ```
+4.  **Create a Feature Branch** (Branch off from `dev`):
+    ```bash
+    git checkout -b feature/your-feature-name
+    ```
+5.  **Work → Commit → Push**:
+    ```bash
+    # Make your changes, then:
+    git add .
+    git commit -m "feat: descriptive message of your work"
+    git push origin feature/your-feature-name
+    ```
+
+**🔁 Flow Summary:**
+`Clone` → `dev` → `Feature Branch` → `Work` → `Pull Request` → `dev`
+
+**❗ Important Rules:**
+- **Never create a branch directly from `main`.** Always branch off from `dev`.
+- No direct commits to `main` or `dev`. All changes must go through a Pull Request.
+- `dev` is eventually merged into `main` for stable releases.
 
 ### 2. Environment Setup
 
