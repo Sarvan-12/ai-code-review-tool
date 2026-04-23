@@ -64,45 +64,88 @@ ai-code-review-tool/
 
 ---
 
-## 🚀 Getting Started (for teammates)
+## 🌟 Guide for Collaborators
+
+### 1. Branching Strategy
+
+We follow a structured Git workflow:
+
+**Branches:**
+* `main` → production-ready code (protected)
+* `dev` → active development branch
+* `feature/*` → individual features
+
+**Workflow:**
+1. Create a feature branch from `dev`
+2. Work and commit changes
+3. Push branch to remote
+4. Create Pull Request → `dev`
+5. Code review required before merge
+
+**Rules:**
+* No direct commits to `main`
+* All changes go through PR
+* `dev` is merged into `main` for releases
+
+**Naming Convention:**
+* `feature/login-api`
+* `feature/dashboard-ui`
+* `bugfix/auth-error`
+
+**Example Commands:**
+```bash
+git checkout dev
+git pull origin dev
+git checkout -b feature/your-feature
+# (make your changes)
+git add .
+git commit -m "feat: your feature"
+git push origin feature/your-feature
+```
+
+---
+
+## 🚀 Local Setup Instructions
 
 ### Prerequisites
 - Node.js installed
-- MongoDB running locally **or** a MongoDB Atlas connection string
-- A Groq API key → get one free at [console.groq.com](https://console.groq.com)
+- Git installed
+- MongoDB installed locally **or** a MongoDB Atlas free account
+- A Groq Developer account
 
-### 1. Clone the repository
+### 1. Repository Setup
 ```bash
 git clone https://github.com/Sarvan-12/ai-code-review-tool.git
-cd ai-code-review-tool
-```
-
-### 2. Install dependencies
-```bash
-cd backend
+cd ai-code-review-tool/backend
 npm install
 ```
 
-### 3. Set up environment variables
+### 2. Configure MongoDB
+- **Local:** Install [MongoDB Community Server](https://www.mongodb.com/try/download/community) and MongoDB Compass. Your URI will be `mongodb://localhost:27017/ai-code-review`.
+- **Atlas (Cloud):** Create a free cluster at [mongodb.com/atlas](https://www.mongodb.com/atlas). Get your connection string (URI) starting with `mongodb+srv://...`
+
+### 3. Configure Groq AI
+- Go to the [Groq Cloud Console](https://console.groq.com/keys)
+- Click "Create API Key"
+- Copy the key immediately (it starts with `gsk_`)
+
+### 4. Set Environment Variables
+Copy the template file to create your active `.env`:
 ```bash
-# Copy the template
 cp .env.example .env
 ```
-
-Then open `.env` and fill in your values:
+Then paste your Mongo URI and Groq API key inside `.env`:
 ```env
 PORT=5000
 MONGO_URI=mongodb://localhost:27017/ai-code-review
 GROQ_API_KEY=your_groq_api_key_here
 ```
-
 > ⚠️ **Never commit `.env` to Git.** It is already excluded via `.gitignore`.
 
-### 4. Start the development server
+### 5. Run the Server
 ```bash
 npm run dev
 ```
-
 Server will run at: `http://localhost:5000`
 
 ---
