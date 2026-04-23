@@ -6,8 +6,8 @@ An AI-powered backend service that accepts code snippets and returns intelligent
 
 ## 📌 Project Status
 
-> **Backend: ~70% complete**
-> All core code is scaffolded and written. Testing and frontend handoff remain.
+> **Backend: 100% complete**  
+> Core logic is fully implemented and verified. Ready for full frontend integration.
 
 | Phase | Description | Status |
 |---|---|---|
@@ -15,8 +15,8 @@ An AI-powered backend service that accepts code snippets and returns intelligent
 | Schema & Model | Mongoose `Review` schema | ✅ Done |
 | Groq Integration | `groqService.js` with prompt engineering | ✅ Done |
 | Routes & Controller | All 4 API endpoints implemented | ✅ Done |
-| Testing | Thunder Client endpoint testing | 🔲 Pending |
-| Frontend Handoff | Share JSON contract with frontend team | 🔲 Pending |
+| Testing | Thunder Client endpoint verification | ✅ Done |
+| Frontend Handoff | JSON contract stabilized and documented | ✅ Done |
 
 ---
 
@@ -27,12 +27,16 @@ ai-code-review-tool/
 │
 ├── .gitignore
 ├── prd.md                            ← Product Requirements Document
+├── DOCUMENTATION.md                  ← Comprehensive technical documentation
 ├── README.md
 │
 └── backend/
+    ├── node_modules/                 ← Installed dependencies
     ├── package.json
-    ├── .env.example                  ← Copy this to .env and fill in your keys
-    ├── server.js                     ← Entry point: Express + middleware setup
+    ├── package-lock.json
+    ├── .env                          ← Active secrets (Internal use)
+    ├── .env.example                  ← Environment template for collaborators
+    ├── server.js                     ← Entry point: Express middleware & server setup
     │
     ├── config/
     │   └── db.js                     ← MongoDB connection logic
@@ -41,13 +45,13 @@ ai-code-review-tool/
     │   └── Review.js                 ← Mongoose schema for review documents
     │
     ├── routes/
-    │   └── reviewRoutes.js           ← Route definitions → maps to controller
+    │   └── reviewRoutes.js           ← Route definitions mapped to controllers
     │
     ├── controllers/
-    │   └── reviewController.js       ← Business logic for all endpoints
+    │   └── reviewController.js       ← Business logic for all API endpoints
     │
     └── services/
-        └── groqService.js            ← Groq API calls + prompt engineering
+        └── groqService.js            ← Groq API integration (LLaMA 3.3)
 ```
 
 ---
@@ -64,89 +68,60 @@ ai-code-review-tool/
 
 ---
 
-## 🌟 Guide for Collaborators
+## 🤝 Collaborative Workflow & Setup
 
-### 1. Branching Strategy
+We follow a structured Git workflow to ensure code quality and stability.
 
-We follow a structured Git workflow:
+### 1. Branching & PR Strategy
 
-**Branches:**
-* `main` → production-ready code (protected)
-* `dev` → active development branch
-* `feature/*` → individual features
+- **`main`**: Production-ready code (Protected).
+- **`dev`**: Active integration branch.
+- **`feature/*`**: Individual feature development.
 
-**Workflow:**
-1. Create a feature branch from `dev`
-2. Work and commit changes
-3. Push branch to remote
-4. Create Pull Request → `dev`
-5. Code review required before merge
+**Workflow Workflow:**
+1.  **Sync**: Ensure your local `dev` is up to date: `git checkout dev && git pull origin dev`.
+2.  **Branch**: Create a new feature branch: `git checkout -b feature/your-feature-name`.
+3.  **Develop**: Work and commit changes locally.
+4.  **Push**: Push to remote: `git push origin feature/your-feature-name`.
+5.  **Review**: Open a Pull Request from your feature branch to `dev`. All code must be reviewed before merging.
 
-**Rules:**
-* No direct commits to `main`
-* All changes go through PR
-* `dev` is merged into `main` for releases
+### 2. Environment Setup
 
-**Naming Convention:**
-* `feature/login-api`
-* `feature/dashboard-ui`
-* `bugfix/auth-error`
+Follow these steps to get the environment running on your machine:
 
-**Example Commands:**
+**Prerequisites:**
+- Node.js & Git installed.
+- MongoDB (Running locally or a [MongoDB Atlas](https://www.mongodb.com/atlas) string).
+- [Groq API Key](https://console.groq.com/keys) (Select the `llama-3.3-70b-versatile` model compatibility).
+
+**Installation:**
 ```bash
-git checkout dev
-git pull origin dev
-git checkout -b feature/your-feature
-# (make your changes)
-git add .
-git commit -m "feat: your feature"
-git push origin feature/your-feature
-```
-
----
-
-## 🚀 Local Setup Instructions
-
-### Prerequisites
-- Node.js installed
-- Git installed
-- MongoDB installed locally **or** a MongoDB Atlas free account
-- A Groq Developer account
-
-### 1. Repository Setup
-```bash
+# 1. Clone the repository
 git clone https://github.com/Sarvan-12/ai-code-review-tool.git
 cd ai-code-review-tool/backend
+
+# 2. Install dependencies
 npm install
-```
 
-### 2. Configure MongoDB
-- **Local:** Install [MongoDB Community Server](https://www.mongodb.com/try/download/community) and MongoDB Compass. Your URI will be `mongodb://localhost:27017/ai-code-review`.
-- **Atlas (Cloud):** Create a free cluster at [mongodb.com/atlas](https://www.mongodb.com/atlas). Get your connection string (URI) starting with `mongodb+srv://...`
-
-### 3. Configure Groq AI
-- Go to the [Groq Cloud Console](https://console.groq.com/keys)
-- Click "Create API Key"
-- Copy the key immediately (it starts with `gsk_`)
-
-### 4. Set Environment Variables
-Copy the template file to create your active `.env`:
-```bash
+# 3. Configure credentials
 cp .env.example .env
 ```
-Then paste your Mongo URI and Groq API key inside `.env`:
+
+**Environment Configuration (`.env`):**
+Open `.env` and configure your local settings:
 ```env
 PORT=5000
-MONGO_URI=mongodb://localhost:27017/ai-code-review
-GROQ_API_KEY=your_groq_api_key_here
+MONGO_URI=your_mongodb_connection_uri # (e.g., mongodb://localhost:27017/ai-code-review)
+GROQ_API_KEY=your_gsk_key_here
 ```
-> ⚠️ **Never commit `.env` to Git.** It is already excluded via `.gitignore`.
 
-### 5. Run the Server
+### 3. Running the Project
+
 ```bash
+# Start development server with Nodemon
 npm run dev
 ```
-Server will run at: `http://localhost:5000`
+The API will be live at `http://localhost:5000`. Test endpoints using the **Thunder Client** collection or Postman.
 
 ---
 
@@ -271,5 +246,4 @@ Thunder Client / Frontend
 - Error responses always follow: `{ "success": false, "error": "message" }`
 - All responses are wrapped in a `{ success: true, data: ... }` envelope
 - All environment variables live in `.env` — never committed to Git
-
 
