@@ -1,0 +1,18 @@
+# ─── Dependencies ────────────────────────────────────────────────────────────
+node_modules/
+package-lock.json
+
+# ─── Environment Variables — NEVER commit ────────────────────────────────────
+# Catches .env at any directory depth (backend/.env, root/.env, etc.)
+.env
+.env.*
+!.env.example        # Allow the template to be committed — it has no real secrets
+
+# ─── Logs ─────────────────────────────────────────────────────────────────────
+logs/
+*.log
+npm-debug.log*
+
+# ─── OS Files ─────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
