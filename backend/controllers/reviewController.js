@@ -9,29 +9,53 @@ const submitReview = async (req, res) => {
 
     // Basic input validation
     if (!code || code.trim() === "") {
-      return res.status(400).json({ error: "Code is required" });
+      return res
+        .status(400)
+        .json({ success: false, error: "Code is required" });
     }
+
+    // Upper limit validation to prevent rate limit burns or timeouts
+    if (code.length > 5000) {
+      return res.status(400).json({
+        success: false,
+        error: "Code exceeds the 5000 character limit",
+      });
+    }
+
+    // Measure response time
+    const startTime = Date.now();
 
     // Call Groq API via the service layer
     const suggestions = await getCodeReview(code, language);
+
+    const endTime = Date.now();
+    const responseTime = endTime - startTime;
 
     // Save the review result to MongoDB
     const review = await Review.create({
       code,
       language: language || "plaintext",
       suggestions,
+      responseTime,
     });
 
-    // Return structured response to frontend
+    // Return structured response to frontend with an envelope
     return res.status(201).json({
-      id: review._id,
-      language: review.language,
-      suggestions: review.suggestions,
-      createdAt: review.createdAt,
+      success: true,
+      data: {
+        id: review._id,
+        language: review.language,
+        suggestions: review.suggestions,
+        model: review.model,
+        responseTime: review.responseTime,
+        createdAt: review.createdAt,
+      },
     });
   } catch (error) {
     console.error("submitReview error:", error.message);
-    return res.status(500).json({ error: "Failed to process review" });
+    return res
+      .status(500)
+      .json({ success: false, error: "Failed to process review" });
   }
 };
 
@@ -42,13 +66,17 @@ const getReviewById = async (req, res) => {
     const review = await Review.findById(req.params.id);
 
     if (!review) {
-      return res.status(404).json({ error: "Review not found" });
+      return res
+        .status(404)
+        .json({ success: false, error: "Review not found" });
     }
 
-    return res.status(200).json(review);
+    return res.status(200).json({ success: true, data: review });
   } catch (error) {
     console.error("getReviewById error:", error.message);
-    return res.status(500).json({ error: "Failed to fetch review" });
+    return res
+      .status(500)
+      .json({ success: false, error: "Failed to fetch review" });
   }
 };
 
@@ -57,17 +85,19 @@ const getReviewById = async (req, res) => {
 const getAllReviews = async (req, res) => {
   try {
     const reviews = await Review.find().sort({ createdAt: -1 });
-    return res.status(200).json(reviews);
+    return res.status(200).json({ success: true, data: reviews });
   } catch (error) {
     console.error("getAllReviews error:", error.message);
-    return res.status(500).json({ error: "Failed to fetch reviews" });
+    return res
+      .status(500)
+      .json({ success: false, error: "Failed to fetch reviews" });
   }
 };
 
 // ─── GET /api/health ──────────────────────────────────────────────────────────
 // Simple health check — use this in Thunder Client to confirm the server is up
 const healthCheck = (req, res) => {
-  return res.status(200).json({ status: "ok", message: "Server is running" });
+  return res.status(200).json({ success: true, message: "Server is running" });
 };
 
 module.exports = { submitReview, getReviewById, getAllReviews, healthCheck };

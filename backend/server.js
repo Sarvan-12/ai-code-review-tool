@@ -12,11 +12,11 @@ const PORT = process.env.PORT || 5000;
 connectDB();
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
-app.use(cors());                  // Allow cross-origin requests from the frontend
-app.use(express.json());          // Parse incoming JSON request bodies
+app.use(cors()); // Allow cross-origin requests from the frontend
+app.use(express.json()); // Parse incoming JSON request bodies
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
-app.use("/api", reviewRoutes);    // All review-related routes are prefixed with /api
+app.use("/api", reviewRoutes); // All review-related routes are prefixed with /api
 
 // ─── Start Server ─────────────────────────────────────────────────────────────
 app.listen(PORT, () => {

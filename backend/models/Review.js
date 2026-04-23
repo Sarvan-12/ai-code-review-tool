@@ -15,13 +15,17 @@ const reviewSchema = new mongoose.Schema(
     },
 
     suggestions: {
-      type: String,
+      type: mongoose.Schema.Types.Mixed, // Allows for a structured JSON object
       required: [true, "Suggestions are required"],
     },
 
     model: {
       type: String,
-      default: "llama3-8b-8192",
+      default: "llama-3.3-70b-versatile",
+    },
+
+    responseTime: {
+      type: Number, // Stored in milliseconds
     },
 
     createdAt: {
@@ -32,7 +36,7 @@ const reviewSchema = new mongoose.Schema(
   {
     // Prevents Mongoose from adding __v (version key) to documents
     versionKey: false,
-  }
+  },
 );
 
 module.exports = mongoose.model("Review", reviewSchema);
