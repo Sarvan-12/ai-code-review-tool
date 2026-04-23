@@ -123,4 +123,4 @@ Fetches the entire array of previously submitted code reviews, sorted from newes
 ## 5. Security and Constraints
 1. **Character Limit:** Arbitrary constraints enforce a maximum payload length of `5000` characters to protect against DDOS-style rate-limit spikes on the Groq tier.
 2. **Environment Variables:** API keys and Database URIs are read purely from environment bindings (`process.env`).
-3. **JSON Resilience:** LLMs occasionally corrupt nested quotes. We intercept raw `failed_generation` data natively dumped by Groq and funnel it safely back as raw strings so critical data is never swallowed entirely during SDK parsing failures.
+3. **JSON Resilience:** LLMs occasionally corrupt nested quotes. The system intercepts raw `failed_generation` data natively dumped by Groq and funnels it safely back as raw strings so critical data is never swallowed entirely during SDK parsing failures.

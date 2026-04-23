@@ -5,7 +5,7 @@
 **Stack:** MERN + Groq API  
 **Version:** v1.0  
 **Date:** April 2026  
-**Role:** Backend Developer  
+**Group:** Backend Team  
 **AI Provider:** Groq (LLaMA)  
 **Timeline:** 3-5 Days  
 
@@ -20,8 +20,8 @@ Developers often lack fast, consistent code feedback during development. [cite_s
 
 ---
 
-## 2. My Scope (Backend Only)
-This PRD covers only the backend responsibilities. [cite_start]Frontend UI and deployment are handled by other team members. [cite: 14, 15]
+## 2. Backend Team Scope
+This PRD outlines the responsibilities for the backend team. [cite_start]Frontend UI and deployment will be handled in collaboration with other team members. [cite: 14, 15]
 
 ### In Scope
 * [cite_start]Groq API integration (send code, receive suggestions) [cite: 17, 18]
