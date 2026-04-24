@@ -1,8 +1,14 @@
 const Review = require("../models/Review");
 const { getCodeReview } = require("../services/groqService");
 
-// ─── POST /api/review ─────────────────────────────────────────────────────────
-// Receives code + language, sends to Groq, saves result, returns structured JSON
+/**
+ * Handles the submission of code for AI review.
+ * Validates input, calls the AI service, saves the result to the database, and returns the review.
+ * 
+ * @param {Object} req - Express request object containing code and language in body.
+ * @param {Object} res - Express response object.
+ * @returns {Object} JSON response with the created review data.
+ */
 const submitReview = async (req, res) => {
   try {
     const { code, language } = req.body;
@@ -59,8 +65,13 @@ const submitReview = async (req, res) => {
   }
 };
 
-// ─── GET /api/review/:id ──────────────────────────────────────────────────────
-// Fetches a single saved review document by its MongoDB ObjectId
+/**
+ * Fetches a single code review by its unique ID.
+ * 
+ * @param {Object} req - Express request object with ID in params.
+ * @param {Object} res - Express response object.
+ * @returns {Object} JSON response with the review data or error message.
+ */
 const getReviewById = async (req, res) => {
   try {
     const review = await Review.findById(req.params.id);
@@ -80,8 +91,14 @@ const getReviewById = async (req, res) => {
   }
 };
 
-// ─── GET /api/reviews ─────────────────────────────────────────────────────────
-// Returns all saved reviews, sorted newest first
+/**
+ * Retrieves all saved code reviews from the database.
+ * Results are sorted by creation date in descending order.
+ * 
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Object} JSON response with an array of all reviews.
+ */
 const getAllReviews = async (req, res) => {
   try {
     const reviews = await Review.find().sort({ createdAt: -1 });
@@ -94,8 +111,13 @@ const getAllReviews = async (req, res) => {
   }
 };
 
-// ─── GET /api/health ──────────────────────────────────────────────────────────
-// Simple health check — use this in Thunder Client to confirm the server is up
+/**
+ * Simple health check endpoint to verify server status.
+ * 
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Object} JSON response indicating the server is running.
+ */
 const healthCheck = (req, res) => {
   return res.status(200).json({ success: true, message: "Server is running" });
 };

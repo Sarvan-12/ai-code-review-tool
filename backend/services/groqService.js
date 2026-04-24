@@ -6,10 +6,14 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 const MODEL = "llama-3.3-70b-versatile"; // Default model — can be swapped here centrally
 
-// ─── getCodeReview ────────────────────────────────────────────────────────────
-// Sends the user's code to Groq and returns AI-generated suggestions as a string
-// Called by: reviewController.js → submitReview()
-
+/**
+ * Sends a code snippet to the Groq AI API for review.
+ * Returns a structured JSON object containing a score, bugs, issues, and refactored code.
+ * 
+ * @param {string} code - The source code to be reviewed.
+ * @param {string} [language="plaintext"] - The programming language of the code.
+ * @returns {Promise<Object>} A promise that resolves to the structured AI review object.
+ */
 const getCodeReview = async (code, language = "plaintext") => {
   const prompt = `You are an expert code reviewer. Review the following ${language} code.
 Respond strictly in JSON format exactly like this structure:
