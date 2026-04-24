@@ -35,7 +35,7 @@ const ReviewResult = ({ result }) => {
           <h3 className="section-title">🛠️ Refactored Code</h3>
           <div className="refactored-code-container">
             <pre>
-              <code>{suggestions.refactored_code.replace(/\\n/g, '\n')}</code>
+              <code>{suggestions.refactored_code}</code>
             </pre>
           </div>
         </div>
