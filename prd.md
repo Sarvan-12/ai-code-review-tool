@@ -22,8 +22,12 @@ Developers need fast, consistent feedback on code quality. Peer reviews are slow
 
 ### ✅ Completed (Frontend Boilerplate)
 - **React + Vite Setup**: A functional frontend proof-of-concept is complete.
-- **API Integration**: Connected to the backend `/api/review` endpoint.
-- **Base UI**: Includes code input and result display sections. Ready for team members to extend with advanced features and polished styling.
+- **Component Architecture**:
+    - **Header**: Branding and title display.
+    - **CodeInput**: Handles code input (5000 char limit) and language selection.
+    - **ReviewResult**: Orchestrates results, score badge, and refactored code.
+    - **IssueList**: Reusable component for Bugs, Issues, Improvements, and Performance sections.
+- **API Integration**: Fully connected to the backend `/api/review` endpoint via Vite proxy.
 
 ---
 
