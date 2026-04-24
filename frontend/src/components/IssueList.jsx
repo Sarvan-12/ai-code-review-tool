@@ -8,7 +8,7 @@ import React from 'react';
  * @param {string} type - The type of issue (bug, improvement, performance) for styling
  */
 const IssueList = ({ title, items, type }) => {
-  if (!items || items.length === 0) return null;
+  const hasItems = items && items.length > 0;
 
   return (
     <div className="issue-section">
@@ -19,14 +19,20 @@ const IssueList = ({ title, items, type }) => {
         {type === 'issue' && '⚠️'}
         {title}
       </h3>
-      {items.map((item, index) => (
-        <div key={index} className={`issue-item ${type}`}>
-          <p className="issue-desc">{item.issue}</p>
-          <p className="issue-fix">
-            <strong>Suggested Fix:</strong> {item.fix}
-          </p>
-        </div>
-      ))}
+      {hasItems ? (
+        items.map((item, index) => (
+          <div key={index} className={`issue-item ${type}`}>
+            <p className="issue-desc">{item.issue}</p>
+            <p className="issue-fix">
+              <strong>Suggested Fix:</strong> {item.fix}
+            </p>
+          </div>
+        ))
+      ) : (
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', fontStyle: 'italic', paddingLeft: '1rem' }}>
+          No {title.toLowerCase()} found.
+        </p>
+      )}
     </div>
   );
 };

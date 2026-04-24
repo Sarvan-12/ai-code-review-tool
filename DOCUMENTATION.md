@@ -42,24 +42,21 @@ ai-code-review-tool/
 ├── README.md             # Developer setup instructions
 ├── DOCUMENTATION.md      # This file
 │
-└── backend/
-    ├── package.json      # Node.js dependencies
-    ├── server.js         # Entry point: Server initialization and middleware setup
-    │
-    ├── config/
-    │   └── db.js         # Mongoose DB connection logic
-    │
-    ├── models/
-    │   └── Review.js     # Mongoose schema definitions (code, suggestions object)
-    │
-    ├── routes/
-    │   └── reviewRoutes.js     # Express Router mapping HTTP verbs to controllers
-    │
-    ├── controllers/
-    │   └── reviewController.js # Business logic and validation checks
-    │
-    └── services/
-        └── groqService.js      # Groq SDK integration, prompting, and parsing logic
+├── backend/
+│   ├── package.json      # Node.js dependencies
+│   ├── server.js         # Entry point: Server initialization and middleware setup
+│   ├── config/           # Database connection logic
+│   ├── models/           # Mongoose schema definitions
+│   ├── routes/           # Express Router mapping
+│   ├── controllers/      # Business logic and validation
+│   └── services/         # Groq SDK integration
+│
+└── frontend/
+    ├── src/
+    │   ├── components/   # Modular React components
+    │   ├── App.jsx       # State management & Orchestration
+    │   └── App.css       # UI Styling
+    └── vite.config.js    # Proxy & Build settings
 ```
 
 ---
@@ -124,3 +121,22 @@ Fetches the entire array of previously submitted code reviews, sorted from newes
 1. **Character Limit:** Arbitrary constraints enforce a maximum payload length of `5000` characters to protect against DDOS-style rate-limit spikes on the Groq tier.
 2. **Environment Variables:** API keys and Database URIs are read purely from environment bindings (`process.env`).
 3. **JSON Resilience:** LLMs occasionally corrupt nested quotes. The system intercepts raw `failed_generation` data natively dumped by Groq and funnels it safely back as raw strings so critical data is never swallowed entirely during SDK parsing failures.
+
+---
+
+## 6. Frontend Architecture
+
+The frontend is a lightweight single-page application built with **React** and **Vite**. It follows a modular component structure and utilizes a proxy strategy to communicate with the backend.
+
+### Component Tree
+- **App.jsx**: Root component. Manages global state (`sourceCode`, `language`, `reviewData`, `isProcessing`, `errorMessage`).
+    - **Header.jsx**: Branding and title display.
+    - **CodeInput.jsx**: Entry form for code and language. Enforces a 5-char minimum and uses a `<select>` for languages.
+    - **ReviewResult.jsx**: Orchestrates results, score badge, and refactored code.
+        - **IssueList.jsx**: Section-specific feedback (Bugs, Issues, etc.). Renders "No issues found" for empty categories.
+
+### Data Flow
+1. **User Input**: Code and language are captured in `CodeInput`.
+2. **Submission**: `App.jsx` handles the form submission, making an asynchronous `POST` request via **Axios**.
+3. **Proxy Strategy**: Configured in `vite.config.js` to forward `/api` requests to `http://localhost:5000`, bypassing CORS during development.
+4. **Hydration**: The API response hydrates the `reviewData` state, which is passed down to `ReviewResult` and its children for rendering.

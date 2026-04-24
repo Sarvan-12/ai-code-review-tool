@@ -26,9 +26,13 @@ ai-code-review-tool/
 │
 ├── frontend/                 ← React + Vite UI
 │   ├── src/
-│   │   ├── components/       ← Reusable UI components
-│   │   ├── App.jsx           ← Main application logic
-│   │   └── App.css           ← Modern styling
+│   │   ├── components/       ← Modular UI components
+│   │   │   ├── Header.jsx    ← Page title & branding
+│   │   │   ├── CodeInput.jsx ← Form with select & validation
+│   │   │   ├── IssueList.jsx ← Section for specific feedback
+│   │   │   └── ReviewResult.jsx ← Summary & score breakdown
+│   │   ├── App.jsx           ← Main orchestration & state
+│   │   └── App.css           ← Modern dark-mode styling
 │   └── vite.config.js        ← Build & proxy configuration
 ```
 
