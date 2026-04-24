@@ -1,67 +1,79 @@
-import { useState } from 'react'
-import axios from 'axios'
+import React, { useState } from 'react';
+import axios from 'axios';
+import Header from './components/Header';
+import CodeInput from './components/CodeInput';
+import ReviewResult from './components/ReviewResult';
+import './App.css';
 
+/**
+ * Main Application Component
+ * Manages the state for code review requests and orchestrates the UI flow.
+ */
 function App() {
-  const [code, setCode] = useState('')
-  const [language, setLanguage] = useState('python')
-  const [result, setResult] = useState(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
+  // ─── State Management ────────────────────────────────────────────────────────
+  const [sourceCode, setSourceCode] = useState('');
+  const [language, setLanguage] = useState('python');
+  const [reviewData, setReviewData] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
-    setResult(null)
+  /**
+   * Handles the form submission to the backend API.
+   * Sends code and language to /api/review and updates state with results.
+   */
+  const handleReviewSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Reset state before new request
+    setIsProcessing(true);
+    setErrorMessage('');
+    setReviewData(null);
 
     try {
-      const response = await axios.post('/api/review', { code, language })
-      setResult(response.data)
+      // POST request to the local backend (proxied via Vite)
+      const response = await axios.post('/api/review', { 
+        code: sourceCode, 
+        language 
+      });
+      
+      setReviewData(response.data);
     } catch (err) {
-      setError(err.response?.data?.error || err.message || 'Something went wrong')
+      // Extract error message from axios error object
+      const errorMsg = err.response?.data?.error || err.message || 'An unexpected error occurred';
+      setErrorMessage(errorMsg);
     } finally {
-      setLoading(false)
+      setIsProcessing(false);
     }
-  }
+  };
 
   return (
-    <div>
-      <h1>AI Code Reviewer</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <textarea
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-            placeholder="Paste your code here..."
-            maxLength={5000}
-            rows={10}
-            cols={50}
-            required
-          />
-        </div>
-        <div>
-          <input
-            type="text"
-            value={language}
-            onChange={(e) => setLanguage(e.target.value)}
-            placeholder="Language (e.g. python)"
-            required
-          />
-        </div>
-        <button type="submit" disabled={loading}>
-          {loading ? 'Reviewing...' : 'Submit Code'}
-        </button>
-      </form>
+    <div className="container">
+      {/* Page Header */}
+      <Header />
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <main>
+        {/* Error Display */}
+        {errorMessage && (
+          <div className="error-box">
+            <strong>Error:</strong> {errorMessage}
+          </div>
+        )}
 
-      {result && (
-        <pre>
-          {JSON.stringify(result, null, 2)}
-        </pre>
-      )}
+        {/* Form for Code Submission */}
+        <CodeInput 
+          code={sourceCode}
+          setCode={setSourceCode}
+          language={language}
+          setLanguage={setLanguage}
+          onSubmit={handleReviewSubmit}
+          isLoading={isProcessing}
+        />
+
+        {/* Display Results when available */}
+        {reviewData && <ReviewResult result={reviewData} />}
+      </main>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
