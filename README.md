@@ -1,274 +1,137 @@
 # 🤖 AI Code Review Tool
 
-An AI-powered backend service that accepts code snippets and returns intelligent, developer-friendly review suggestions using the **Groq API (LLaMA 3)**. Built with the **MERN stack** (MongoDB, Express, Node.js) as part of a team project.
+An AI-powered application that analyzes source code for bugs, performance bottlenecks, and quality issues using the **Groq API**. It provides developers with instant feedback, quality scores, and refactored code suggestions to accelerate the development lifecycle.
 
 ---
 
-## 📌 Project Status
+## 🛠️ Prerequisites
 
-> **Backend: 100% complete**  
-> Core logic is fully implemented and verified. Ready for full frontend integration.
-
-| Phase | Description | Status |
-|---|---|---|
-| Project Setup | Express server, .env, MongoDB connection, folder structure | ✅ Done |
-| Schema & Model | Mongoose `Review` schema | ✅ Done |
-| Groq Integration | `groqService.js` with prompt engineering | ✅ Done |
-| Routes & Controller | All 4 API endpoints implemented | ✅ Done |
-| Testing | Thunder Client endpoint verification | ✅ Done |
-| Frontend Handoff | JSON contract stabilized and documented | ✅ Done |
+Before you begin, ensure you have the following installed:
+- **Node.js** (v18 or higher)
+- **Git**
+- **MongoDB** (Local instance or a [MongoDB Atlas](https://www.mongodb.com/atlas) account)
+- **Groq API Key** (Get yours at [console.groq.com](https://console.groq.com/keys))
 
 ---
 
-## 🗂️ Folder Structure
+## 🚀 Step-by-Step Setup
+
+### 1. Cloning the Repository
+Run this command to clone the project (this will automatically create the `ai-code-review-tool` folder):
+```bash
+git clone https://github.com/Sarvan-12/ai-code-review-tool.git
+
+# Navigate into the project folder
+cd ai-code-review-tool
+```
+
+### 2. Branching Workflow
+**CRITICAL:** Never work directly on the `main` or `dev` branches. Always create a feature branch:
+```bash
+# 1. Switch to the dev branch
+git checkout dev
+
+# 2. Pull the latest changes
+git pull origin dev
+
+# 3. Create your own feature branch
+git checkout -b feature/your-task-name
+```
+
+### 3. Environment Configuration
+You need to set up your secrets in the `backend` folder:
+1. Navigate to `backend/`.
+2. Create a file named `.env`.
+3. Add the following lines and fill in your actual credentials:
+```env
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+GROQ_API_KEY=your_groq_api_key
+```
+
+### 4. Installation & Running
+You must run both the backend and the frontend in separate terminals.
+
+**Terminal 1 (Backend):**
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+**Terminal 2 (Frontend):**
+```bash
+cd frontend
+npm install
+npm run dev
+```
+The frontend runs on `http://localhost:5173` and the backend on `http://localhost:5000`.
+
+---
+
+## 🤝 How to Contribute
+
+Once you have finished your task, follow these steps to submit your work:
+
+1. **Commit your changes**:
+   ```bash
+   git add .
+   git commit -m "feat: added character counter to UI"
+   ```
+2. **Push to GitHub**:
+   ```bash
+   git push origin feature/your-task-name
+   ```
+3. **Open a Pull Request**: 
+   - Go to the GitHub repository.
+   - Click **New Pull Request**.
+   - Set **Base branch: `dev`** and **Compare branch: `your-feature-branch`**.
+   - Add a proper title and description of your work.
+   - Tag the repo owner for review.
+
+---
+
+## 🏗️ Project Structure
 
 ```
 ai-code-review-tool/
-│
-├── .gitignore
-├── prd.md                            ← Product Requirements Document
-├── DOCUMENTATION.md                  ← Comprehensive technical documentation
-├── README.md
-│
-└── backend/
-    ├── node_modules/                 ← Installed dependencies
-    ├── package.json
-    ├── package-lock.json
-    ├── .env                          ← Active secrets (Internal use)
-    ├── .env.example                  ← Environment template for collaborators
-    ├── server.js                     ← Entry point: Express middleware & server setup
-    │
-    ├── config/
-    │   └── db.js                     ← MongoDB connection logic
-    │
-    ├── models/
-    │   └── Review.js                 ← Mongoose schema for review documents
-    │
-    ├── routes/
-    │   └── reviewRoutes.js           ← Route definitions mapped to controllers
-    │
-    ├── controllers/
-    │   └── reviewController.js       ← Business logic for all API endpoints
-    │
-    └── services/
-        └── groqService.js            ← Groq API integration (LLaMA 3.3)
+├── backend/                  ← Node.js + Express API
+│   ├── config/               ← Database connection
+│   ├── controllers/          ← API logic
+│   ├── models/               ← Mongoose schemas
+│   ├── routes/               ← API endpoints
+│   └── services/             ← Groq API integration
+├── frontend/                 ← React + Vite UI
+│   ├── src/
+│   │   ├── components/       ← Reusable UI parts
+│   │   ├── App.jsx           ← Main orchestration
+│   │   └── App.css           ← Modern styling
+├── prd.md                    ← Product Requirements
+└── DOCUMENTATION.md          ← Deep technical details
 ```
 
 ---
 
-## ⚙️ Tech Stack
+## ⚠️ Git Rules & Daily Workflow
 
-| Layer | Technology |
-|---|---|
-| Runtime | Node.js |
-| Framework | Express.js |
-| Database | MongoDB + Mongoose |
-| AI Provider | Groq API (LLaMA 3.3 — `llama-3.3-70b-versatile`) |
-| Dev Tools | Nodemon, Thunder Client |
+To keep our codebase clean and prevent mistakes, please follow these rules strictly:
 
----
+- **Rule 1**: Always `git pull origin dev` before starting new work to avoid merge conflicts.
+- **Rule 2**: **Never push to `main`**. All features must go to `dev` via Pull Request first.
+- **Rule 3**: Use descriptive commit messages (e.g., `fix: scroll issue` instead of `updated code`).
+- **Rule 4**: If you get stuck on a merge conflict, ask a teammate before forcing a push.
 
-## 🤝 Collaborative Workflow & Setup
-
-We follow a structured Git workflow to ensure code quality and stability.
-
-### 1. Git Workflow for Collaborators
-
-Follow these exact steps to contribute to the project:
-
-1.  **Clone the Repository** (This automatically creates the project folder):
-    ```bash
-    git clone https://github.com/Sarvan-12/ai-code-review-tool.git
-    ```
-2.  **Navigate into the Project**:
-    ```bash
-    cd ai-code-review-tool
-    ```
-3.  **Switch to the `dev` Branch**:
-    ```bash
-    # Always stay updated with the remote dev branch
-    git checkout dev
-    git pull origin dev
-    ```
-4.  **Create a Feature Branch** (Branch off from `dev`):
-    ```bash
-    git checkout -b feature/your-feature-name
-    ```
-5.  **Work → Commit → Push**:
-    ```bash
-    # Make your changes, then:
-    git add .
-    git commit -m "feat: descriptive message of your work"
-    git push origin feature/your-feature-name
-    ```
-
-**🔁 Flow Summary:**
-`Clone` → `dev` → `Feature Branch` → `Work` → `Pull Request` → `dev`
-
-**❗ Important Rules:**
-- **Never create a branch directly from `main`.** Always branch off from `dev`.
-- No direct commits to `main` or `dev`. All changes must go through a Pull Request.
-- `dev` is eventually merged into `main` for stable releases.
-
-### 2. Environment Setup
-
-Follow these steps to get the environment running on your machine:
-
-**Prerequisites:**
-- Node.js & Git installed.
-- MongoDB (Running locally or a [MongoDB Atlas](https://www.mongodb.com/atlas) string).
-- [Groq API Key](https://console.groq.com/keys) (Select the `llama-3.3-70b-versatile` model compatibility).
-
-**Installation:**
+### 🔄 Sync your branch with latest dev
+If your teammates have merged new code into `dev`, you need to sync your branch:
 ```bash
-# 1. Clone the repository
-git clone https://github.com/Sarvan-12/ai-code-review-tool.git
-cd ai-code-review-tool/backend
-
-# 2. Install dependencies
-npm install
-
-# 3. Configure credentials
-cp .env.example .env
+git checkout dev
+git pull origin dev
+git checkout feature/your-task-name
+git merge dev
 ```
 
-**Environment Configuration (`.env`):**
-Open `.env` and configure your local settings:
-```env
-PORT=5000
-MONGO_URI=your_mongodb_connection_uri # (e.g., mongodb://localhost:27017/ai-code-review)
-GROQ_API_KEY=your_gsk_key_here
-```
-
-### 3. Running the Project
-
-```bash
-# Start development server with Nodemon
-npm run dev
-```
-The API will be live at `http://localhost:5000`. Test endpoints using the **Thunder Client** collection or Postman.
-
----
-
-## 📡 API Endpoints
-
-Base URL: `http://localhost:5000/api`
-
-### `GET /api/health`
-Server status check. Use this first to confirm the server is running.
-
-**Response:**
-```json
-{ "success": true, "message": "Server is running" }
-```
-
----
-
-### `POST /api/review`
-Submit code for an AI-generated review.
-
-**Request Body:**
-```json
-{
-  "code": "def add(a, b): return a + b",
-  "language": "python"
-}
-```
-
-**Response `201`:**
-```json
-{
-  "success": true,
-  "data": {
-    "id": "64abc123...",
-    "language": "python",
-    "model": "llama-3.3-70b-versatile",
-    "responseTime": 1205,
-    "suggestions": {
-      "score": 8,
-      "bugs": [],
-      "issues": [
-        { "issue": "Missing type hints", "fix": "Add type hints to parameters `a: int, b: int`" }
-      ],
-      "improvements": [],
-      "performance": [],
-      "refactored_code": "def add(a: int, b: int) -> int:\n    return a + b"
-    },
-    "createdAt": "2026-04-23T10:30:00Z"
-  }
-}
-```
-
-**Error `400`** (if `code` is missing or exceeds 5000 chars):
-```json
-{ "success": false, "error": "Code is required" }
-```
-
----
-
-### `GET /api/review/:id`
-Fetch a single saved review by its MongoDB ID.
-
-**Response `200`:** `{ "success": true, "data": { ...review document } }`  
-**Response `404`:** `{ "success": false, "error": "Review not found" }`
-
----
-
-### `GET /api/reviews`
-List all past reviews, sorted newest first.
-
-**Response `200`:** `{ "success": true, "data": [ ...array of review documents ] }`
-
----
-
-## 🗄️ MongoDB Schema
-
-**Collection:** `reviews`
-
-| Field | Type | Description |
-|---|---|---|
-| `_id` | ObjectId | Auto-generated by MongoDB |
-| `code` | String | The submitted source code |
-| `language` | String | Programming language (default: `plaintext`) |
-| `suggestions` | Object | Structured JSON AI review containing quality, bugs, etc. |
-| `model` | String | Groq model used (default: `llama-3.3-70b-versatile`) |
-| `responseTime` | Number | Milliseconds taken for the Groq API call to complete |
-| `createdAt` | Date | Timestamp of submission |
-
----
-
-## 🔁 Request Lifecycle
-
-```
-Thunder Client / Frontend
-        │
-        ▼
-   server.js  ──►  reviewRoutes.js  ──►  reviewController.js
-                                               │            │
-                                         groqService.js   Review.js
-                                         (Groq API)       (MongoDB)
-```
-
----
-
-## 👥 Team Scope
-
-| Role | Responsibility |
-|---|---|
-| **Backend** *(this repo)* | Express API, Groq integration, MongoDB |
-| **Frontend** | React UI, code editor, displaying suggestions |
-| **Deployment** | Hosting, CI/CD (out of v1.0 scope) |
-
-> Frontend team: consume the `POST /api/review` response. The JSON contract is stable — see the endpoint docs above.
-
----
-
-## 📋 Notes & Assumptions
-
-- No authentication required for v1.0
-- Groq model: `llama-3.3-70b-versatile` (fast and free-tier friendly)
-- `suggestions` is returned as a **structured JSON object**. The UI should parse keys like `quality` and `bugs`.
-- Error responses always follow: `{ "success": false, "error": "message" }`
-- All responses are wrapped in a `{ success: true, data: ... }` envelope
-- All environment variables live in `.env` — never committed to Git
-
+### ❗ Important: Do NOT commit these files
+The following files are ignored for security and stability. Ensure they are never committed:
+- `node_modules/` (Dependencies)
+- `.env` (Your private API keys)
+- `frontend/.vite/` (Vite cache)

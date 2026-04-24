@@ -1,152 +1,53 @@
-
 # AI-Based Code Review Tool
-**Product Requirements Document - Backend Scope**
+**Product Requirements Document**
 
 **Stack:** MERN + Groq API  
 **Version:** v1.0  
-**Date:** April 2026  
-**Group:** Backend Team  
-**AI Provider:** Groq (LLaMA)  
-**Timeline:** 3-5 Days  
+**AI Provider:** Groq (LLaMA 3.3)  
 
 ---
 
 ## 1. Problem Statement
-Developers often lack fast, consistent code feedback during development. [cite_start]Peer review takes time, and style/logic issues slip through. [cite: 10, 11]
-
-[cite_start]This tool lets users paste code and instantly receive AI-generated suggestions - improving code quality without slowing down the team. [cite: 12]
-
-[cite_start]The backend is responsible for receiving code from the frontend, routing it to the Groq API, processing the AI response, storing the result in MongoDB, and returning structured output back to the client. [cite: 13]
+Developers need fast, consistent feedback on code quality. Peer reviews are slow, and many logic/style issues go unnoticed. This tool provides instant AI-generated reviews with actionable fixes and refactored code.
 
 ---
 
-## 2. Backend Team Scope
-This PRD outlines the responsibilities for the backend team. [cite_start]Frontend UI and deployment will be handled in collaboration with other team members. [cite: 14, 15]
+## 2. Project Scope
 
-### In Scope
-* [cite_start]Groq API integration (send code, receive suggestions) [cite: 17, 18]
-* [cite_start]REST API routes expose endpoints for frontend to consume [cite: 19]
-* [cite_start]MongoDB save and retrieve review results [cite: 20]
-* [cite_start]Return structured JSON response to the frontend [cite: 21]
+### ✅ Completed (Backend)
+- **Groq API Integration**: Seamless communication with LLaMA 3.3 for structured JSON feedback.
+- **REST API**: Robust endpoints for submitting reviews and retrieving history.
+- **Database**: MongoDB storage for persistent review records and performance metadata.
+- **Response Handling**: Stable JSON contract with error envelopes.
 
-### Out of Scope
-* [cite_start]Frontend/React components (another team member) [cite: 23]
-* [cite_start]Authentication and user login [cite: 24]
-* [cite_start]Deployment and hosting [cite: 25]
-* [cite_start]Code editor UI or syntax highlighting [cite: 26]
+### ✅ Completed (Frontend Boilerplate)
+- **React + Vite Setup**: A functional frontend proof-of-concept is complete.
+- **Component Architecture**:
+    - **Header**: Branding and title display.
+    - **CodeInput**: Handles code input (5000 char limit) and language selection.
+    - **ReviewResult**: Orchestrates results, score badge, and refactored code.
+    - **IssueList**: Reusable component for Bugs, Issues, Improvements, and Performance sections.
+- **API Integration**: Fully connected to the backend `/api/review` endpoint via Vite proxy.
 
 ---
 
-## 3. Basic Flow
-[cite_start]The core request lifecycle is straightforward: [cite: 27, 28]
+## 3. Core Request Flow
 
-| Step | Actor | Action |
+| Step | Component | Action |
 | :--- | :--- | :--- |
-| 1 | Frontend | Pastes code + selects language |
-| 2 | Express Route | POST /api/review receives payload |
-| 3 | Groq Service | Sends prompt to Groq API → gets suggestions |
-| 4 | MongoDB | Saves result to reviews collection |
-| 5 | Response | Returns JSON with id + suggestions |
-
-[cite_start]**Step-by-step:** [cite: 30]
-* [cite_start]Frontend sends a POST request with code and language to `/api/review`. [cite: 31]
-* [cite_start]Express route handler validates and forwards the payload to the Groq API. [cite: 31]
-* [cite_start]Groq returns an AI-generated suggestions object. [cite: 31]
-* [cite_start]The result is saved to MongoDB with metadata (language, timestamp). [cite: 32]
-* [cite_start]A structured JSON response is returned to the frontend. [cite: 32]
+| 1 | **Frontend** | User pastes code and selects language. |
+| 2 | **Vite Proxy** | Forwards request to local backend at port 5000. |
+| 3 | **Express API** | Validates input and triggers Groq Service. |
+| 4 | **Groq API** | Generates structured JSON review. |
+| 5 | **MongoDB** | Persists the review result. |
+| 6 | **Frontend** | Renders sections based on the AI feedback. |
 
 ---
 
-## 4. API Endpoints
+## 4. API Specification
 
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
-| POST | `/api/review` | Submit code for AI review |
-| GET | `/api/review/:id` | Fetch a single review by ID |
-| GET | `/api/reviews` | List all past reviews |
-| GET | `/api/health` | Health check / server status |
-
-[cite_start]**POST /api/review - Request Body** [cite: 35]
-```json
-{
-  "code": "def add(a, b): return a + b",
-  "language": "python"
-}
-```
-
-[cite_start]**POST /api/review - Response** [cite: 40]
-```json
-{
-  "success": true,
-  "data": {
-    "id": "64abc123...",
-    "language": "python",
-    "model": "llama-3.3-70b-versatile",
-    "responseTime": 1240,
-    "suggestions": {
-      "score": 8,
-      "bugs": [],
-      "issues": [
-        { "issue": "Missing type hints", "fix": "Add type hints" }
-      ],
-      "improvements": [],
-      "performance": [],
-      "refactored_code": "def add(a: int, b: int) -> int:\n    return a + b"
-    },
-    "createdAt": "2026-04-23T10:30:00Z"
-  }
-}
-```
-
----
-
-## 5. MongoDB Schema
-[cite_start]**Collection:** reviews [cite: 48, 49]
-
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| id | ObjectId | Auto-generated by MongoDB |
-| code | String | The submitted source code |
-| language | String | Programming language (default: plaintext) |
-| suggestions | Object | Structured JSON AI review containing quality, bugs, etc. |
-| model | String | Groq model used (default: llama-3.3-70b-versatile) |
-| responseTime | Number | Milliseconds taken for the Groq API call to complete |
-| createdAt | Date | Timestamp of submission |
-
-[cite_start]**Mongoose Schema Snippet:** [cite: 51]
-```javascript
-const reviewSchema = new mongoose.Schema({
-  code: { type: String, required: true },
-  language: { type: String, default: "plaintext" },
-  suggestions: { type: String, required: true },
-  model: { type: String, default: "llama-3.1-8b-instant" },
-  createdAt: { type: Date, default: Date.now }
-});
-```
-
----
-
-## 6. Backend Folder Structure
-
-| Path | Description |
-| :--- | :--- |
-| `backend/` | |
-| `server.js` | Entry point, Express setup |
-| `.env` | GROQ API KEY, MONGO URI |
-| `config/db.js` | MongoDB connection |
-| `routes/reviewRoutes.js` | Route definitions |
-| `controllers/reviewController.js` | Business logic |
-| `models/Review.js` | Mongoose schema |
-| `services/groqService.js` | Groq API calls |
-
-
-
----
-
-## 8. Notes & Assumptions
-* [cite_start]Groq model: `llama-3.3-70b-versatile` (fast and free tier friendly). [cite: 69]
-* [cite_start]No authentication required for this phase. [cite: 69]
-* [cite_start]Frontend team will consume the JSON response directly. `suggestions` will be an Object, and all responses wrapped in a `{ success, data/error }` envelope. [cite: 69]
-* [cite_start]All environment variables stored in `.env` never committed to Git. [cite: 69]
-* [cite_start]Error responses follow a standard format: `{ success: false, error: 'message' }`. [cite: 69]
-* [cite_start]Coordinate the response schema with the frontend dev before Day 3. [cite: 69]
+| `POST` | `/api/review` | Submit code for AI analysis |
+| `GET` | `/api/reviews` | Retrieve full history of reviews |
+| `GET` | `/api/health` | Check system status |
