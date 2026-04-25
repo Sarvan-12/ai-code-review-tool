@@ -95,6 +95,14 @@ textarea:focus {
   border-color: var(--primary-color);
 }
 
+.char-counter {
+  font-size: 12px;
+  text-align: right;
+  color: var(--text-muted);
+  margin-top: 0.35rem;
+  transition: color 0.2s;
+}
+
 .lang-input {
   width: 100%;
   max-width: 200px;
@@ -132,6 +140,92 @@ textarea:focus {
 
 .btn-primary:disabled {
   opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--surface-lighter);
+  color: var(--text-main);
+  transform: translateY(-1px);
+}
+
+.btn-secondary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.btn-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.btn-row .btn {
+  width: 180px;
+}
+
+.btn-sample {
+  background-color: var(--surface-lighter);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+}
+
+.btn-sample:hover:not(:disabled) {
+  background-color: var(--surface-color);
+  border-color: var(--primary-color);
+  transform: translateY(-1px);
+}
+
+.btn-sample:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.input-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.input-group-header label {
+  margin-bottom: 0;
+}
+
+.btn-clear-corner {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.4rem 0.9rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  line-height: 1;
+}
+
+.btn-clear-corner:hover:not(:disabled) {
+  background-color: rgba(239, 68, 68, 0.1);
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.btn-clear-corner:disabled {
+  opacity: 0.3;
   cursor: not-allowed;
 }
 
@@ -190,6 +284,33 @@ textarea:focus {
   padding: 1rem;
   overflow-x: auto;
   position: relative;
+}
+
+.btn-copy {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background-color: rgba(51, 65, 85, 0.8);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  backdrop-filter: blur(4px);
+  z-index: 10;
+}
+
+.btn-copy:hover {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: white;
+}
+
+.btn-copy:active {
+  transform: scale(0.95);
 }
 
 .refactored-code-container pre {

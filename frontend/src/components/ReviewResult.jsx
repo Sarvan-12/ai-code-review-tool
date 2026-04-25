@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import IssueList from './IssueList';
 
 /**
@@ -7,7 +7,16 @@ import IssueList from './IssueList';
  * @param {object} result - The response data from the backend
  */
 const ReviewResult = ({ result }) => {
+  const [copied, setCopied] = useState(false);
   if (!result || !result.data) return null;
+
+  const handleCopy = () => {
+    if (result.data.suggestions.refactored_code) {
+      navigator.clipboard.writeText(result.data.suggestions.refactored_code);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
   const { suggestions, responseTime, model, language } = result.data;
   const score = suggestions.score;
@@ -34,6 +43,13 @@ const ReviewResult = ({ result }) => {
         <div className="refactor-section">
           <h3 className="section-title">🛠️ Refactored Code</h3>
           <div className="refactored-code-container">
+            <button 
+              className="btn-copy" 
+              onClick={handleCopy}
+              title="Copy code to clipboard"
+            >
+              {copied ? '✅ Copied!' : '📋 Copy Code'}
+            </button>
             <pre>
               <code>{suggestions.refactored_code}</code>
             </pre>

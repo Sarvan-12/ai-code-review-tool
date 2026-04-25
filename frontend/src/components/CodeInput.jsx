@@ -12,12 +12,54 @@ import React from 'react';
  */
 const SUPPORTED_LANGUAGES = ['python', 'javascript', 'typescript', 'java', 'cpp', 'go', 'plaintext'];
 
+const SAMPLE_CODE = `# Python — contains intentional bugs for review demo
+def calculate_average(numbers):
+    total = 0
+    for i in range(len(numbers)):
+        total =+ numbers[i]   # bug: =+ should be +=
+    average = total / len(numbers)  # bug: ZeroDivisionError if list is empty
+    return average
+
+def find_duplicates(lst):
+    seen = []
+    duplicates = []
+    for item in lst:
+        if item in seen:
+            duplicates.append(item)
+        seen.append(item)  # bug: should append only if not already seen
+    return list(set(duplicates))
+
+def fetch_user(user_id):
+    users = {1: 'Alice', 2: 'Bob', 3: 'Charlie'}
+    return users[user_id]   # bug: KeyError if user_id not in dict; no default
+
+result = calculate_average([])
+print('Average:', result)
+
+dupes = find_duplicates([1, 2, 2, 3, 3, 3, 4])
+print('Duplicates:', dupes)
+
+user = fetch_user(99)
+print('User:', user)
+`;
+
 const CodeInput = ({ code, setCode, language, setLanguage, onSubmit, isLoading }) => {
   return (
     <div className="card">
       <form onSubmit={onSubmit}>
         <div className="input-group">
-          <label htmlFor="code-input">Source Code</label>
+          <div className="input-group-header">
+            <label htmlFor="code-input">Source Code</label>
+            <button
+              type="button"
+              className="btn-clear-corner"
+              onClick={() => setCode('')}
+              disabled={isLoading || code.length === 0}
+              title="Clear code"
+            >
+              ✕ Clear
+            </button>
+          </div>
           <textarea
             id="code-input"
             value={code}
@@ -31,6 +73,19 @@ const CodeInput = ({ code, setCode, language, setLanguage, onSubmit, isLoading }
               Code must be at least 5 characters long.
             </p>
           )}
+          <p
+            className="char-counter"
+            style={{
+              color:
+                code.length > 4900
+                  ? 'var(--danger)'
+                  : code.length > 4000
+                  ? 'var(--warning)'
+                  : 'var(--text-muted)',
+            }}
+          >
+            {code.length} / 5000
+          </p>
         </div>
 
         <div className="input-group">
@@ -50,13 +105,27 @@ const CodeInput = ({ code, setCode, language, setLanguage, onSubmit, isLoading }
           </select>
         </div>
 
-        <button 
-          type="submit" 
-          className="btn btn-primary" 
-          disabled={isLoading || code.trim().length < 5}
-        >
-          {isLoading ? 'Analyzing Code...' : 'Review Code'}
-        </button>
+        <div className="btn-row">
+          <button 
+            type="submit" 
+            className="btn btn-primary" 
+            disabled={isLoading || code.trim().length < 5}
+          >
+            {isLoading ? 'Analyzing Code...' : 'Review Code'}
+          </button>
+          <button
+            type="button"
+            className="btn btn-sample"
+            onClick={() => {
+              setCode(SAMPLE_CODE);
+              setLanguage('python');
+            }}
+            disabled={isLoading}
+            title="Load a buggy sample for testing"
+          >
+            ⚡ Sample Code
+          </button>
+        </div>
       </form>
     </div>
   );
