@@ -68,7 +68,10 @@ function App() {
         {/* Form for Code Submission */}
         <CodeInput
           code={sourceCode}
-          setCode={setSourceCode}
+          setCode={(newCode) => {
+            setSourceCode(newCode);
+            setReviewData(null);
+          }}
           language={language}
           setLanguage={setLanguage}
           onSubmit={handleReviewSubmit}
