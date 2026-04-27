@@ -95,6 +95,14 @@ textarea:focus {
   border-color: var(--primary-color);
 }
 
+.char-counter {
+  font-size: 12px;
+  text-align: right;
+  color: var(--text-muted);
+  margin-top: 0.35rem;
+  transition: color 0.2s;
+}
+
 .lang-input {
   width: 100%;
   max-width: 200px;
@@ -135,19 +143,120 @@ textarea:focus {
   cursor: not-allowed;
 }
 
+.btn-secondary {
+  background-color: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--surface-lighter);
+  color: var(--text-main);
+  transform: translateY(-1px);
+}
+
+.btn-secondary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.btn-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.btn-row .btn {
+  width: 180px;
+}
+
+.btn-sample {
+  background-color: var(--surface-lighter);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+}
+
+.btn-sample:hover:not(:disabled) {
+  background-color: var(--surface-color);
+  border-color: var(--primary-color);
+  transform: translateY(-1px);
+}
+
+.btn-sample:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.input-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.input-group-header label {
+  margin-bottom: 0;
+}
+
+.btn-clear-corner {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.4rem 0.9rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  line-height: 1;
+}
+
+.btn-clear-corner:hover:not(:disabled) {
+  background-color: rgba(239, 68, 68, 0.1);
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.btn-clear-corner:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
 /* Result Styles */
 .score-badge {
   display: inline-block;
-  padding: 0.5rem 1rem;
-  border-radius: 99px;
-  font-weight: 700;
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
+  padding: 1rem 2.5rem;
+  border-radius: 14px;
+  font-weight: 800;
+  font-size: 1.8rem;
+  margin-bottom: 1.2rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  min-width: 140px;
+  letter-spacing: 1px;
+
 }
 
-.score-high { background-color: rgba(16, 185, 129, 0.2); color: var(--success); }
-.score-mid { background-color: rgba(245, 158, 11, 0.2); color: var(--warning); }
-.score-low { background-color: rgba(239, 68, 68, 0.2); color: var(--danger); }
+.score-high {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: var(--success);
+}
+
+.score-mid {
+  background-color: rgba(245, 158, 11, 0.2);
+  color: var(--warning);
+}
+
+.score-low {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: var(--danger);
+}
 
 .section-title {
   font-size: 1.25rem;
@@ -166,9 +275,17 @@ textarea:focus {
   border-left: 4px solid var(--primary-color);
 }
 
-.issue-item.bug { border-left-color: var(--danger); }
-.issue-item.performance { border-left-color: var(--warning); }
-.issue-item.improvement { border-left-color: var(--primary-color); }
+.issue-item.bug {
+  border-left-color: var(--danger);
+}
+
+.issue-item.performance {
+  border-left-color: var(--warning);
+}
+
+.issue-item.improvement {
+  border-left-color: var(--primary-color);
+}
 
 .issue-desc {
   font-weight: 600;
@@ -190,6 +307,33 @@ textarea:focus {
   padding: 1rem;
   overflow-x: auto;
   position: relative;
+}
+
+.btn-copy {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background-color: rgba(51, 65, 85, 0.8);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  backdrop-filter: blur(4px);
+  z-index: 10;
+}
+
+.btn-copy:hover {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: white;
+}
+
+.btn-copy:active {
+  transform: scale(0.95);
 }
 
 .refactored-code-container pre {
@@ -220,6 +364,26 @@ textarea:focus {
 }
 
 @media (max-width: 640px) {
-  header h1 { font-size: 1.8rem; }
-  .container { padding: 1rem; }
+  header h1 {
+    font-size: 1.8rem;
+  }
+
+  .container {
+    padding: 1rem;
+  }
+}
+
+
+.empty-message {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-style: italic;
+  padding-left: 1rem;
+  margin-top: 0.5rem;
+}
+
+.issue-section {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }

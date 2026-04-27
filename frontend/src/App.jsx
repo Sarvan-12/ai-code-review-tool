@@ -23,7 +23,7 @@ function App() {
    */
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Reset state before new request
     setIsProcessing(true);
     setErrorMessage('');
@@ -31,12 +31,18 @@ function App() {
 
     try {
       // POST request to the local backend (proxied via Vite)
-      const response = await axios.post('/api/review', { 
-        code: sourceCode, 
-        language 
+      const response = await axios.post('/api/review', {
+        code: sourceCode,
+        language
       });
-      
+
       setReviewData(response.data);
+
+      setTimeout(() => {
+        document.getElementById('result-section')?.scrollIntoView({
+          behavior: 'smooth'
+        });
+      }, 200);
     } catch (err) {
       // Extract error message from axios error object
       const errorMsg = err.response?.data?.error || err.message || 'An unexpected error occurred';
@@ -60,7 +66,7 @@ function App() {
         )}
 
         {/* Form for Code Submission */}
-        <CodeInput 
+        <CodeInput
           code={sourceCode}
           setCode={setSourceCode}
           language={language}
@@ -70,7 +76,12 @@ function App() {
         />
 
         {/* Display Results when available */}
-        {reviewData && <ReviewResult result={reviewData} />}
+        {reviewData && (
+          <div id="result-section">
+            <ReviewResult result={reviewData} />
+          </div>
+        )}
+
       </main>
     </div>
   );
