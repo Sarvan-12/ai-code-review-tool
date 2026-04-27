@@ -47,6 +47,13 @@ const ReviewResult = ({ result }) => {
         <div className="refactor-section">
           <h3 className="section-title">🛠️ Refactored Code</h3>
           <div className="refactored-code-container">
+            <button
+              className="btn-copy"
+              onClick={handleCopy}
+              title="Copy code to clipboard"
+            >
+              {copied ? '✅ Copied!' : '📋 Copy Code'}
+            </button>
             <pre>
               <code>{suggestions.refactored_code}</code>
             </pre>
