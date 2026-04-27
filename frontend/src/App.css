@@ -139,8 +139,25 @@ textarea:focus {
 }
 
 .btn-primary:disabled {
-  opacity: 0.6;
+  opacity: 0.7;
   cursor: not-allowed;
+}
+
+.spinner {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.5rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .btn-secondary {
@@ -357,6 +374,7 @@ textarea:focus {
 .error-box {
   background-color: rgba(239, 68, 68, 0.1);
   border: 1px solid var(--danger);
+  border-left: 3px solid var(--danger);
   color: var(--danger);
   padding: 1rem;
   border-radius: 8px;
@@ -388,33 +406,7 @@ textarea:focus {
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-/* Navigation Styles */
-.main-nav {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  margin-top: 1.5rem;
-}
-
-.nav-link {
-  color: var(--text-main);
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 1.1rem;
-  padding-bottom: 0.25rem;
-  transition: color 0.2s ease-in-out;
-}
-
-.nav-link:hover {
-  color: var(--primary-color);
-}
-
-.nav-link.active {
-  color: var(--primary-color);
-  border-bottom: 2px solid var(--primary-color);
-}
-
-/* History Page Styles */
+/* ── History Page ──────────────────────────────────────────────────────────── */
 .history-list {
   display: flex;
   flex-direction: column;
@@ -422,9 +414,7 @@ textarea:focus {
 }
 
 .history-card {
-  margin-bottom: 0; /* Override generic .card margin */
-  padding: 1rem;
-  transition: all 0.2s ease;
+  padding: 1.25rem 1.5rem;
 }
 
 .history-header {
@@ -457,8 +447,8 @@ textarea:focus {
 }
 
 .history-score-badge.score-high { color: var(--success); }
-.history-score-badge.score-mid { color: var(--warning); }
-.history-score-badge.score-low { color: var(--danger); }
+.history-score-badge.score-mid  { color: var(--warning); }
+.history-score-badge.score-low  { color: var(--danger); }
 
 .history-date {
   color: var(--text-muted);
@@ -479,4 +469,53 @@ textarea:focus {
   margin-top: 1.5rem;
   padding-top: 1.5rem;
   border-top: 1px solid var(--border-color);
+}
+
+/* Nav styles */
+.main-nav {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.nav-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.nav-link:hover {
+  color: var(--text-main);
+  background-color: var(--surface-lighter);
+}
+
+.nav-link.active {
+  color: var(--primary-color);
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* Score label above badge */
+.score-container {
+  margin-bottom: 1.5rem;
+}
+
+.score-label {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Local validation error */
+.local-error-text {
+  color: var(--danger);
+  font-size: 0.8rem;
+  margin-top: 0.4rem;
 }

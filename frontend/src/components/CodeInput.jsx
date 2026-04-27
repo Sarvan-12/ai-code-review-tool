@@ -1,3 +1,4 @@
+import { useState } from 'react';
 
 
 /**
@@ -44,9 +45,25 @@ print('User:', user)
 `;
 
 const CodeInput = ({ code, setCode, language, setLanguage, onSubmit, isLoading }) => {
+  const [localError, setLocalError] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const trimmedCode = code.trim();
+    if (!trimmedCode) {
+      setLocalError("Please paste some code before submitting");
+      return;
+    }
+    if (code.length < 5) {
+      setLocalError("Code is too short to review");
+      return;
+    }
+    onSubmit(e);
+  };
+
   return (
     <div className="card">
-      <form onSubmit={onSubmit}>
+      <form onSubmit={handleSubmit}>
         <div className="input-group">
           <div className="input-group-header">
             <label htmlFor="code-input">Source Code</label>
@@ -63,11 +80,18 @@ const CodeInput = ({ code, setCode, language, setLanguage, onSubmit, isLoading }
           <textarea
             id="code-input"
             value={code}
-            onChange={(e) => setCode(e.target.value)}
+            onChange={(e) => {
+              setCode(e.target.value);
+              setLocalError('');
+            }}
             placeholder="Paste your code here (min 5, max 5000 characters)..."
             maxLength={5000}
-            required
           />
+          {localError && (
+            <p className="local-error-text">
+              {localError}
+            </p>
+          )}
           {code.trim() && code.trim().length < 5 && (
             <p style={{ color: 'var(--danger)', fontSize: '0.8rem', marginTop: '0.25rem' }}>
               Code must be at least 5 characters long.
@@ -80,8 +104,8 @@ const CodeInput = ({ code, setCode, language, setLanguage, onSubmit, isLoading }
                 code.length > 4900
                   ? 'var(--danger)'
                   : code.length > 4000
-                  ? 'var(--warning)'
-                  : 'var(--text-muted)',
+                    ? 'var(--warning)'
+                    : 'var(--text-muted)',
             }}
           >
             {code.length} / 5000
@@ -106,12 +130,16 @@ const CodeInput = ({ code, setCode, language, setLanguage, onSubmit, isLoading }
         </div>
 
         <div className="btn-row">
-          <button 
-            type="submit" 
-            className="btn btn-primary" 
-            disabled={isLoading || code.trim().length < 5}
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={isLoading}
           >
-            {isLoading ? 'Analyzing Code...' : 'Review Code'}
+            {isLoading ? (
+              <>
+                <span className="spinner"></span> Analyzing...
+              </>
+            ) : 'Review Code'}
           </button>
           <button
             type="button"

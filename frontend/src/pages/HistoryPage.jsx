@@ -13,7 +13,7 @@ function HistoryPage() {
       try {
         const response = await axios.get('/api/reviews');
         setReviews(response.data.data);
-      } catch (err) {
+      } catch {
         setError('Failed to load history.');
       } finally {
         setLoading(false);

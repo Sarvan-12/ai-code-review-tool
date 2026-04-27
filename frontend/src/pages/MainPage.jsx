@@ -3,6 +3,10 @@ import axios from 'axios';
 import CodeInput from '../components/CodeInput';
 import ReviewResult from '../components/ReviewResult';
 
+/**
+ * MainPage component — handles the code review form and displays results.
+ * Contains all state and submit logic for the review flow.
+ */
 function MainPage() {
   const [sourceCode, setSourceCode] = useState('');
   const [language, setLanguage] = useState('python');
@@ -31,7 +35,20 @@ function MainPage() {
         });
       }, 200);
     } catch (err) {
-      const errorMsg = err.response?.data?.error || err.message || 'An unexpected error occurred';
+      // Show user-friendly messages based on HTTP status code
+      const status = err.response?.status;
+      let errorMsg;
+
+      if (status === 400) {
+        errorMsg = 'Invalid input — check your code and try again';
+      } else if (status === 429) {
+        errorMsg = 'Too many requests — please wait a moment before trying again';
+      } else if (status === 500 || status === undefined) {
+        errorMsg = 'Something went wrong on the server — try again in a few seconds';
+      } else {
+        errorMsg = err.response?.data?.error || err.message || 'An unexpected error occurred';
+      }
+
       setErrorMessage(errorMsg);
     } finally {
       setIsProcessing(false);
@@ -48,7 +65,11 @@ function MainPage() {
 
       <CodeInput
         code={sourceCode}
-        setCode={setSourceCode}
+        setCode={(newCode) => {
+          setSourceCode(newCode);
+          // Clear old results whenever user edits the code
+          setReviewData(null);
+        }}
         language={language}
         setLanguage={setLanguage}
         onSubmit={handleReviewSubmit}
