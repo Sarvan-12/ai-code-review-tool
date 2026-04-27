@@ -232,16 +232,31 @@ textarea:focus {
 /* Result Styles */
 .score-badge {
   display: inline-block;
-  padding: 0.5rem 1rem;
-  border-radius: 99px;
-  font-weight: 700;
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
+  padding: 1rem 2.5rem;
+  border-radius: 14px;
+  font-weight: 800;
+  font-size: 1.8rem;
+  margin-bottom: 1.2rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  min-width: 140px;
+  letter-spacing: 1px;
+
 }
 
-.score-high { background-color: rgba(16, 185, 129, 0.2); color: var(--success); }
-.score-mid { background-color: rgba(245, 158, 11, 0.2); color: var(--warning); }
-.score-low { background-color: rgba(239, 68, 68, 0.2); color: var(--danger); }
+.score-high {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: var(--success);
+}
+
+.score-mid {
+  background-color: rgba(245, 158, 11, 0.2);
+  color: var(--warning);
+}
+
+.score-low {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: var(--danger);
+}
 
 .section-title {
   font-size: 1.25rem;
@@ -260,9 +275,17 @@ textarea:focus {
   border-left: 4px solid var(--primary-color);
 }
 
-.issue-item.bug { border-left-color: var(--danger); }
-.issue-item.performance { border-left-color: var(--warning); }
-.issue-item.improvement { border-left-color: var(--primary-color); }
+.issue-item.bug {
+  border-left-color: var(--danger);
+}
+
+.issue-item.performance {
+  border-left-color: var(--warning);
+}
+
+.issue-item.improvement {
+  border-left-color: var(--primary-color);
+}
 
 .issue-desc {
   font-weight: 600;
@@ -341,6 +364,26 @@ textarea:focus {
 }
 
 @media (max-width: 640px) {
-  header h1 { font-size: 1.8rem; }
-  .container { padding: 1rem; }
+  header h1 {
+    font-size: 1.8rem;
+  }
+
+  .container {
+    padding: 1rem;
+  }
+}
+
+
+.empty-message {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-style: italic;
+  padding-left: 1rem;
+  margin-top: 0.5rem;
+}
+
+.issue-section {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }

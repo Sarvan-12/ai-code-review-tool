@@ -29,8 +29,10 @@ const IssueList = ({ title, items, type }) => {
           </div>
         ))
       ) : (
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', fontStyle: 'italic', paddingLeft: '1rem' }}>
+        <p className="empty-message">
           No {title.toLowerCase()} found.
+          ✓ No issues found in this category
+
         </p>
       )}
     </div>
