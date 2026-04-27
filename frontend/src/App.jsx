@@ -44,8 +44,19 @@ function App() {
         });
       }, 200);
     } catch (err) {
-      // Extract error message from axios error object
-      const errorMsg = err.response?.data?.error || err.message || 'An unexpected error occurred';
+      const status = err.response?.status;
+      let errorMsg = '';
+      
+      if (status === 400) {
+        errorMsg = 'Invalid input — check your code and try again';
+      } else if (status === 429) {
+        errorMsg = 'Too many requests — please wait a moment before trying again';
+      } else if (status === 500 || status === undefined) {
+        errorMsg = 'Something went wrong on the server — try again in a few seconds';
+      } else {
+        errorMsg = err.response?.data?.error || err.message || 'An unexpected error occurred';
+      }
+      
       setErrorMessage(errorMsg);
     } finally {
       setIsProcessing(false);

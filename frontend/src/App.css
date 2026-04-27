@@ -357,6 +357,7 @@ textarea:focus {
 .error-box {
   background-color: rgba(239, 68, 68, 0.1);
   border: 1px solid var(--danger);
+  border-left: 3px solid var(--danger);
   color: var(--danger);
   padding: 1rem;
   border-radius: 8px;
