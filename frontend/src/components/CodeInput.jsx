@@ -85,7 +85,6 @@ const CodeInput = ({ code, setCode, language, setLanguage, onSubmit, isLoading }
             }}
             placeholder="Paste your code here (min 5, max 5000 characters)..."
             maxLength={5000}
-            required
           />
           {localError && (
             <p className="local-error-text">
