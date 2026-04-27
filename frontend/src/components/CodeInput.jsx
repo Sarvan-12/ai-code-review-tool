@@ -134,7 +134,11 @@ const CodeInput = ({ code, setCode, language, setLanguage, onSubmit, isLoading }
             className="btn btn-primary"
             disabled={isLoading}
           >
-            {isLoading ? 'Analyzing Code...' : 'Review Code'}
+            {isLoading ? (
+              <>
+                <span className="spinner"></span> Analyzing...
+              </>
+            ) : 'Review Code'}
           </button>
           <button
             type="button"
