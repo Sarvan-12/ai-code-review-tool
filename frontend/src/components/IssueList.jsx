@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 /**
  * IssueList component renders a category of issues (bugs, improvements, etc.)
