@@ -4,6 +4,10 @@ import MainPage from './pages/MainPage';
 import HistoryPage from './pages/HistoryPage';
 import './App.css';
 
+/**
+ * Root component — sets up routing only.
+ * All page-level logic lives inside the individual page components.
+ */
 function App() {
   return (
     <div className="container">
