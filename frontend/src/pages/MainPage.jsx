@@ -9,7 +9,7 @@ import ReviewResult from '../components/ReviewResult';
  */
 function MainPage() {
   const [sourceCode, setSourceCode] = useState('');
-  const [language, setLanguage] = useState('python');
+  const [language, setLanguage] = useState('C');
   const [reviewData, setReviewData] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
