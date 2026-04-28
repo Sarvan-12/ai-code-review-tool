@@ -23,6 +23,7 @@ const ReviewResult = ({ result }) => {
 
   // Determine score badge color
   const getScoreClass = (s) => {
+
     if (s >= 8) return 'score-high';
     if (s >= 5) return 'score-mid';
     return 'score-low';
@@ -57,18 +58,24 @@ const ReviewResult = ({ result }) => {
             <pre className="code-block">
               <code>
                 {suggestions.refactored_code
-                  .replace(/\\n/g, '\n')     // fix escaped new lines
-                  .replace(/;/g, ';\n')      // break statements
-                  .replace(/{/g, '{\n')      // new line after {
-                  .replace(/}/g, '\n}')      // new line before }
+                  .replace(/\\n/g, '\n')
+
+                  // your existing logic
+                  .replace(/;/g, ';\n')
+                  .replace(/{/g, '{\n')
+                  .replace(/}/g, '\n}')
+
+                  // ✅ ADD THESE NEW LINES
+                  .replace(/\n\s*\n/g, '\n')          // remove extra blank lines
+                  .replace(/\{\n/g, '{\n  ')          // indent after {
+                  .replace(/\n\}/g, '\n}')            // clean closing brace
+                  .replace(/\n/g, '\n')               // normalize
                 }
               </code>
             </pre>
           </div>
         </div>
       )}
-
-
       <div className="meta-info">
         <span><strong>Language:</strong> {language}</span>
         <span><strong>Model:</strong> {model}</span>
