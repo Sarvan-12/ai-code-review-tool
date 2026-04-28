@@ -11,36 +11,18 @@ import { useState } from 'react';
  * @param {function} onSubmit - Submit handler
  * @param {boolean} isLoading - Loading state for the submit button
  */
-const SUPPORTED_LANGUAGES = ['python', 'javascript', 'typescript', 'java', 'cpp', 'go'];
+const SUPPORTED_LANGUAGES = ['C', 'C++', 'Go', 'Java', 'JavaScript', 'Python', 'TypeScript'];
 
-const LANGUAGE_SAMPLES = {
-  python: `def find_max(numbers):
-    max_val = 0
-    for n in numbers:
-        if n > max_val:
-            max_val == n
-    return max_val
-
-print(find_max([-1, -2, -3]))`,
-  javascript: `function calculateSum(arr) {
-  let sum = 0;
-  for (let i = 0; i <= arr.length; i++) {
-    sum += arr[i];
-  }
-  return sum;
-}
-console.log(calculateSum([1, 2, 3]));`,
-  typescript: `function greet(person: string) {
-  return "Hello, " + persons;
-}
-console.log(greet("User"));`,
-  java: `public class Main {
-    public static void main(String[] args) {
-        int[] nums = {1, 2, 3};
-        System.out.println(nums[5]);
+export const LANGUAGE_SAMPLES = {
+  'C': `#include <stdio.h>
+int main() {
+    int x = 10;
+    if (x = 5) {
+        printf("Equal");
     }
+    return 0;
 }`,
-  cpp: `#include <iostream>
+  'C++': `#include <iostream>
 int main() {
     int x = 10;
     if (x = 5) {
@@ -48,12 +30,38 @@ int main() {
     }
     return 0;
 }`,
-  go: `package main
+  'Go': `package main
 import "fmt"
 func main() {
     x := 10
     fmt.Println("Value is", y)
-}`
+}`,
+  'Java': `public class Main {
+    public static void main(String[] args) {
+        int[] nums = {1, 2, 3};
+        System.out.println(nums[5]);
+    }
+}`,
+  'JavaScript': `function calculateSum(arr) {
+  let sum = 0;
+  for (let i = 0; i <= arr.length; i++) {
+    sum += arr[i];
+  }
+  return sum;
+}
+console.log(calculateSum([1, 2, 3]));`,
+  'Python': `def find_max(numbers):
+    max_val = 0
+    for n in numbers:
+        if n > max_val:
+            max_val == n
+    return max_val
+
+print(find_max([-1, -2, -3]))`,
+  'TypeScript': `function greet(person: string) {
+  return "Hello, " + persons;
+}
+console.log(greet("User"));`
 };
 
 const CodeInput = ({ code, setCode, language, setLanguage, onSubmit, isLoading }) => {
@@ -135,7 +143,7 @@ const CodeInput = ({ code, setCode, language, setLanguage, onSubmit, isLoading }
           >
             {SUPPORTED_LANGUAGES.map((lang) => (
               <option key={lang} value={lang}>
-                {lang.charAt(0).toUpperCase() + lang.slice(1)}
+                {lang}
               </option>
             ))}
           </select>
@@ -157,10 +165,18 @@ const CodeInput = ({ code, setCode, language, setLanguage, onSubmit, isLoading }
             type="button"
             className="btn btn-sample"
             onClick={() => {
-              const currentIndex = SUPPORTED_LANGUAGES.indexOf(language);
-              const nextIndex = (currentIndex + 1) % SUPPORTED_LANGUAGES.length;
-              const nextLang = SUPPORTED_LANGUAGES[nextIndex];
-              
+              const cycleLanguages = ['C', 'C++', 'Java', 'JavaScript', 'Python'];
+              let nextLang = language;
+
+              // If textarea is empty, load the current language's sample (default to C if not in cycle)
+              if (code === '') {
+                if (!cycleLanguages.includes(language)) nextLang = 'C';
+              } else {
+                const currentIndex = cycleLanguages.indexOf(language);
+                const nextIndex = (currentIndex + 1) % cycleLanguages.length;
+                nextLang = cycleLanguages[nextIndex];
+              }
+
               setLanguage(nextLang);
               setCode(LANGUAGE_SAMPLES[nextLang]);
             }}
