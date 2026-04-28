@@ -321,34 +321,41 @@ textarea:focus {
 }
 
 .refactored-code-container {
-  background-color: #020617;
   border-radius: 8px;
-  padding: 1rem;
-  overflow-x: auto;
   position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+}
+
+.syntax-highlighter-wrapper {
+  overflow-y: visible;
 }
 
 .btn-copy {
   position: absolute;
   top: 0.75rem;
   right: 0.75rem;
-  background-color: rgba(51, 65, 85, 0.8);
+  background-color: rgba(51, 65, 85, 0.9);
   color: var(--text-main);
   border: 1px solid var(--border-color);
   border-radius: 6px;
-  padding: 0.35rem 0.75rem;
+  padding: 0.4rem 0.8rem;
   font-size: 0.75rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
-  backdrop-filter: blur(4px);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(8px);
   z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .btn-copy:hover {
   background-color: var(--primary-color);
   border-color: var(--primary-color);
   color: white;
+  transform: translateY(-1px);
 }
 
 .btn-copy:active {
@@ -356,11 +363,9 @@ textarea:focus {
 }
 
 .refactored-code-container pre {
-  font-family: 'Fira Code', monospace;
-  font-size: 0.85rem;
-  color: #e2e8f0;
-  white-space: pre-wrap;
-  word-break: break-all;
+  margin: 0 !important;
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
 }
 
 .meta-info {

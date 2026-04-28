@@ -40,7 +40,8 @@ CRITICAL RULES:
 3. If the code is already correct, return empty arrays and say "No major issues found" in the refactored_code section if no refactor is needed.
 4. Every object inside the arrays MUST include BOTH the "issue" property and the "fix" property as strings. Do not omit the "fix" key.
 5. If there are no items for a category, return an empty array []. Do not use strings like "None".
-6. Ensure code inside "refactored_code" escapes newlines and quotes correctly.
+6. Ensure code inside "refactored_code" uses proper indentation (2 or 4 spaces) and newlines for readability. Do NOT return the code as a single line. Use real newlines characters.
+7. CRITICAL: The "refactored_code" field must contain ONLY the raw source code. Do NOT include any introductory text, conversational remarks, or markdown code fences (like \`\`\`) inside this specific JSON string value. Any explanations should be in the issues/improvements arrays instead.
 
 \`\`\`${language}
 ${code}
