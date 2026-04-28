@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import IssueList from './IssueList';
 
 /**
@@ -8,113 +10,145 @@ import IssueList from './IssueList';
  */
 const ReviewResult = ({ result }) => {
   const [copied, setCopied] = useState(false);
+  
   if (!result || !result.data) return null;
 
+  const { suggestions, responseTime, model, language } = result.data;
+  const score = suggestions.score;
+
+  /**
+   * Maps UI language names to SyntaxHighlighter supported aliases.
+   */
+  const getLanguageAlias = (lang) => {
+    if (!lang) return 'plaintext';
+    const l = lang.toLowerCase();
+    if (l === 'c++') return 'cpp';
+    if (l === 'c#') return 'csharp';
+    return l;
+  };
+
+  /**
+   * Extract only the code content from the AI response.
+   * Prioritizes content within markdown triple backticks.
+   */
+  const cleanCode = (code) => {
+    if (!code) return '';
+    
+    let cleaned = code;
+
+    // 1. Try to extract from triple backticks first (standard markdown)
+    const backtickRegex = /```(?:[a-z]*)\n?([\s\S]*?)```/i;
+    const match = code.match(backtickRegex);
+    
+    if (match) {
+      cleaned = match[1];
+    } else {
+      // 2. Fallback: If no backticks, try to strip conversational intro
+      // Looks for text like "Here is the code:" or "Corrected code:" followed by common code starts
+      // This regex looks for common starting patterns (imports, includes, etc.) 
+      // and takes everything from that point onwards.
+      const codeStartRegex = /(?:^|\n)(?:\s*)(?:#include|import|from|public|private|class|function|def|const|let|var|using|package)\s+/i;
+      const startIndex = cleaned.search(codeStartRegex);
+      
+      if (startIndex !== -1) {
+        cleaned = cleaned.substring(startIndex);
+      }
+    }
+    
+    // Final cleanup of literal escape sequences and whitespace
+    cleaned = cleaned
+      .replace(/\\n/g, '\n')
+      .replace(/\\t/g, '    ')
+      .replace(/\\r/g, '');
+
+    return cleaned.trim();
+  };
+
   const handleCopy = () => {
-    if (result.data.suggestions.refactored_code) {
-      navigator.clipboard.writeText(
-        formatRefactoredCode(result.data.suggestions.refactored_code, language)
-      );
+    const codeToCopy = cleanCode(suggestions.refactored_code);
+    if (codeToCopy) {
+      navigator.clipboard.writeText(codeToCopy);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
   };
 
-  const { suggestions, responseTime, model, language } = result.data;
-  const score = suggestions.score;
-  console.log("RAW REFACTORED CODE:", suggestions.refactored_code);
-  const formatRefactoredCode = (code) => {
-    if (!code) return '';
-
-    let formatted = code
-      .replace(/```[a-zA-Z]*\n?/g, '')   // remove ```java etc
-      .replace(/```/g, '')
-      .replace(/\\r\\n/g, '\n')
-      .replace(/\\n/g, '\n')
-      .replace(/\\t/g, '    ')
-      .trim();
-
-    // remove extra empty lines
-    formatted = formatted.replace(/\n\s*\n/g, '\n');
-
-    // apply formatting only for languages with braces
-    if (/[{};]/.test(formatted)) {
-      formatted = formatted
-        .replace(/{/g, ' {\n')
-        .replace(/}/g, '\n}\n')
-        .replace(/;/g, ';\n');
-    }
-
-    // indentation logic
-    let indent = 0;
-    formatted = formatted
-      .split('\n')
-      .map((line) => {
-        let trimmed = line.trim();
-
-        if (trimmed.startsWith('}')) indent--;
-
-        let result = '  '.repeat(Math.max(indent, 0)) + trimmed;
-
-        if (trimmed.endsWith('{')) indent++;
-
-        return result;
-      })
-      .join('\n');
-
-    return formatted;
+  // Determine score badge color
+  const getScoreClass = (s) => {
+    if (s >= 8) return 'score-high';
+    if (s >= 5) return 'score-mid';
+    return 'score-low';
   };
-  // indentation logic
-  
-// Determine score badge color
-const getScoreClass = (s) => {
 
-  if (s >= 8) return 'score-high';
-  if (s >= 5) return 'score-mid';
-  return 'score-low';
-};
+  const finalCode = cleanCode(suggestions.refactored_code);
 
-return (
-  <div className="card">
-    <div className="score-container">
-      <p className="score-label">Code Quality Score</p>
-      <div className={`score-badge ${getScoreClass(score)}`}>
-        {score * 10}/100
-      </div>
-    </div>
-
-
-    <IssueList title="Critical Bugs" items={suggestions.bugs} type="bug" />
-    <IssueList title="Security & Logic Issues" items={suggestions.issues} type="issue" />
-    <IssueList title="Performance Optimizations" items={suggestions.performance} type="performance" />
-    <IssueList title="Improvements & Best Practices" items={suggestions.improvements} type="improvement" />
-
-    {suggestions.refactored_code && (
-      <div className="refactor-section">
-        <h3 className="section-title">🛠️ Refactored Code</h3>
-        <div className="refactored-code-container">
-          <button
-            className="btn-copy"
-            onClick={handleCopy}
-            title="Copy code to clipboard"
-          >
-            {copied ? '✅ Copied!' : '📋 Copy Code'}
-          </button>
-          <pre className="code-block">
-            <code>
-              {formatRefactoredCode(suggestions.refactored_code)}
-            </code>
-          </pre>
+  return (
+    <div className="card">
+      {/* Score Header */}
+      <div className="score-container">
+        <p className="score-label">Code Quality Score</p>
+        <div className={`score-badge ${getScoreClass(score)}`}>
+          {score * 10}/100
         </div>
       </div>
-    )}
-    <div className="meta-info">
-      <span><strong>Language:</strong> {language}</span>
-      <span><strong>Model:</strong> {model}</span>
-      <span><strong>Response Time:</strong> {responseTime}ms</span>
+
+      {/* Issues Sections */}
+      <IssueList title="Critical Bugs" items={suggestions.bugs} type="bug" />
+      <IssueList title="Security & Logic Issues" items={suggestions.issues} type="issue" />
+      <IssueList title="Performance Optimizations" items={suggestions.performance} type="performance" />
+      <IssueList title="Improvements & Best Practices" items={suggestions.improvements} type="improvement" />
+
+      {/* Refactored Code Section */}
+      {finalCode && (
+        <div className="refactor-section">
+          <h3 className="section-title">🛠️ Refactored Code</h3>
+          <div className="refactored-code-container">
+            <button
+              className="btn-copy"
+              onClick={handleCopy}
+              title="Copy code to clipboard"
+            >
+              {copied ? '✅ Copied!' : '📋 Copy Code'}
+            </button>
+            <div className="syntax-highlighter-wrapper">
+              <SyntaxHighlighter
+                language={getLanguageAlias(language)}
+                style={vscDarkPlus}
+                wrapLongLines={true}
+                customStyle={{
+                  margin: 0,
+                  padding: '1.5rem',
+                  fontSize: '0.9rem',
+                  backgroundColor: '#020617',
+                  borderRadius: '8px',
+                  border: '1px solid #334155',
+                  lineHeight: '1.5',
+                  whiteSpace: 'pre-wrap',
+                  wordBreak: 'break-word'
+                }}
+                codeTagProps={{
+                   style: {
+                     fontFamily: "'Fira Code', monospace",
+                     whiteSpace: 'pre-wrap',
+                     wordBreak: 'break-word'
+                   }
+                }}
+              >
+                {finalCode}
+              </SyntaxHighlighter>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Meta Information Footer */}
+      <div className="meta-info">
+        <span><strong>Language:</strong> {language}</span>
+        <span><strong>Model:</strong> {model}</span>
+        <span><strong>Response Time:</strong> {responseTime}ms</span>
+      </div>
     </div>
-  </div>
-);
+  );
 };
 
 export default ReviewResult;
