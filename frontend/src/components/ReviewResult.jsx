@@ -54,8 +54,15 @@ const ReviewResult = ({ result }) => {
             >
               {copied ? '✅ Copied!' : '📋 Copy Code'}
             </button>
-            <pre>
-              <code>{suggestions.refactored_code}</code>
+            <pre className="code-block">
+              <code>
+                {suggestions.refactored_code
+                  .replace(/\\n/g, '\n')     // fix escaped new lines
+                  .replace(/;/g, ';\n')      // break statements
+                  .replace(/{/g, '{\n')      // new line after {
+                  .replace(/}/g, '\n}')      // new line before }
+                }
+              </code>
             </pre>
           </div>
         </div>

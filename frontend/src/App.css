@@ -529,3 +529,20 @@ textarea:focus {
   font-size: 0.8rem;
   margin-top: 0.4rem;
 }
+
+/* Override for better code readability */
+.refactored-code-container pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  /* FIX */
+  line-height: 1.6;
+  padding-bottom: 2.5rem;
+  /* space for copy button */
+}
+
+/* Move copy button to bottom-right */
+.btn-copy {
+  top: auto;
+  bottom: 0.75rem;
+  right: 0.75rem;
+}
