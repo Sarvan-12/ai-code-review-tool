@@ -374,11 +374,61 @@ textarea:focus {
 .error-box {
   background-color: rgba(239, 68, 68, 0.1);
   border: 1px solid var(--danger);
-  border-left: 3px solid var(--danger);
+  border-left: 4px solid var(--danger);
   color: var(--danger);
   padding: 1rem;
   border-radius: 8px;
   margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.error-content {
+  flex: 1;
+}
+
+.btn-retry {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: inherit;
+  border: 1px solid currentColor;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-retry:hover {
+  background-color: currentColor;
+  color: var(--bg-color);
+}
+
+.error-timeout {
+  background-color: rgba(245, 158, 11, 0.1);
+  border-color: var(--warning);
+  color: var(--warning);
+}
+
+.error-network {
+  background-color: rgba(148, 163, 184, 0.1);
+  border-color: var(--text-muted);
+  color: var(--text-muted);
+}
+
+.error-server {
+  background-color: rgba(239, 68, 68, 0.1);
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.error-client {
+  background-color: rgba(59, 130, 246, 0.1);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
 }
 
 @media (max-width: 640px) {

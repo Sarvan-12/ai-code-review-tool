@@ -16,6 +16,7 @@ function App() {
   const [reviewData, setReviewData] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [errorType, setErrorType] = useState(null);
 
   /**
    * Handles the form submission to the backend API.
@@ -27,6 +28,7 @@ function App() {
     // Reset state before new request
     setIsProcessing(true);
     setErrorMessage('');
+    setErrorType(null);
     setReviewData(null);
 
     try {
@@ -34,7 +36,7 @@ function App() {
       const response = await axios.post('/api/review', {
         code: sourceCode,
         language
-      });
+      }, { timeout: 30000 });
 
       setReviewData(response.data);
 
@@ -46,18 +48,29 @@ function App() {
     } catch (err) {
       const status = err.response?.status;
       let errorMsg = '';
+      let type = 'generic';
       
-      if (status === 400) {
+      if (err.code === 'ECONNABORTED' || (err.message && err.message.toLowerCase().includes('timeout'))) {
+        errorMsg = 'The AI is taking too long to respond. Please try again.';
+        type = 'timeout';
+      } else if (!err.response) {
+        errorMsg = 'Network error — please check your internet connection and try again.';
+        type = 'network';
+      } else if (status === 400) {
         errorMsg = 'Invalid input — check your code and try again';
+        type = 'client';
       } else if (status === 429) {
         errorMsg = 'Too many requests — please wait a moment before trying again';
-      } else if (status === 500 || status === undefined) {
+        type = 'client';
+      } else if (status >= 500) {
         errorMsg = 'Something went wrong on the server — try again in a few seconds';
+        type = 'server';
       } else {
         errorMsg = err.response?.data?.error || err.message || 'An unexpected error occurred';
       }
       
       setErrorMessage(errorMsg);
+      setErrorType(type);
     } finally {
       setIsProcessing(false);
     }
@@ -71,8 +84,13 @@ function App() {
       <main>
         {/* Error Display */}
         {errorMessage && (
-          <div className="error-box">
-            <strong>Error:</strong> {errorMessage}
+          <div className={`error-box error-${errorType || 'generic'}`}>
+            <div className="error-content">
+              <strong>{errorType === 'timeout' ? 'Timeout:' : 'Error:'}</strong> {errorMessage}
+            </div>
+            <button className="btn btn-retry" onClick={handleReviewSubmit}>
+              🔄 Try Again
+            </button>
           </div>
         )}
 
