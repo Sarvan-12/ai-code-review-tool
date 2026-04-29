@@ -15,15 +15,6 @@ const MODEL = "llama-3.3-70b-versatile"; // Default model — can be swapped her
  * @returns {Promise<Object>} A promise that resolves to the structured AI review object.
  */
 const getCodeReview = async (code, language = "plaintext") => {
-  // 🧪 TEST MODE SWITCHES (ADD THESE)
-  if (process.env.TEST_TIMEOUT === "true") {
-    await new Promise(resolve => setTimeout(resolve, 35000)); // 35s delay
-  }
-
-  if (process.env.TEST_SERVER_ERROR === "true") {
-    throw new Error("Simulated server crash");
-  }
-
   const prompt = `
 You are an expert code reviewer. Review the following ${language} code.
 
@@ -64,25 +55,51 @@ ${code}
     const response = await groq.chat.completions.create({
       model: MODEL,
       messages: [{ role: "user", content: prompt }],
-      response_format: { type: "json_object" },
+      response_format: { type: "json_object" }, // Ensures Groq strictly outputs JSON
     });
 
     content = response.choices[0]?.message?.content || "{}";
-
   } catch (apiError) {
     console.error("Groq API validation failed:", apiError.message);
 
-    // ⚠️ IMPORTANT: preserve error type
-    if (apiError.code === "ETIMEDOUT") {
-      throw new Error("TIMEOUT");
+    // Extract failed_generation from the API message if available
+    let failedGen =
+      apiError?.error?.failed_generation || apiError?.failed_generation;
+
+    if (!failedGen && apiError.message) {
+      try {
+        const match = apiError.message.match(/\{"error":.*\}/);
+        if (match) {
+          const parsedErr = JSON.parse(match[0]);
+          failedGen = parsedErr.error?.failed_generation;
+        }
+      } catch (e) {
+        // Ignore extraction errors
+      }
     }
 
-    throw new Error("API_ERROR");
+    if (failedGen) {
+      content = failedGen;
+    } else {
+      return {
+        score: 0,
+        issues: [
+          {
+            issue: "Groq API Error",
+            fix: "The AI failed to generate a valid response. Try submitting the code again.",
+          },
+        ],
+        improvements: [],
+        performance: [],
+        refactored_code: "",
+      };
+    }
   }
 
   // Strip markdown fences (```json ... ```)
   const raw = content.replace(/```json|```/g, "").trim();
 
+  // Try to parse the JSON securely
   try {
     return JSON.parse(raw);
   } catch (error) {
@@ -92,8 +109,8 @@ ${code}
       score: 0,
       issues: [
         {
-          issue: "Invalid JSON from AI",
-          fix: "Retry the request",
+          issue: "Failed to parse API output",
+          fix: "The AI's JSON output was structurally invalid. Raw output is provided below.",
         },
       ],
       improvements: [],
