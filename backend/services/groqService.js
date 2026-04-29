@@ -15,11 +15,19 @@ const MODEL = "llama-3.3-70b-versatile"; // Default model — can be swapped her
  * @returns {Promise<Object>} A promise that resolves to the structured AI review object.
  */
 const getCodeReview = async (code, language = "plaintext") => {
-<<<<<<< Updated upstream
+  // 🧪 TEST MODE SWITCHES (ADD THESE)
+  if (process.env.TEST_TIMEOUT === "true") {
+    await new Promise(resolve => setTimeout(resolve, 35000)); // 35s delay
+  }
+
+  if (process.env.TEST_SERVER_ERROR === "true") {
+    throw new Error("Simulated server crash");
+  }
+
   const prompt = `
 You are an expert code reviewer. Review the following ${language} code.
 
-Respond strictly in JSON format exactly like this structure:
+Respond strictly in json format exactly like this structure:
 {
   "score": 0,
   "bugs": [
@@ -49,19 +57,6 @@ CRITICAL RULES:
 ${code}
 \`\`\`
 `;
-=======
-
-  // 🧪 TEST MODE SWITCHES (ADD THESE)
-  if (process.env.TEST_TIMEOUT === "true") {
-    await new Promise(resolve => setTimeout(resolve, 35000)); // 35s delay
-  }
-
-  if (process.env.TEST_SERVER_ERROR === "true") {
-    throw new Error("Simulated server crash");
-  }
-
-  const prompt = `You are an expert code reviewer...`;
->>>>>>> Stashed changes
 
   let content = "{}";
 
@@ -77,45 +72,22 @@ ${code}
   } catch (apiError) {
     console.error("Groq API validation failed:", apiError.message);
 
-<<<<<<< Updated upstream
-    // Extract failed_generation from the API message if available
-    let failedGen =
-      apiError?.error?.failed_generation || apiError?.failed_generation;
-
-    if (!failedGen && apiError.message) {
-      try {
-        const match = apiError.message.match(/\{"error":.*\}/);
-        if (match) {
-          const parsedErr = JSON.parse(match[0]);
-          failedGen = parsedErr.error?.failed_generation;
-        }
-      } catch (e) {
-        // Ignore extraction errors
-      }
-=======
     // ⚠️ IMPORTANT: preserve error type
     if (apiError.code === "ETIMEDOUT") {
       throw new Error("TIMEOUT");
->>>>>>> Stashed changes
     }
 
     throw new Error("API_ERROR");
   }
 
-<<<<<<< Updated upstream
   // Strip markdown fences (```json ... ```)
-=======
->>>>>>> Stashed changes
   const raw = content.replace(/```json|```/g, "").trim();
 
   try {
     return JSON.parse(raw);
   } catch (error) {
-<<<<<<< Updated upstream
     console.error("Failed to parse Groq JSON response:", error.message);
 
-=======
->>>>>>> Stashed changes
     return {
       score: 0,
       issues: [
