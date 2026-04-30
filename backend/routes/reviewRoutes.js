@@ -6,6 +6,7 @@ const {
   getAllReviews,
   healthCheck,
   deleteHistory,
+  deleteAllHistory,
 } = require("../controllers/reviewController");
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
