@@ -471,7 +471,7 @@ textarea:focus {
 }
 
 .history-content {
-  flex-grow: 1;
+  flex-grow: 0;
   height: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr; /* Col 2 and Col 3: Equal 40% each */
@@ -484,6 +484,7 @@ textarea:focus {
 }
 
 .history-layout.has-active .history-content {
+  flex-grow: 1;
   opacity: 1;
   transform: scale(1);
   visibility: visible;
