@@ -14,6 +14,7 @@ const MODEL = "llama-3.3-70b-versatile"; // Default model — can be swapped her
  * @param {string} [language="plaintext"] - The programming language of the code.
  * @returns {Promise<Object>} A promise that resolves to the structured AI review object.
  */
+
 const getCodeReview = async (code, language = "plaintext") => {
   const prompt = `
 You are an expert code reviewer. Review the following ${language} code.
@@ -42,8 +43,7 @@ CRITICAL RULES:
 3. If the code is already correct, return empty arrays and say "No major issues found" in the refactored_code section if no refactor is needed.
 4. Every object inside the arrays MUST include BOTH the "issue" property and the "fix" property as strings. Do not omit the "fix" key.
 5. If there are no items for a category, return an empty array []. Do not use strings like "None".
-6. Ensure code inside "refactored_code" uses proper indentation (2 or 4 spaces) and newlines for readability. Do NOT return the code as a single line. Use real newlines characters.
-7. CRITICAL: The "refactored_code" field must contain ONLY the raw source code. Do NOT include any introductory text, conversational remarks, or markdown code fences (like \`\`\`) inside this specific JSON string value. Any explanations should be in the issues/improvements arrays instead.
+6. Ensure code inside "refactored_code" escapes newlines and quotes correctly.
 
 \`\`\`${language}
 ${code}
@@ -53,15 +53,29 @@ ${code}
   let content = "{}";
 
   try {
-    const response = await groq.chat.completions.create({
-      model: MODEL,
-      messages: [{ role: "user", content: prompt }],
-      response_format: { type: "json_object" }, // Ensures Groq strictly outputs JSON
-    });
+    const response = await groq.chat.completions.create(
+      {
+        model: MODEL,
+        messages: [{ role: "user", content: prompt }],
+        response_format: { type: "json_object" }, // Ensures Groq strictly outputs JSON
+      },
+      { timeout: 30000 } // 30-second timeout
+    );
 
     content = response.choices[0]?.message?.content || "{}";
   } catch (apiError) {
     console.error("Groq API validation failed:", apiError.message);
+
+    if (
+      apiError.name === "APITimeoutError" ||
+      apiError.code === "ETIMEDOUT" ||
+      (apiError.message && apiError.message.toLowerCase().includes("timeout"))
+    ) {
+      const err = new Error("The AI is taking too long to respond. Please try again.");
+      err.status = 504;
+      err.type = 'timeout';
+      throw err;
+    }
 
     // Extract failed_generation from the API message if available
     let failedGen =
@@ -82,18 +96,10 @@ ${code}
     if (failedGen) {
       content = failedGen;
     } else {
-      return {
-        score: 0,
-        issues: [
-          {
-            issue: "Groq API Error",
-            fix: "The AI failed to generate a valid response. Try submitting the code again.",
-          },
-        ],
-        improvements: [],
-        performance: [],
-        refactored_code: "",
-      };
+      const err = new Error("The AI failed to generate a valid response. Try submitting the code again.");
+      err.status = 502;
+      err.type = 'server';
+      throw err;
     }
   }
 
@@ -106,18 +112,10 @@ ${code}
   } catch (error) {
     console.error("Failed to parse Groq JSON response:", error.message);
 
-    return {
-      score: 0,
-      issues: [
-        {
-          issue: "Failed to parse API output",
-          fix: "The AI's JSON output was structurally invalid. Raw output is provided below.",
-        },
-      ],
-      improvements: [],
-      performance: [],
-      refactored_code: raw,
-    };
+    const err = new Error("The AI's JSON output was structurally invalid. Try submitting the code again.");
+    err.status = 500;
+    err.type = 'server';
+    throw err;
   }
 };
 

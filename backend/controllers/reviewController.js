@@ -60,8 +60,8 @@ const submitReview = async (req, res) => {
   } catch (error) {
     console.error("submitReview error:", error.message);
     return res
-      .status(500)
-      .json({ success: false, error: "Failed to process review" });
+      .status(error.status || 500)
+      .json({ success: false, error: error.message || "Failed to process review", type: error.type || 'server' });
   }
 };
 

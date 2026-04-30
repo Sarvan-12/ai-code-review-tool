@@ -37,29 +37,32 @@ function MainPage() {
         });
       }, 200);
     } catch (err) {
-      const status = err.response?.status;
       let errorMsg = '';
       let type = 'generic';
-      
+
       if (err.code === 'ECONNABORTED' || (err.message && err.message.toLowerCase().includes('timeout'))) {
         errorMsg = 'The AI is taking too long to respond. Please try again.';
         type = 'timeout';
-      } else if (!err.response) {
-        errorMsg = 'Network error — please check your internet connection and try again.';
-        type = 'network';
-      } else if (status === 400) {
-        errorMsg = 'Invalid input — check your code and try again';
-        type = 'client';
-      } else if (status === 429) {
-        errorMsg = 'Too many requests — please wait a moment before trying again';
-        type = 'client';
-      } else if (status >= 500) {
-        errorMsg = 'Something went wrong on the server — try again in a few seconds';
-        type = 'server';
+      } else if (err.response) {
+        // If our backend sent a structured JSON error, use it (even if it's 502 or 504)
+        if (err.response.data && err.response.data.error) {
+          errorMsg = err.response.data.error;
+          type = err.response.data.type || 'server';
+        } 
+        // Otherwise, if it's 502 or 504 without our JSON, it's a Vite proxy error (backend is down)
+        else if (err.response.status === 504 || err.response.status === 502) {
+          errorMsg = 'Network error. Please check your internet connection.';
+          type = 'network';
+        } else {
+          errorMsg = 'Something went wrong on the server. Please try again later.';
+          type = 'server';
+        }
       } else {
-        errorMsg = err.response?.data?.error || err.message || 'An unexpected error occurred';
+        // Fallback for no response (network errors, server unreachable)
+        errorMsg = 'Network error. Please check your internet connection.';
+        type = 'network';
       }
-      
+
       setErrorMessage(errorMsg);
       setErrorType(type);
     } finally {
@@ -72,7 +75,11 @@ function MainPage() {
       {errorMessage && (
         <div className={`error-box error-${errorType || 'generic'}`}>
           <div className="error-content">
-            <strong>{errorType === 'timeout' ? 'Timeout:' : 'Error:'}</strong> {errorMessage}
+            <strong>
+              {errorType === 'timeout' ? 'Timeout:' : 
+               errorType === 'network' ? 'Network Error:' : 
+               errorType === 'server' ? 'Server Error:' : 'Error:'}
+            </strong> {errorMessage}
           </div>
           <button className="btn btn-retry" onClick={handleReviewSubmit}>
             🔄 Try Again
