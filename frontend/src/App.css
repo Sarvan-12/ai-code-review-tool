@@ -418,14 +418,15 @@ textarea:focus {
   display: flex;
   gap: 1rem;
   height: calc(100vh - 120px);
-  margin-top: 0.5rem;
+  width: 90vw; /* 90% of viewport width */
+  margin: 0.5rem auto 0; /* Center it */
   transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
   overflow: hidden;
 }
 
 .history-sidebar {
   width: 100%;
-  max-width: 1200px; /* Wider initial view */
+  max-width: 900px; /* Slightly wider centered list */
   margin: 0 auto;
   flex-shrink: 0;
   overflow-y: auto;
@@ -438,9 +439,9 @@ textarea:focus {
 
 /* Three-Column Dashboard Mode */
 .history-layout.has-active .history-sidebar {
-  width: 300px; /* Slightly wider sidebar */
+  width: 300px; /* Thicker sidebar for dashboard */
   max-width: none;
-  margin: 0 0 0 1rem; /* Small left gap */
+  margin: 0;
   gap: 0.75rem;
   padding: 0 0.5rem 0 0;
 }
@@ -460,9 +461,8 @@ textarea:focus {
   flex-grow: 1;
   height: 100%;
   display: grid;
-  grid-template-columns: 450px 1fr; /* Widen middle column significantly */
-  gap: 1.5rem;
-  margin-right: 1.5rem; /* Small right gap */
+  grid-template-columns: 450px 1fr; /* Increased Middle column width */
+  gap: 1rem;
   opacity: 0;
   transform: scale(0.98);
   visibility: hidden;
