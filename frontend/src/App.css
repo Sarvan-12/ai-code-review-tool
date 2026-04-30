@@ -423,7 +423,7 @@ textarea:focus {
 /* ── History Page ──────────────────────────────────────────────────────────── */
 .history-layout {
   display: flex;
-  gap: 1.5rem;
+  justify-content: center;
   height: calc(100vh - 120px);
   width: 92vw; /* Perfect 4% margin on each side */
   margin: 0 auto;
@@ -431,10 +431,16 @@ textarea:focus {
   overflow: hidden;
 }
 
+.history-layout.has-active {
+  justify-content: flex-start;
+  gap: 1.5rem;
+}
+
 .history-sidebar {
   width: 100%;
-  max-width: 1100px; /* Broader centered list */
+  max-width: 900px; /* Slightly wider centered list */
   margin: 0 auto;
+  text-align: center;
   flex-shrink: 0;
   overflow-y: auto;
   display: flex;
@@ -465,7 +471,7 @@ textarea:focus {
 }
 
 .history-content {
-  flex-grow: 1;
+  flex-grow: 0;
   height: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr; /* Col 2 and Col 3: Equal 40% each */
@@ -478,6 +484,7 @@ textarea:focus {
 }
 
 .history-layout.has-active .history-content {
+  flex-grow: 1;
   opacity: 1;
   transform: scale(1);
   visibility: visible;
@@ -627,6 +634,8 @@ textarea:focus {
 
 /* Modernized Card Styles (Compact & Sleek Rows) */
 .history-item {
+  width: 100%;
+  margin: 0 auto;
   padding: 1.25rem 1.5rem; /* Reduced from 2.25rem */
   min-height: 80px; /* Reduced from 120px */
   border-radius: var(--radius);
