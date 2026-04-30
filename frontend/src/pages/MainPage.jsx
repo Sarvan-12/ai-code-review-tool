@@ -60,7 +60,8 @@ function MainPage() {
   };
 
   return (
-    <main>
+    <main className="container-centered">
+      <h2 className="section-title">New Code Review</h2>
       {errorMessage && (
         <div className="error-box" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span><strong>Error:</strong> {errorMessage}</span>

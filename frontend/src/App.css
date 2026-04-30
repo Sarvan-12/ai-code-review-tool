@@ -444,10 +444,10 @@ textarea:focus {
   transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-/* Three-Column Dashboard Mode */
+/* Three-Column Dashboard Mode (1:2:2 Ratio) */
 .history-layout.has-active .history-sidebar {
-  width: 300px; /* Thicker sidebar for dashboard */
-  max-width: none;
+  width: 20%; /* Col 1: ~20% */
+  max-width: 320px;
   margin: 0;
   gap: 0.75rem;
   padding: 0 0.5rem 0 0;
@@ -468,7 +468,7 @@ textarea:focus {
   flex-grow: 1;
   height: 100%;
   display: grid;
-  grid-template-columns: 500px 1fr; /* Larger middle column for wide screens */
+  grid-template-columns: 1fr 1fr; /* Col 2 and Col 3: Equal 40% each */
   gap: 1.5rem;
   opacity: 0;
   transform: scale(0.98);
