@@ -47,6 +47,7 @@ function HistoryPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeReviewId, setActiveReviewId] = useState(null);
+  const [activeTab, setActiveTab] = useState('analysis'); // 'analysis' or 'comparison'
   const [copiedCode, setCopiedCode] = useState(false);
   const [copiedRefactor, setCopiedRefactor] = useState(false);
 
@@ -64,6 +65,13 @@ function HistoryPage() {
     fetchReviews();
   }, []);
 
+  // Reset to analysis tab when switching records
+  useEffect(() => {
+    if (activeReviewId) {
+      setActiveTab('analysis');
+    }
+  }, [activeReviewId]);
+
   const handleDelete = async (e, id) => {
     e.stopPropagation();
     if (window.confirm("Are you sure you want to delete this review history?")) {
@@ -75,6 +83,18 @@ function HistoryPage() {
         }
       } catch (err) {
         alert("Failed to delete history item.");
+      }
+    }
+  };
+
+  const handleDeleteAll = async () => {
+    if (window.confirm("CRITICAL: This will permanently delete ALL review history. Are you sure?")) {
+      try {
+        await axios.delete('/api/history/all');
+        setReviews([]);
+        setActiveReviewId(null);
+      } catch (err) {
+        alert("Failed to clear history.");
       }
     }
   };
@@ -138,6 +158,20 @@ function HistoryPage() {
         
         {/* Column 1: History Sidebar */}
         <div className="history-sidebar">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+            <h3 className="dashboard-panel-title" style={{ marginBottom: 0 }}>Past Reviews</h3>
+            {reviews.length > 0 && (
+              <button 
+                onClick={handleDeleteAll}
+                className="btn-clear-corner"
+                style={{ fontSize: '0.7rem', padding: '0.25rem 0.5rem' }}
+                title="Clear all history"
+              >
+                🗑️ Clear All
+              </button>
+            )}
+          </div>
+
           {reviews.map((review) => {
             const score = review.suggestions?.score || 0;
             const date = new Date(review.createdAt).toLocaleDateString();
@@ -169,41 +203,38 @@ function HistoryPage() {
           })}
         </div>
 
-        {/* Triple Panel Content */}
+        {/* Dashoard Content (Visible only when a record is active) */}
         <div className="history-content">
           {activeReview && (
             <>
-              {/* Column 2: Analysis (Score + Bugs) */}
+              {/* Column 2: Analysis Dashboard */}
               <div className="dashboard-col">
-                <div className="card">
-                  <div className="score-container">
-                    <p className="score-label">Quality Score</p>
+                <div className="dashboard-panel" style={{ flex: '0 0 auto' }}>
+                  <span className="dashboard-panel-title">Quality Score</span>
+                  <div className="score-container" style={{ marginBottom: 0, padding: '0.5rem 0' }}>
                     <div className={`score-badge ${getScoreClass(activeReview.suggestions?.score || 0)}`}>
                       {(activeReview.suggestions?.score || 0) * 10}/100
                     </div>
                   </div>
                 </div>
 
-                <div className="dashboard-scroll-area">
-                  <div className="card">
-                    <IssueList items={activeReview.suggestions?.bugs} type="bug" />
-                    <IssueList items={activeReview.suggestions?.issues} type="issue" />
-                    <IssueList items={activeReview.suggestions?.performance} type="performance" />
-                    <IssueList items={activeReview.suggestions?.improvements} type="improvement" />
+                <div className="dashboard-panel" style={{ flex: '1 1 auto' }}>
+                  <span className="dashboard-panel-title">Bugs & Suggestions</span>
+                  <div className="scrollable-panel-content">
+                    <IssueList title="Critical Bugs" items={activeReview.suggestions?.bugs} type="bug" />
+                    <IssueList title="Security Issues" items={activeReview.suggestions?.issues} type="issue" />
+                    <IssueList title="Performance" items={activeReview.suggestions?.performance} type="performance" />
+                    <IssueList title="Improvements" items={activeReview.suggestions?.improvements} type="improvement" />
                   </div>
                 </div>
               </div>
 
-              {/* Column 3: Code Comparison (Original + Refactored) */}
-              <div className="dashboard-col dashboard-col-split">
-                {/* Top Half: Original */}
-                <div className="code-panel">
-                  <span className="code-panel-label">📄 Original Source</span>
-                  <div className="refactored-code-container">
-                    <button
-                      className="btn-copy"
-                      onClick={() => handleCopy(activeReview.code, 'code')}
-                    >
+              {/* Column 3: Code Comparison Dashboard */}
+              <div className="dashboard-col">
+                <div className="dashboard-panel" style={{ flex: '1 1 50%' }}>
+                  <span className="dashboard-panel-title">Original Source</span>
+                  <div className="refactored-code-container" style={{ height: '100%' }}>
+                    <button className="btn-copy" onClick={() => handleCopy(activeReview.code, 'code')}>
                       {copiedCode ? '✅' : '📋'}
                     </button>
                     <div className="syntax-highlighter-wrapper">
@@ -215,10 +246,9 @@ function HistoryPage() {
                           margin: 0,
                           padding: '1.25rem',
                           fontSize: '0.8rem',
-                          backgroundColor: '#020617',
-                          borderRadius: '8px',
-                          border: '1px solid #334155',
-                          lineHeight: '1.4'
+                          backgroundColor: '#000000',
+                          lineHeight: '1.5',
+                          height: '100%'
                         }}
                       >
                         {activeReview.code || 'No code provided.'}
@@ -227,14 +257,10 @@ function HistoryPage() {
                   </div>
                 </div>
 
-                {/* Bottom Half: Refactored */}
-                <div className="code-panel">
-                  <span className="code-panel-label">🛠️ Refactored Result</span>
-                  <div className="refactored-code-container">
-                    <button
-                      className="btn-copy"
-                      onClick={() => handleCopy(cleanCode(activeReview.suggestions.refactored_code), 'refactor')}
-                    >
+                <div className="dashboard-panel" style={{ flex: '1 1 50%' }}>
+                  <span className="dashboard-panel-title">Refactored Result</span>
+                  <div className="refactored-code-container" style={{ height: '100%' }}>
+                    <button className="btn-copy" onClick={() => handleCopy(cleanCode(activeReview.suggestions.refactored_code), 'refactor')}>
                       {copiedRefactor ? '✅' : '📋'}
                     </button>
                     <div className="syntax-highlighter-wrapper">
@@ -246,10 +272,9 @@ function HistoryPage() {
                           margin: 0,
                           padding: '1.25rem',
                           fontSize: '0.8rem',
-                          backgroundColor: '#020617',
-                          borderRadius: '8px',
-                          border: '1px solid #334155',
-                          lineHeight: '1.4'
+                          backgroundColor: '#000000',
+                          lineHeight: '1.5',
+                          height: '100%'
                         }}
                       >
                         {cleanCode(activeReview.suggestions.refactored_code)}

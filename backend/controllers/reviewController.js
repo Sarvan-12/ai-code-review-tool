@@ -148,4 +148,28 @@ const deleteHistory = async (req, res) => {
   }
 };
 
-module.exports = { submitReview, getReviewById, getAllReviews, healthCheck, deleteHistory };
+/**
+ * Deletes ALL code reviews from the database.
+ * 
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Object} JSON response indicating success or failure.
+ */
+const deleteAllHistory = async (req, res) => {
+  try {
+    const result = await Review.deleteMany({});
+    
+    return res.status(200).json({ 
+      success: true, 
+      message: "All history cleared successfully",
+      count: result.deletedCount 
+    });
+  } catch (error) {
+    console.error("deleteAllHistory error:", error.message);
+    return res
+      .status(500)
+      .json({ success: false, error: "Failed to clear history" });
+  }
+};
+
+module.exports = { submitReview, getReviewById, getAllReviews, healthCheck, deleteHistory, deleteAllHistory };
