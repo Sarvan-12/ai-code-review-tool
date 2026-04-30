@@ -122,4 +122,30 @@ const healthCheck = (req, res) => {
   return res.status(200).json({ success: true, message: "Server is running" });
 };
 
-module.exports = { submitReview, getReviewById, getAllReviews, healthCheck };
+/**
+ * Deletes a single code review by its unique ID.
+ * 
+ * @param {Object} req - Express request object with ID in params.
+ * @param {Object} res - Express response object.
+ * @returns {Object} JSON response indicating success or failure.
+ */
+const deleteHistory = async (req, res) => {
+  try {
+    const review = await Review.findByIdAndDelete(req.params.id);
+
+    if (!review) {
+      return res
+        .status(404)
+        .json({ success: false, error: "Review not found" });
+    }
+
+    return res.status(200).json({ success: true, message: "Review deleted successfully" });
+  } catch (error) {
+    console.error("deleteHistory error:", error.message);
+    return res
+      .status(500)
+      .json({ success: false, error: "Failed to delete review" });
+  }
+};
+
+module.exports = { submitReview, getReviewById, getAllReviews, healthCheck, deleteHistory };
