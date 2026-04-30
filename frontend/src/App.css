@@ -427,6 +427,7 @@ textarea:focus {
   height: calc(100vh - 120px);
   width: 92vw; /* Perfect 4% margin on each side */
   margin: 0 auto;
+  justify-content: center; /* Center the list initially */
   transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
   overflow: hidden;
 }
