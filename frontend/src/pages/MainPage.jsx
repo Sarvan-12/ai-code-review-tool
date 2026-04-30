@@ -25,7 +25,7 @@ function MainPage() {
       const response = await axios.post('/api/review', {
         code: sourceCode,
         language
-      });
+      }, { timeout: 30000 }); // 30 second timeout
 
       setReviewData(response.data);
 
@@ -36,17 +36,21 @@ function MainPage() {
       }, 200);
     } catch (err) {
       // Show user-friendly messages based on HTTP status code
-      const status = err.response?.status;
       let errorMsg;
 
-      if (status === 400) {
-        errorMsg = 'Invalid input — check your code and try again';
-      } else if (status === 429) {
-        errorMsg = 'Too many requests — please wait a moment before trying again';
-      } else if (status === 500 || status === undefined) {
-        errorMsg = 'Something went wrong on the server — try again in a few seconds';
+      if (err.code === 'ECONNABORTED') {
+        errorMsg = 'The AI is taking too long to respond. Please try again.';
       } else {
-        errorMsg = err.response?.data?.error || err.message || 'An unexpected error occurred';
+        const status = err.response?.status;
+        if (status === 400) {
+          errorMsg = 'Invalid input — check your code and try again';
+        } else if (status === 429) {
+          errorMsg = 'Too many requests — please wait a moment before trying again';
+        } else if (status === 500) {
+          errorMsg = 'Something went wrong on the server — try again in a few seconds';
+        } else {
+          errorMsg = 'Failed to connect to the server. Check your network.';
+        }
       }
 
       setErrorMessage(errorMsg);
@@ -58,8 +62,15 @@ function MainPage() {
   return (
     <main>
       {errorMessage && (
-        <div className="error-box">
-          <strong>Error:</strong> {errorMessage}
+        <div className="error-box" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span><strong>Error:</strong> {errorMessage}</span>
+          <button 
+            className="btn btn-secondary" 
+            style={{ padding: '0.3rem 0.8rem', fontSize: '0.8rem' }}
+            onClick={handleReviewSubmit}
+          >
+            🔄 Try Again
+          </button>
         </div>
       )}
 
