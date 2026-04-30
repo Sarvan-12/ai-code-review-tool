@@ -1,4 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+
 
 :root {
   --bg-color: #0f172a;
@@ -24,11 +29,12 @@
 
 body {
   font-family: 'Inter', sans-serif;
-  background-color: var(--bg-color);
+  background-color: white;
   color: var(--text-main);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
+
 
 .container {
   width: 100%;
@@ -51,16 +57,13 @@ header {
 header h1 {
   font-size: 2.5rem;
   font-weight: 800;
-  background: linear-gradient(to right, #60a5fa, #3b82f6);
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
+  color: #1e293b;
+  -webkit-text-fill-color: #1e293b;
   margin-bottom: 0.5rem;
 }
 
 header p {
-  color: var(--text-muted);
+  color: #475569;
   font-size: 1.1rem;
 }
 
@@ -861,7 +864,7 @@ textarea:focus {
 }
 
 .nav-link {
-  color: var(--text-muted);
+  color: #1e293b;
   text-decoration: none;
   font-weight: 600;
   font-size: 0.95rem;
@@ -871,8 +874,8 @@ textarea:focus {
 }
 
 .nav-link:hover {
-  color: var(--text-main);
-  background-color: var(--surface-lighter);
+  color: #1e293b;
+  background-color: rgba(30, 41, 59, 0.08);
 }
 
 .nav-link.active {
@@ -900,3 +903,12 @@ textarea:focus {
   font-size: 0.8rem;
   margin-top: 0.4rem;
 }
+
+/* Page section headings */
+.section-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 1.5rem;
+}
+
