@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+
 
 /**
  * CodeInput component handles the input form for code and language.
@@ -10,38 +11,58 @@ import React, { useState } from 'react';
  * @param {function} onSubmit - Submit handler
  * @param {boolean} isLoading - Loading state for the submit button
  */
-const SUPPORTED_LANGUAGES = ['python', 'javascript', 'typescript', 'java', 'cpp', 'go', 'plaintext'];
+const SUPPORTED_LANGUAGES = ['C', 'C++', 'Go', 'Java', 'JavaScript', 'Python', 'TypeScript'];
 
-const SAMPLE_CODE = `# Python — contains intentional bugs for review demo
-def calculate_average(numbers):
-    total = 0
-    for i in range(len(numbers)):
-        total =+ numbers[i]   # bug: =+ should be +=
-    average = total / len(numbers)  # bug: ZeroDivisionError if list is empty
-    return average
+export const LANGUAGE_SAMPLES = {
+  'C': `#include <stdio.h>
+int main() {
+    int x = 10;
+    if (x = 5) {
+        printf("Equal");
+    }
+    return 0;
+}`,
+  'C++': `#include <iostream>
+int main() {
+    int x = 10;
+    if (x = 5) {
+        std::cout << "Equal";
+    }
+    return 0;
+}`,
+  'Go': `package main
+import "fmt"
+func main() {
+    x := 10
+    fmt.Println("Value is", y)
+}`,
+  'Java': `public class Main {
+    public static void main(String[] args) {
+        int[] nums = {1, 2, 3};
+        System.out.println(nums[5]);
+    }
+}`,
+  'JavaScript': `function calculateSum(arr) {
+  let sum = 0;
+  for (let i = 0; i <= arr.length; i++) {
+    sum += arr[i];
+  }
+  return sum;
+}
+console.log(calculateSum([1, 2, 3]));`,
+  'Python': `def find_max(numbers):
+    max_val = 0
+    for n in numbers:
+        if n > max_val:
+            max_val == n
+    return max_val
 
-def find_duplicates(lst):
-    seen = []
-    duplicates = []
-    for item in lst:
-        if item in seen:
-            duplicates.append(item)
-        seen.append(item)  # bug: should append only if not already seen
-    return list(set(duplicates))
-
-def fetch_user(user_id):
-    users = {1: 'Alice', 2: 'Bob', 3: 'Charlie'}
-    return users[user_id]   # bug: KeyError if user_id not in dict; no default
-
-result = calculate_average([])
-print('Average:', result)
-
-dupes = find_duplicates([1, 2, 2, 3, 3, 3, 4])
-print('Duplicates:', dupes)
-
-user = fetch_user(99)
-print('User:', user)
-`;
+print(find_max([-1, -2, -3]))`,
+  'TypeScript': `function greet(person: string) {
+  return "Hello, " + persons;
+}
+console.log(greet("User"));`
+};
 
 const CodeInput = ({ code, setCode, language, setLanguage, onSubmit, isLoading }) => {
   const [localError, setLocalError] = useState('');
@@ -122,7 +143,7 @@ const CodeInput = ({ code, setCode, language, setLanguage, onSubmit, isLoading }
           >
             {SUPPORTED_LANGUAGES.map((lang) => (
               <option key={lang} value={lang}>
-                {lang.charAt(0).toUpperCase() + lang.slice(1)}
+                {lang}
               </option>
             ))}
           </select>
@@ -144,8 +165,20 @@ const CodeInput = ({ code, setCode, language, setLanguage, onSubmit, isLoading }
             type="button"
             className="btn btn-sample"
             onClick={() => {
-              setCode(SAMPLE_CODE);
-              setLanguage('python');
+              const cycleLanguages = ['C', 'C++', 'Java', 'JavaScript', 'Python'];
+              let nextLang = language;
+
+              // If textarea is empty, load the current language's sample (default to C if not in cycle)
+              if (code === '') {
+                if (!cycleLanguages.includes(language)) nextLang = 'C';
+              } else {
+                const currentIndex = cycleLanguages.indexOf(language);
+                const nextIndex = (currentIndex + 1) % cycleLanguages.length;
+                nextLang = cycleLanguages[nextIndex];
+              }
+
+              setLanguage(nextLang);
+              setCode(LANGUAGE_SAMPLES[nextLang]);
             }}
             disabled={isLoading}
             title="Load a buggy sample for testing"
