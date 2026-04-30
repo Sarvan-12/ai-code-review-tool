@@ -31,7 +31,14 @@ body {
 }
 
 .container {
-  max-width: 1000px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* Use this for pages that need a maximum readable width (like MainPage) */
+.container-centered {
+  max-width: 1100px;
   margin: 0 auto;
   padding: 2rem 1rem;
 }
@@ -416,10 +423,10 @@ textarea:focus {
 /* ── History Page ──────────────────────────────────────────────────────────── */
 .history-layout {
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem;
   height: calc(100vh - 120px);
-  width: 90vw; /* 90% of viewport width */
-  margin: 0.5rem auto 0; /* Center it */
+  width: 93vw; /* Subtle 3.5% margin on each side */
+  margin: 0 auto;
   transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
   overflow: hidden;
 }
@@ -461,8 +468,8 @@ textarea:focus {
   flex-grow: 1;
   height: 100%;
   display: grid;
-  grid-template-columns: 450px 1fr; /* Increased Middle column width */
-  gap: 1rem;
+  grid-template-columns: 500px 1fr; /* Larger middle column for wide screens */
+  gap: 1.5rem;
   opacity: 0;
   transform: scale(0.98);
   visibility: hidden;
