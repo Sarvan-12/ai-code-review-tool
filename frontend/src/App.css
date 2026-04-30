@@ -385,14 +385,69 @@ textarea:focus {
   font-size: 0.8rem;
 }
 
+/* Error UI (Teammate 4) */
 .error-box {
-  background-color: rgba(239, 68, 68, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-radius: var(--radius);
   border: 1px solid var(--danger);
-  border-left: 3px solid var(--danger);
+  background-color: rgba(239, 68, 68, 0.1);
+  color: var(--text-main);
+  margin-bottom: 2rem;
+  animation: slideIn 0.3s ease-out;
+}
+
+.error-content {
+  flex: 1;
+  font-size: 0.95rem;
+}
+
+.error-content strong {
+  margin-right: 0.5rem;
   color: var(--danger);
-  padding: 1rem;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
+}
+
+.btn-retry {
+  background-color: transparent;
+  border: 1px solid currentColor;
+  color: var(--text-main);
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-retry:hover {
+  background-color: currentColor;
+  color: var(--bg-color);
+}
+
+.error-timeout {
+  background-color: rgba(245, 158, 11, 0.1);
+  border-color: var(--warning);
+}
+.error-timeout strong { color: var(--warning); }
+
+.error-network {
+  background-color: rgba(148, 163, 184, 0.1);
+  border-color: var(--text-muted);
+}
+.error-network strong { color: var(--text-muted); }
+
+.error-server {
+  background-color: rgba(239, 68, 68, 0.1);
+  border-color: var(--danger);
+}
+.error-server strong { color: var(--danger); }
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 640px) {

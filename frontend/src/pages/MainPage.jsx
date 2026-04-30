@@ -13,12 +13,14 @@ function MainPage() {
   const [reviewData, setReviewData] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [errorType, setErrorType] = useState(null);
 
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
 
     setIsProcessing(true);
     setErrorMessage('');
+    setErrorType(null);
     setReviewData(null);
 
     try {
@@ -35,25 +37,30 @@ function MainPage() {
         });
       }, 200);
     } catch (err) {
-      // Show user-friendly messages based on HTTP status code
-      let errorMsg;
+      let errorMsg = '';
+      let type = 'generic';
 
-      if (err.code === 'ECONNABORTED') {
+      if (err.code === 'ECONNABORTED' || (err.message && err.message.toLowerCase().includes('timeout'))) {
         errorMsg = 'The AI is taking too long to respond. Please try again.';
-      } else {
-        const status = err.response?.status;
-        if (status === 400) {
-          errorMsg = 'Invalid input — check your code and try again';
-        } else if (status === 429) {
-          errorMsg = 'Too many requests — please wait a moment before trying again';
-        } else if (status === 500) {
-          errorMsg = 'Something went wrong on the server — try again in a few seconds';
+        type = 'timeout';
+      } else if (err.response) {
+        if (err.response.data && err.response.data.error) {
+          errorMsg = err.response.data.error;
+          type = err.response.data.type || 'server';
+        } else if (err.response.status === 504 || err.response.status === 502) {
+          errorMsg = 'Network error. Please check your internet connection.';
+          type = 'network';
         } else {
-          errorMsg = 'Failed to connect to the server. Check your network.';
+          errorMsg = 'Something went wrong on the server. Please try again later.';
+          type = 'server';
         }
+      } else {
+        errorMsg = 'Network error. Please check your internet connection.';
+        type = 'network';
       }
 
       setErrorMessage(errorMsg);
+      setErrorType(type);
     } finally {
       setIsProcessing(false);
     }
@@ -63,13 +70,15 @@ function MainPage() {
     <main className="container-centered">
       <h2 className="section-title">New Code Review</h2>
       {errorMessage && (
-        <div className="error-box" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span><strong>Error:</strong> {errorMessage}</span>
-          <button 
-            className="btn btn-secondary" 
-            style={{ padding: '0.3rem 0.8rem', fontSize: '0.8rem' }}
-            onClick={handleReviewSubmit}
-          >
+        <div className={`error-box error-${errorType || 'generic'}`}>
+          <div className="error-content">
+            <strong>
+              {errorType === 'timeout' ? 'Timeout:' : 
+               errorType === 'network' ? 'Network Error:' : 
+               errorType === 'server' ? 'Server Error:' : 'Error:'}
+            </strong> {errorMessage}
+          </div>
+          <button className="btn btn-retry" onClick={handleReviewSubmit}>
             🔄 Try Again
           </button>
         </div>
