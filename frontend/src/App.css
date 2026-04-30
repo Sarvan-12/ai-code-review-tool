@@ -416,33 +416,36 @@ textarea:focus {
 /* ── History Page ──────────────────────────────────────────────────────────── */
 .history-layout {
   display: flex;
-  gap: 1.5rem;
-  height: calc(100vh - 120px); /* Strict screen fit */
-  margin-top: 1rem;
+  gap: 1rem;
+  height: calc(100vh - 120px);
+  margin-top: 0.5rem;
   transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-  justify-content: center; /* Center initially */
-}
-
-.history-layout.has-active {
-  justify-content: flex-start; /* Slide left when active */
+  overflow: hidden;
 }
 
 .history-sidebar {
   width: 100%;
-  max-width: 600px;
+  max-width: 850px;
+  margin: 0 auto;
   flex-shrink: 0;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  padding: 0.5rem 1rem 2rem;
+  gap: 1.5rem;
+  padding: 1rem;
   transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
+/* Three-Column Dashboard Mode */
 .history-layout.has-active .history-sidebar {
-  width: 320px;
+  width: 280px; /* Thinner sidebar for dashboard */
   max-width: none;
+  margin: 0;
+  gap: 0.75rem;
+  padding: 0 0.5rem 0 0;
 }
+
+/* Hide Sidebar on mobile dashboard for space? Let's keep it but thin */
 
 .history-sidebar::-webkit-scrollbar {
   width: 6px;
@@ -455,18 +458,20 @@ textarea:focus {
 
 .history-content {
   flex-grow: 1;
+  height: 100%;
   display: grid;
-  grid-template-columns: 1fr 1.5fr; /* Center & Right columns */
-  gap: 1.5rem;
+  grid-template-columns: 350px 1fr; /* Middle and Right columns */
+  gap: 1rem;
   opacity: 0;
+  transform: scale(0.98);
   visibility: hidden;
   width: 0;
-  overflow: hidden;
   transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .history-layout.has-active .history-content {
   opacity: 1;
+  transform: scale(1);
   visibility: visible;
   width: auto;
 }
@@ -480,75 +485,142 @@ textarea:focus {
   overflow: hidden;
 }
 
-.dashboard-scroll-area {
+.dashboard-panel {
+  background: rgba(30, 41, 59, 0.2);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dashboard-panel-title {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.scrollable-panel-content {
   flex-grow: 1;
   overflow-y: auto;
   padding-right: 0.5rem;
 }
 
-.dashboard-scroll-area::-webkit-scrollbar {
-  width: 5px;
+/* Minimalist Scrollbars */
+.history-sidebar::-webkit-scrollbar,
+.scrollable-panel-content::-webkit-scrollbar,
+.syntax-highlighter-wrapper::-webkit-scrollbar {
+  width: 4px;
 }
 
-.dashboard-scroll-area::-webkit-scrollbar-thumb {
-  background-color: var(--border-color);
+.history-sidebar::-webkit-scrollbar-thumb,
+.scrollable-panel-content::-webkit-scrollbar-thumb,
+.syntax-highlighter-wrapper::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
 }
 
-/* Dashboard Card Tweaks (No Titles/Tabs) */
-.dashboard-col .card {
-  margin-bottom: 0;
-  padding: 1.25rem;
+.history-sidebar:hover::-webkit-scrollbar-thumb,
+.scrollable-panel-content:hover::-webkit-scrollbar-thumb,
+.syntax-highlighter-wrapper:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
-.dashboard-col .score-container {
-  margin-bottom: 0;
+/* Tab Navigation (Glass Toggle Style) */
+.history-tabs {
+  display: inline-flex;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(10px);
+  padding: 4px;
+  border-radius: 100px;
+  border: 1px solid var(--border-color);
+  margin-bottom: 2rem;
+  align-self: center; /* Center the toggle */
 }
 
-/* Right Column: Split Top/Bottom */
-.dashboard-col-split {
+.history-tab-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 0.6rem 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 100px;
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.history-tab-btn:hover {
+  color: var(--text-main);
+}
+
+.history-tab-btn.active {
+  background: var(--primary-color);
+  color: white;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.history-tab-btn.active::after {
+  display: none; /* Remove the old underline */
+}
+
+.tab-content-area {
+  flex-grow: 1;
+  overflow-y: auto; /* Internal scroll for content */
+  padding-right: 0.5rem;
+}
+
+.tab-content-area::-webkit-scrollbar {
+  width: 6px;
+}
+
+.tab-content-area::-webkit-scrollbar-thumb {
+  background-color: var(--border-color);
+  border-radius: 4px;
+}
+
+/* Side-by-side code comparison */
+.code-comparison-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
   height: 100%;
 }
 
-.code-panel {
-  flex: 1;
+.code-box-wrapper {
   display: flex;
   flex-direction: column;
-  height: 50%;
-  overflow: hidden;
+  height: calc(100vh - 350px);
 }
 
-.code-panel .refactored-code-container {
+.code-box-wrapper h4 {
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.code-box-wrapper .refactored-code-container {
   flex-grow: 1;
-  height: 0;
+  height: 0; /* Important for flex-grow to work inside flex-col */
 }
 
-.code-panel .syntax-highlighter-wrapper {
+.code-box-wrapper .syntax-highlighter-wrapper {
   height: 100%;
   overflow-y: auto;
 }
 
-.code-panel-label {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  letter-spacing: 0.05em;
-}
-
-/* Removed UI Elements */
-.history-tabs, .section-title, .code-box-wrapper h4 {
-  display: none !important;
-}
-
-/* Modernized Card Styles (Ultra-Premium Rows) */
+/* Modernized Card Styles (Compact & Sleek Rows) */
 .history-item {
-  padding: 1.5rem 2rem;
-  min-height: 100px;
+  padding: 1.25rem 1.5rem; /* Reduced from 2.25rem */
+  min-height: 80px; /* Reduced from 120px */
   border-radius: var(--radius);
   background: rgba(30, 41, 59, 0.3);
   backdrop-filter: blur(16px);
@@ -563,9 +635,9 @@ textarea:focus {
 }
 
 .history-layout.has-active .history-item {
-  padding: 1.25rem 1.5rem; 
-  min-height: 80px;
-  margin-bottom: 0.5rem;
+  padding: 0.75rem 1rem; /* Very compact in sidebar mode */
+  min-height: 65px;
+  margin-bottom: 0.25rem;
 }
 
 .history-item:hover {
