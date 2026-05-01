@@ -106,15 +106,7 @@ const ReviewResult = ({ result }) => {
             <Code size={20} className="text-slate-700" /> Refactored Code
           </h3>
           <div className="refactored-code-container">
-            <button 
-              className="copy-btn" 
-              onClick={handleCopy}
-              title="Copy to clipboard"
-              style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
-            >
-              {copied ? <><Check size={16} /> Copied!</> : <><Copy size={16} /> Copy Code</>}
-            </button>
-            <div className="syntax-highlighter-wrapper">
+            <div className="syntax-highlighter-wrapper" style={{ position: 'relative' }}>
               <SyntaxHighlighter
                 language={getLanguageAlias(language)}
                 style={vscDarkPlus}
@@ -140,6 +132,32 @@ const ReviewResult = ({ result }) => {
               >
                 {finalCode}
               </SyntaxHighlighter>
+              <button 
+                className="copy-btn" 
+                onClick={handleCopy}
+                title="Copy to clipboard"
+                style={{ 
+                  position: 'absolute', 
+                  bottom: '12px', 
+                  right: '12px', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '6px',
+                  backgroundColor: 'rgba(255,255,255,0.1)',
+                  color: '#fff',
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  padding: '6px 12px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  backdropFilter: 'blur(4px)',
+                  transition: 'all 0.2s',
+                  zIndex: 10
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.2)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.1)'}
+              >
+                {copied ? <><Check size={14} /> Copied</> : <><Copy size={14} /> Copy</>}
+              </button>
             </div>
           </div>
         </div>

@@ -69,7 +69,7 @@ function MainPage() {
 
   return (
     <main className="container-centered">
-      <h2 className="section-title">New Code Review</h2>
+      <h2 className="section-title" style={{ color: '#1e293b' }}>New Code Review</h2>
       {errorMessage && (
         <div className={`error-box error-${errorType || 'generic'}`}>
           <div className="error-content">

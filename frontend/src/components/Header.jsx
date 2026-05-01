@@ -10,7 +10,7 @@ const Header = () => {
   return (
     <header style={{
       textAlign: 'center',
-      padding: '3rem 1rem 1.5rem',
+      padding: '1.5rem 1rem 1rem',
       position: 'relative',
     }}>
 

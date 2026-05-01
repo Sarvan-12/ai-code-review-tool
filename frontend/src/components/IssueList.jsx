@@ -13,11 +13,11 @@ const IssueList = ({ title, items, type }) => {
   return (
     <div className="issue-section">
       <h3 className="section-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        {type === 'bug' && <Bug size={20} className="text-red-500" />}
-        {type === 'performance' && <Zap size={20} className="text-yellow-500" />}
-        {type === 'improvement' && <Wand2 size={20} className="text-blue-500" />}
-        {type === 'issue' && <AlertTriangle size={20} className="text-orange-500" />}
-        {title}
+        {type === 'bug' && <Bug size={24} color="#ef4444" />}
+        {type === 'performance' && <Zap size={24} color="#eab308" />}
+        {type === 'improvement' && <Wand2 size={24} color="#3b82f6" />}
+        {type === 'issue' && <AlertTriangle size={24} color="#f97316" />}
+        <span>{title}</span>
       </h3>
       {hasItems ? (
         items.map((item, index) => (
