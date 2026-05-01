@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Check, Copy, Code } from 'lucide-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import IssueList from './IssueList';
@@ -101,14 +102,17 @@ const ReviewResult = ({ result }) => {
       {/* Refactored Code Section */}
       {finalCode && (
         <div className="refactor-section">
-          <h3 className="section-title">🛠️ Refactored Code</h3>
+          <h3 className="section-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Code size={20} className="text-slate-700" /> Refactored Code
+          </h3>
           <div className="refactored-code-container">
-            <button
-              className="btn-copy"
+            <button 
+              className="copy-btn" 
               onClick={handleCopy}
-              title="Copy code to clipboard"
+              title="Copy to clipboard"
+              style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
             >
-              {copied ? '✅ Copied!' : '📋 Copy Code'}
+              {copied ? <><Check size={16} /> Copied!</> : <><Copy size={16} /> Copy Code</>}
             </button>
             <div className="syntax-highlighter-wrapper">
               <SyntaxHighlighter

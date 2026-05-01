@@ -1,4 +1,4 @@
-
+import { Bug, Zap, Wand2, AlertTriangle, CheckCircle2 } from 'lucide-react';
 
 /**
  * IssueList component renders a category of issues (bugs, improvements, etc.)
@@ -12,11 +12,11 @@ const IssueList = ({ title, items, type }) => {
 
   return (
     <div className="issue-section">
-      <h3 className="section-title">
-        {type === 'bug' && '🐛'}
-        {type === 'performance' && '⚡'}
-        {type === 'improvement' && '✨'}
-        {type === 'issue' && '⚠️'}
+      <h3 className="section-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        {type === 'bug' && <Bug size={20} className="text-red-500" />}
+        {type === 'performance' && <Zap size={20} className="text-yellow-500" />}
+        {type === 'improvement' && <Wand2 size={20} className="text-blue-500" />}
+        {type === 'issue' && <AlertTriangle size={20} className="text-orange-500" />}
         {title}
       </h3>
       {hasItems ? (
@@ -31,8 +31,7 @@ const IssueList = ({ title, items, type }) => {
       ) : (
         <p className="empty-message">
           No {title.toLowerCase()} found.
-          ✓ No issues found in this category
-
+          <CheckCircle2 size={16} style={{ display: 'inline', marginLeft: '4px', verticalAlign: 'text-bottom' }} /> No issues found in this category
         </p>
       )}
     </div>

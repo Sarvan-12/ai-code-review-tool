@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { RefreshCw } from 'lucide-react';
 import CodeInput from '../components/CodeInput';
 import ReviewResult from '../components/ReviewResult';
 
@@ -78,8 +79,8 @@ function MainPage() {
                errorType === 'server' ? 'Server Error:' : 'Error:'}
             </strong> {errorMessage}
           </div>
-          <button className="btn btn-retry" onClick={handleReviewSubmit}>
-            🔄 Try Again
+          <button className="btn btn-retry" onClick={handleReviewSubmit} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+            <RefreshCw size={16} /> Try Again
           </button>
         </div>
       )}
