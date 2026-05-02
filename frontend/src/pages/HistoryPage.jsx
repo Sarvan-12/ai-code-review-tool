@@ -138,7 +138,8 @@ function HistoryPage() {
     <main style={{ padding: '2rem', maxWidth: '1600px', margin: '0 auto' }}>
       <div className={`history-layout ${activeReviewId ? 'has-active' : ''}`} style={{ 
         display: 'grid', 
-        gridTemplateColumns: activeReviewId ? '350px 1fr' : '1fr',
+        gridTemplateColumns: activeReviewId ? '350px 1fr' : 'minmax(300px, 800px)',
+        justifyContent: 'center',
         gap: '2rem',
         transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
       }}>
