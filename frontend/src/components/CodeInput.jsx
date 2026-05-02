@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Sparkles, Code2, Loader2, X, RefreshCw } from 'lucide-react';
-
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 /**
  * CodeInput component handles the input form for code and language.
@@ -13,6 +14,17 @@ import { Sparkles, Code2, Loader2, X, RefreshCw } from 'lucide-react';
  * @param {boolean} isLoading - Loading state for the submit button
  */
 const SUPPORTED_LANGUAGES = ['C', 'C++', 'Go', 'Java', 'JavaScript', 'Python', 'TypeScript'];
+
+// Map display names to Prism-supported language identifiers
+const LANGUAGE_MAP = {
+  'C': 'c',
+  'C++': 'cpp',
+  'Go': 'go',
+  'Java': 'java',
+  'JavaScript': 'javascript',
+  'Python': 'python',
+  'TypeScript': 'typescript'
+};
 
 export const LANGUAGE_SAMPLES = {
   'C': `#include <stdio.h>
@@ -137,7 +149,39 @@ const CodeInput = ({ code, setCode, language, setLanguage, onSubmit, isLoading }
             padding: '1.25rem',
             border: '1px solid rgba(255, 255, 255, 0.05)',
             boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.2)',
+            position: 'relative',
+            minHeight: '200px',
+            overflow: 'hidden'
           }}>
+            {/* Syntax Highlighting Layer (Bottom) */}
+            <SyntaxHighlighter
+              language={LANGUAGE_MAP[language] || 'javascript'}
+              style={vscDarkPlus}
+              customStyle={{
+                margin: 0,
+                padding: 0,
+                backgroundColor: 'transparent',
+                fontSize: '0.9rem',
+                lineHeight: '1.7',
+                fontFamily: "'Fira Code', 'Consolas', monospace",
+                minHeight: '200px',
+                pointerEvents: 'none',
+                width: '100%',
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-all'
+              }}
+              codeTagProps={{
+                style: {
+                  fontFamily: 'inherit',
+                  fontSize: 'inherit',
+                  lineHeight: 'inherit'
+                }
+              }}
+            >
+              {code || ' '}
+            </SyntaxHighlighter>
+
+            {/* Hidden Input Layer (Top) */}
             <textarea
               id="code-input"
               value={code}
@@ -149,17 +193,27 @@ const CodeInput = ({ code, setCode, language, setLanguage, onSubmit, isLoading }
               maxLength={5000}
               spellCheck="false"
               style={{
-                width: '100%',
+                position: 'absolute',
+                top: '1.25rem',
+                left: '1.25rem',
+                right: '1.25rem',
+                bottom: '1.25rem',
+                width: 'calc(100% - 2.5rem)',
+                height: 'calc(100% - 2.5rem)',
                 backgroundColor: 'transparent',
-                color: '#f1f5f9',
+                color: 'transparent', // Make text transparent so highlighter shows through
+                caretColor: '#f1f5f9', // Keep the cursor visible
                 border: 'none',
                 outline: 'none',
                 fontSize: '0.9rem',
                 lineHeight: '1.7',
                 fontFamily: "'Fira Code', 'Consolas', monospace",
-                resize: 'vertical',
-                minHeight: '200px',
-                padding: '0'
+                resize: 'none',
+                margin: 0,
+                padding: 0,
+                zIndex: 1,
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-all'
               }}
             />
           </div>
