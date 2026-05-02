@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { RefreshCw } from 'lucide-react';
 import CodeInput from '../components/CodeInput';
 import ReviewResult from '../components/ReviewResult';
 
@@ -68,7 +69,7 @@ function MainPage() {
 
   return (
     <main className="container-centered">
-      <h2 className="section-title">New Code Review</h2>
+      <h2 className="section-title" style={{ color: '#1e293b' }}>New Code Review</h2>
       {errorMessage && (
         <div className={`error-box error-${errorType || 'generic'}`}>
           <div className="error-content">
@@ -78,8 +79,8 @@ function MainPage() {
                errorType === 'server' ? 'Server Error:' : 'Error:'}
             </strong> {errorMessage}
           </div>
-          <button className="btn btn-retry" onClick={handleReviewSubmit}>
-            🔄 Try Again
+          <button className="btn btn-retry" onClick={handleReviewSubmit} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+            <RefreshCw size={16} /> Try Again
           </button>
         </div>
       )}
