@@ -127,7 +127,7 @@ const ReviewResult = ({ result }) => {
               fontSize: '1.1rem',
               fontWeight: '700'
             }}>
-              <Terminal size={20} /> Optimized Implementation
+              <Code size={20} /> Refactored Code
             </h3>
           </div>
           
@@ -164,7 +164,7 @@ const ReviewResult = ({ result }) => {
               onClick={handleCopy}
               style={{ 
                 position: 'absolute', 
-                top: '12px', 
+                bottom: '12px', 
                 right: '12px', 
                 display: 'flex', 
                 alignItems: 'center', 
