@@ -2,7 +2,7 @@
 **Product Requirements Document**
 
 **Stack:** MERN + Groq API  
-**Version:** v1.0  
+**Version:** v1.1 (Premium Edition)
 **AI Provider:** Groq (LLaMA 3.3)  
 
 ---
@@ -20,13 +20,12 @@ Developers need fast, consistent feedback on code quality. Peer reviews are slow
 - **Database**: MongoDB storage for persistent review records and performance metadata.
 - **Response Handling**: Stable JSON contract with error envelopes.
 
-### ✅ Completed (Frontend Boilerplate)
-- **React + Vite Setup**: A functional frontend proof-of-concept is complete.
-- **Component Architecture**:
-    - **Header**: Branding and title display.
-    - **CodeInput**: Handles code input (5000 char limit) and language selection.
-    - **ReviewResult**: Orchestrates results, score badge, and refactored code.
-    - **IssueList**: Reusable component for Bugs, Issues, Improvements, and Performance sections.
+### ✅ Completed (Frontend Premium UI)
+- **Glassmorphism Design System**: High-end frosted glass aesthetic across all components.
+- **Real-Time Syntax Highlighting**: Integrated `react-syntax-highlighter` for a pro-IDE feel in the input box.
+- **Animated Backgrounds**: Soft oklch-based animated gradients.
+- **3-Column History Dashboard**: Advanced layout for comparing original and refactored code history.
+- **Component Architecture**: Modular React components (`Header`, `CodeInput`, `ReviewResult`, `IssueList`).
 - **API Integration**: Fully connected to the backend `/api/review` endpoint via Vite proxy.
 
 ---
@@ -35,12 +34,12 @@ Developers need fast, consistent feedback on code quality. Peer reviews are slow
 
 | Step | Component | Action |
 | :--- | :--- | :--- |
-| 1 | **Frontend** | User pastes code and selects language. |
+| 1 | **Frontend** | User pastes code into the syntax-highlighted editor. |
 | 2 | **Vite Proxy** | Forwards request to local backend at port 5000. |
 | 3 | **Express API** | Validates input and triggers Groq Service. |
 | 4 | **Groq API** | Generates structured JSON review. |
 | 5 | **MongoDB** | Persists the review result. |
-| 6 | **Frontend** | Renders sections based on the AI feedback. |
+| 6 | **Frontend** | Renders glassmorphism sections and highlighted refactored code. |
 
 ---
 
@@ -50,4 +49,6 @@ Developers need fast, consistent feedback on code quality. Peer reviews are slow
 | :--- | :--- | :--- |
 | `POST` | `/api/review` | Submit code for AI analysis |
 | `GET` | `/api/reviews` | Retrieve full history of reviews |
+| `DELETE` | `/api/history/:id`| Delete a single history record |
+| `DELETE` | `/api/history/all`| Clear all history |
 | `GET` | `/api/health` | Check system status |

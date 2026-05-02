@@ -16,19 +16,11 @@ The application follows a standard REST API architecture built upon the **MERN**
 
 ### High-Level Flow
 1. **Client Request:** Frontend sends a POST request containing `code` and `language`.
-2. **Validation Layer:** The controller intercepts the request, ensuring the inputs exist and that `code` stays under the 5,000-character upper limit to prevent rate-limit burns.
-3. **Service Layer (AI Integration):** The payload is handed to `groqService.js`. A specialized LLM prompt is constructed demanding strict JSON structure (`response_format: { type: "json_object" }`).
+2. **Validation Layer:** The controller intercepts the request, ensuring the inputs exist and that `code` stays under the 5,000-character upper limit.
+3. **Service Layer (AI Integration):** The payload is handed to `groqService.js`. A specialized LLM prompt is constructed demanding strict JSON structure.
 4. **Resilience & Parsing:** Groq SDK errors are intercepted natively. Escaping errors inherent to LLM-generated JSON are safely parsed and preserved via regex-stripping fallbacks.
-5. **Persistence Layer:** The metrics (`responseTime`, `model`), inputs, and formatted `suggestions` are saved to MongoDB as a unique document via Mongoose.
+5. **Persistence Layer:** The metrics (`responseTime`, `model`), inputs, and formatted `suggestions` are saved to MongoDB.
 6. **Client Response:** An enveloped JSON payload (`{ success: true, data: { ... } }`) is surfaced back to the client.
-
-### Technology Stack
-- **Runtime Environment:** Node.js
-- **Server Framework:** Express.js
-- **Database:** MongoDB
-- **ODM:** Mongoose
-- **AI Processing:** Groq Developer API
-- **AI Model:** `llama-3.3-70b-versatile` (chosen for superior logical consistency over 8B variants)
 
 ---
 
@@ -36,15 +28,8 @@ The application follows a standard REST API architecture built upon the **MERN**
 
 ```text
 ai-code-review-tool/
-├── .env                  # Environment secrets (IGNORED IN GIT)
-├── .gitignore            # Git exclusion rules 
-├── prd.md                # Historic Product Requirements Document
-├── README.md             # Developer setup instructions
-├── DOCUMENTATION.md      # This file
-│
 ├── backend/
-│   ├── package.json      # Node.js dependencies
-│   ├── server.js         # Entry point: Server initialization and middleware setup
+│   ├── server.js         # Entry point: Server initialization
 │   ├── config/           # Database connection logic
 │   ├── models/           # Mongoose schema definitions
 │   ├── routes/           # Express Router mapping
@@ -53,9 +38,10 @@ ai-code-review-tool/
 │
 └── frontend/
     ├── src/
-    │   ├── components/   # Modular React components
-    │   ├── App.jsx       # State management & Orchestration
-    │   └── App.css       # UI Styling
+    │   ├── components/   # Glassmorphism UI components
+    │   ├── pages/        # MainPage and HistoryPage
+    │   ├── App.jsx       # Routing and Global Background
+    │   └── lib/          # Utility functions (cn merger)
     └── vite.config.js    # Proxy & Build settings
 ```
 
@@ -63,80 +49,46 @@ ai-code-review-tool/
 
 ## 4. API Endpoints Contract
 
-The API utilizes a standardized response wrapper envelope for all endpoints:
-- **Success Form:** `{ "success": true, "data": { ... } }`
-- **Error Form:** `{ "success": false, "error": "Error message" }`
-
-### 4.1 Health Check
-**Endpoint:** `GET /api/health`  
-Returns the operational status of the server. Useful for pinging and alive checks.
-
-### 4.2 Submit Code Review
-**Endpoint:** `POST /api/review`  
-Synchronously triggers the AI code review process.
-
-**Request Payload:**
-```json
-{
-  "code": "function add(a, b) { return a+b }",
-  "language": "javascript"
-}
-```
-
-**Response (201 Created):**
-```json
-{
-  "success": true,
-  "data": {
-    "id": "64abc12347...",
-    "language": "javascript",
-    "model": "llama-3.3-70b-versatile",
-    "responseTime": 850,
-    "suggestions": {
-      "score": 8,
-      "bugs": [],
-      "issues": [
-        { "issue": "Missing type hints", "fix": "Add type annotations if using TS or JSDoc" }
-      ],
-      "improvements": [],
-      "performance": [],
-      "refactored_code": "/**\n* @param {number} a\n* @param {number} b\n*/\nfunction add(a, b) { return a + b }"
-    },
-    "createdAt": "2026-04-23T10:30:00Z"
-  }
-}
-```
-
-### 4.3 Fetch Specific Review
-**Endpoint:** `GET /api/review/:id`  
-Returns the full historic Review Document matching the Mongoose `ObjectId`.
-
-### 4.4 List All Reviews
+### 4.1 List All Reviews
 **Endpoint:** `GET /api/reviews`  
 Fetches the entire array of previously submitted code reviews, sorted from newest to oldest.
 
+### 4.2 Delete History
+**Endpoint:** `DELETE /api/history/:id`  
+Deletes a specific review record by ID.
+
+**Endpoint:** `DELETE /api/history/all`  
+CRITICAL: Permanently clears the entire MongoDB collection for reviews.
+
 ---
 
-## 5. Security and Constraints
-1. **Character Limit:** Arbitrary constraints enforce a maximum payload length of `5000` characters to protect against DDOS-style rate-limit spikes on the Groq tier.
-2. **Environment Variables:** API keys and Database URIs are read purely from environment bindings (`process.env`).
-3. **JSON Resilience:** LLMs occasionally corrupt nested quotes. The system intercepts raw `failed_generation` data natively dumped by Groq and funnels it safely back as raw strings so critical data is never swallowed entirely during SDK parsing failures.
+## 5. Premium Frontend Architecture
 
----
+The frontend is a high-performance **React SPA** modernized with a **Glassmorphism Design System**.
 
-## 6. Frontend Architecture
+### 5.1 Glassmorphism & UI System
+- **Visuals**: Uses `backdrop-filter: blur(24px)` and `linear-gradient` overlays to create a "frosted glass" effect.
+- **Styling**: Leverages an **Inline-Style System** for maximum performance and atomic control over premium effects.
+- **Background**: An animated `BgradientAnim` component provides a soft, oklch-based color-shifting background that sits behind the UI.
 
-The frontend is a lightweight single-page application built with **React** and **Vite**. It follows a modular component structure and utilizes a proxy strategy to communicate with the backend.
+### 5.2 Layered Editor Architecture
+The `CodeInput.jsx` component uses a layered strategy to provide real-time syntax highlighting:
+1. **Background Layer**: A `react-syntax-highlighter` (Prism) component renders the highlighted code based on the selected language.
+2. **Foreground Layer**: A transparent `<textarea>` sits perfectly on top, allowing users to type while seeing the highlights beneath them.
+3. **Synchronization**: The text content is shared via state, ensuring the highlights update instantly as the user types.
 
-### Component Tree
-- **App.jsx**: Root component. Manages global state (`sourceCode`, `language`, `reviewData`, `isProcessing`, `errorMessage`).
-    - **Header.jsx**: Branding and title display.
-    - **CodeInput.jsx**: Entry form for code and language. Enforces a 5-char minimum and uses a `<select>` for languages.
-    - **ReviewResult.jsx**: Orchestrates results, score badge, and refactored code.
-        - **IssueList.jsx**: Section-specific feedback (Bugs, Issues, etc.). Renders "No issues found" for empty categories.
+### 5.3 3-Column History Dashboard
+The `HistoryPage.jsx` implements a complex state-driven layout:
+- **Sidebar (Col 1)**: A scrollable list of past reviews with "Score Rings".
+- **Analysis (Col 2)**: Detailed issue lists (Bugs, Security, Performance) for the active record.
+- **Comparison (Col 3)**: Side-by-side view of the **Original Source** vs. the **Refactored Result**, both with syntax highlighting.
 
-### Data Flow
-1. **User Input**: Code and language are captured in `CodeInput`.
-2. **Submission**: `App.jsx` handles the form submission, making an asynchronous `POST` request via **Axios**.
-3. **Proxy Strategy**: Configured in `vite.config.js` to forward `/api` requests to `http://localhost:5000`, bypassing CORS during development.
+### 5.4 Component Tree
+- **App.jsx**: Global background and routing.
+- **Header.jsx**: Premium hero section with animated navigation pills.
+- **MainPage.jsx**: Orchestrates the input and results flow.
+    - **CodeInput.jsx**: The layered IDE-style editor.
+    - **ReviewResult.jsx**: The glassmorphism analysis display.
+- **HistoryPage.jsx**: The 3-column historic analysis dashboard.
+- **IssueList.jsx**: Reusable glass-card issue renderer.
 4. **Hydration**: The API response hydrates the `reviewData` state, which is passed down to `ReviewResult` and its children for rendering.
