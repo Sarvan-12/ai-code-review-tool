@@ -5,6 +5,8 @@ const {
   getReviewById,
   getAllReviews,
   healthCheck,
+  deleteHistory,
+  deleteAllHistory,
 } = require("../controllers/reviewController");
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
@@ -14,5 +16,7 @@ router.get("/health", healthCheck); // GET  /api/health       → server status 
 router.post("/review", submitReview); // POST /api/review       → submit code for AI review
 router.get("/review/:id", getReviewById); // GET  /api/review/:id   → fetch one review by ID
 router.get("/reviews", getAllReviews); // GET  /api/reviews      → list all past reviews
+router.delete("/history/all", deleteAllHistory); // DELETE /api/history/all → clear all history
+router.delete("/history/:id", deleteHistory); // DELETE /api/history/:id → delete a review history
 
 module.exports = router;

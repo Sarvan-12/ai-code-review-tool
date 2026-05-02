@@ -50,15 +50,29 @@ ${code}
   let content = "{}";
 
   try {
-    const response = await groq.chat.completions.create({
-      model: MODEL,
-      messages: [{ role: "user", content: prompt }],
-      response_format: { type: "json_object" }, // Ensures Groq strictly outputs JSON
-    });
+    const response = await groq.chat.completions.create(
+      {
+        model: MODEL,
+        messages: [{ role: "user", content: prompt }],
+        response_format: { type: "json_object" }, // Ensures Groq strictly outputs JSON
+      },
+      { timeout: 30000 } // 30-second timeout
+    );
 
     content = response.choices[0]?.message?.content || "{}";
   } catch (apiError) {
     console.error("Groq API validation failed:", apiError.message);
+
+    if (
+      apiError.name === "APITimeoutError" ||
+      apiError.code === "ETIMEDOUT" ||
+      (apiError.message && apiError.message.toLowerCase().includes("timeout"))
+    ) {
+      const err = new Error("The AI is taking too long to respond. Please try again.");
+      err.status = 504;
+      err.type = 'timeout';
+      throw err;
+    }
 
     // Extract failed_generation from the API message if the SDK embeds it as a string
     let failedGen =
@@ -78,18 +92,10 @@ ${code}
     if (failedGen) {
       content = failedGen;
     } else {
-      return {
-        score: 0,
-        issues: [
-          {
-            issue: "Groq API Error",
-            fix: "The AI failed to generate a valid response. Try submitting the code again.",
-          },
-        ],
-        improvements: [],
-        performance: [],
-        refactored_code: "",
-      };
+      const err = new Error("The AI failed to generate a valid response. Try submitting the code again.");
+      err.status = 502;
+      err.type = 'server';
+      throw err;
     }
   }
 
@@ -101,19 +107,10 @@ ${code}
     return JSON.parse(raw);
   } catch (error) {
     console.error("Failed to parse Groq JSON response:", error.message);
-    // Fallback object to prevent API crash. Include the raw failed JSON in refactored_code so the user can still read the AI's suggestions!
-    return {
-      score: 0,
-      issues: [
-        {
-          issue: "Failed to parse API output",
-          fix: "The AI's JSON output was structurally invalid. Raw output is provided below.",
-        },
-      ],
-      improvements: [],
-      performance: [],
-      refactored_code: raw,
-    };
+    const err = new Error("The AI's JSON output was structurally invalid. Try submitting the code again.");
+    err.status = 500;
+    err.type = 'server';
+    throw err;
   }
 };
 
