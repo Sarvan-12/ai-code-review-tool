@@ -3,6 +3,7 @@ import Header from './components/Header';
 import MainPage from './pages/MainPage';
 import HistoryPage from './pages/HistoryPage';
 import { BgradientAnim } from './components/ui/soft-gradient-background-animation';
+import CustomCursor from './components/ui/CustomCursor';
 import './App.css';
 
 /**
@@ -12,6 +13,8 @@ import './App.css';
 function App() {
   return (
     <div style={{ position: 'relative', minHeight: '100vh' }}>
+      <CustomCursor />
+      
       {/* Fixed soft gradient background — sits behind all content */}
       <div style={{
         position: 'fixed',
@@ -33,4 +36,3 @@ function App() {
 }
 
 export default App;
-
