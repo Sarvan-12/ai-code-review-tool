@@ -54,14 +54,23 @@ ${code}
       {
         model: MODEL,
         messages: [{ role: "user", content: prompt }],
-        response_format: { type: "json_object" }, // Ensures Groq strictly outputs JSON
+        response_format: { type: "json_object" },
+        max_tokens: 2048, // 1. Setting the token limit per request here
       },
-      { timeout: 30000 } // 30-second timeout
+      { timeout: 30000 }
     );
 
     content = response.choices[0]?.message?.content || "{}";
   } catch (apiError) {
-    console.error("Groq API validation failed:", apiError.message);
+    console.error("Groq API error:", apiError.message);
+
+    // 2. Detect Rate Limit (HTTP 429)
+    if (apiError.status === 429) {
+      const err = new Error("API Rate limit reached. Please wait a few seconds before trying again.");
+      err.status = 429;
+      err.type = 'rate_limit';
+      throw err;
+    }
 
     if (
       apiError.name === "APITimeoutError" ||
