@@ -99,39 +99,8 @@ const CustomCursor = () => {
         }
       }
 
-      // Handle hover state
-      targetRadius = isHovering ? 14 : 4; // Slightly larger outer ring
-      currentRadius += (targetRadius - currentRadius) * 0.15;
-
-      // Slowly cycle main cursor color through the palette
-      colorTimer += 0.01;
-      if (colorTimer > 1) {
-        colorTimer = 0;
-        colorIndex = (colorIndex + 1) % colors.length;
-      }
-      
-      // We will just use the active color from the palette for the main dot
-      const mainColor = colors[colorIndex];
-
-      // Draw Main Cursor Dot
-      ctx.globalAlpha = 1;
-      
-      // Inner solid dot (White when hovering, colored otherwise)
-      ctx.fillStyle = isHovering ? '#ffffff' : mainColor; 
-      ctx.shadowBlur = 8;
-      ctx.shadowColor = mainColor;
-      ctx.beginPath();
-      ctx.arc(pos.x, pos.y, isHovering ? 2 : 3, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.shadowBlur = 0;
-      
-      // Outer subtle ring 
-      ctx.strokeStyle = mainColor;
-      ctx.globalAlpha = isHovering ? 0.8 : 0.4;
-      ctx.lineWidth = isHovering ? 1.5 : 1;
-      ctx.beginPath();
-      ctx.arc(pos.x, pos.y, currentRadius, 0, Math.PI * 2);
-      ctx.stroke();
+      // The main cursor dot and outer ring have been removed.
+      // Now only the colorful particles trail behind the default browser cursor.
 
       requestAnimationFrame(loop);
     };
