@@ -27,54 +27,48 @@ const LANGUAGE_MAP = {
 };
 
 export const LANGUAGE_SAMPLES = {
-  'C': `#include <stdio.h>
-int main() {
-    int x = 10;
-    if (x = 5) {
-        printf("Equal");
+  'C': `int find(int arr[], int n) {
+    for (int i = 0; i <= n; i++) {
+        if (arr[i] = 10) {
+            return i;
+        }
     }
-    return 0;
+    return -1;
 }`,
-  'C++': `#include <iostream>
-int main() {
-    int x = 10;
-    if (x = 5) {
-        std::cout << "Equal";
+  'C++': `int getSum(int arr[], int n) {
+    int sum;
+    for (int i = 0; i < n; i++) {
+        sum = sum + arr[i];
     }
-    return 0;
+    return sum;
 }`,
-  'Go': `package main
-import "fmt"
-func main() {
-    x := 10
-    fmt.Println("Value is", y)
-}`,
-  'Java': `public class Main {
-    public static void main(String[] args) {
-        int[] nums = {1, 2, 3};
-        System.out.println(nums[5]);
+  'Go': `func check(n int) {
+    if (n = 10) {
+        fmt.Println("Ten")
     }
 }`,
-  'JavaScript': `function calculateSum(arr) {
-  let sum = 0;
-  for (let i = 0; i <= arr.length; i++) {
-    sum += arr[i];
+  'Java': `public int findMax(int[] arr) {
+    int max = 0;
+    for (int i = 0; i < arr.length; i++) {
+        if (arr[i] > max) max = arr[i];
+    }
+    return max;
+}`,
+  'JavaScript': `function reverse(str) {
+  let rev = "";
+  for (let i = str.length; i >= 0; i--) {
+    rev += str[i];
   }
-  return sum;
-}
-console.log(calculateSum([1, 2, 3]));`,
-  'Python': `def find_max(numbers):
-    max_val = 0
+  return rev;
+}`,
+  'Python': `def calculate_sum(numbers):
+    total = 0
     for n in numbers:
-        if n > max_val:
-            max_val == n
-    return max_val
-
-print(find_max([-1, -2, -3]))`,
-  'TypeScript': `function greet(person: string) {
-  return "Hello, " + persons;
-}
-console.log(greet("User"));`
+        total == n
+    return total`,
+  'TypeScript': `function greet(name: string) {
+  return "Hello " + names;
+}`
 };
 
 const CodeInput = ({ code, setCode, language, setLanguage, onSubmit, isLoading }) => {
