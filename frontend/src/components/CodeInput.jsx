@@ -27,54 +27,34 @@ const LANGUAGE_MAP = {
 };
 
 export const LANGUAGE_SAMPLES = {
-  'C': `#include <stdio.h>
-int main() {
-    int x = 10;
-    if (x = 5) {
-        printf("Equal");
+  'C': `int checkPasscode(int code) {
+    if (code = 1234) {
+        return 1;
     }
     return 0;
 }`,
-  'C++': `#include <iostream>
-int main() {
-    int x = 10;
-    if (x = 5) {
-        std::cout << "Equal";
-    }
-    return 0;
+  'C++': `double calculatePercentage(int score, int total) {
+    return (score / total) * 100;
 }`,
-  'Go': `package main
-import "fmt"
-func main() {
-    x := 10
-    fmt.Println("Value is", y)
-}`,
-  'Java': `public class Main {
-    public static void main(String[] args) {
-        int[] nums = {1, 2, 3};
-        System.out.println(nums[5]);
+  'Go': `func check(n int) {
+    if (n = 10) {
+        fmt.Println("Ten")
     }
 }`,
-  'JavaScript': `function calculateSum(arr) {
-  let sum = 0;
-  for (let i = 0; i <= arr.length; i++) {
-    sum += arr[i];
-  }
-  return sum;
-}
-console.log(calculateSum([1, 2, 3]));`,
-  'Python': `def find_max(numbers):
-    max_val = 0
-    for n in numbers:
-        if n > max_val:
-            max_val == n
-    return max_val
-
-print(find_max([-1, -2, -3]))`,
-  'TypeScript': `function greet(person: string) {
-  return "Hello, " + persons;
-}
-console.log(greet("User"));`
+  'Java': `public boolean isAdmin(String role) {
+    if (role == "admin") {
+        return true;
+    }
+    return false;
+}`,
+  'JavaScript': `function getAverage(num1, num2) {
+  return num1 + num2 / 2;
+}`,
+  'Python': `def divide_pizza(slices, people):
+    return slices / people`,
+  'TypeScript': `function greet(name: string) {
+  return "Hello " + names;
+}`
 };
 
 const CodeInput = ({ code, setCode, language, setLanguage, onSubmit, isLoading }) => {
