@@ -17,10 +17,12 @@ An AI-powered application that analyzes source code for bugs, performance bottle
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React, Vite, TailwindCSS (or Vanilla CSS based on preference)
-- **Backend**: Node.js, Express.js
-- **Database**: MongoDB
-- **AI Integration**: Groq API (LLaMA 3.3 70B)
+| Layer | Technology |
+|---|---|
+| **Frontend** | React 18, Vite, Vanilla CSS |
+| **Backend** | Node.js, Express.js |
+| **Database** | MongoDB, Mongoose |
+| **AI Model** | Groq API — LLaMA 3.3 70B |
 
 ---
 
@@ -82,6 +84,8 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ---
 
-## 📝 License
+## 🙏 Acknowledgements
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+- [Groq](https://groq.com) for the blazing-fast LLaMA inference API
+- [React Syntax Highlighter](https://github.com/react-syntax-highlighter/react-syntax-highlighter) for in-editor code highlighting
+- [MongoDB Atlas](https://www.mongodb.com/atlas) for cloud database hosting
