@@ -136,16 +136,10 @@ function HistoryPage() {
 
   return (
     <main style={{ padding: '2rem', maxWidth: '1600px', margin: '0 auto' }}>
-      <div className={`history-layout ${activeReviewId ? 'has-active' : ''}`} style={{ 
-        display: 'grid', 
-        gridTemplateColumns: activeReviewId ? '350px 1fr' : 'minmax(300px, 800px)',
-        justifyContent: 'center',
-        gap: '2rem',
-        transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
-      }}>
+      <div className={`history-layout ${activeReviewId ? 'has-active' : ''}`}>
         
         {/* Column 1: History Sidebar */}
-        <div style={{
+        <div className="history-sidebar" style={{
           background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(238, 242, 255, 0.6) 100%)',
           backdropFilter: 'blur(24px)',
           borderRadius: '24px',
@@ -237,9 +231,9 @@ function HistoryPage() {
         </div>
 
         {/* Dashboard Content (Visible only when a record is active) */}
-        <div style={{ display: activeReviewId ? 'flex' : 'none', flexDirection: 'column', gap: '2rem' }}>
+        <div className="history-content">
           {activeReview && (
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+            <>
               
               {/* Column 2: Analysis Dashboard */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
@@ -341,7 +335,7 @@ function HistoryPage() {
                 </div>
               </div>
 
-            </div>
+            </>
           )}
         </div>
       </div>
