@@ -2,8 +2,6 @@
 
 An AI-powered application that analyzes source code for bugs, performance bottlenecks, and quality issues using the **Groq API**. Featuring a modern UI with real-time syntax highlighting, advanced history dashboards, and actionable feedback.
 
-![Project Preview](https://via.placeholder.com/1200x600?text=AI+Code+Review+Tool+Preview)
-
 ---
 
 ## ✨ Features
@@ -15,14 +13,38 @@ An AI-powered application that analyzes source code for bugs, performance bottle
 
 ---
 
+## ⚙️ How It Works
+
+`Paste Code` ➔ `Groq AI Analyzes` ➔ `Review Displayed + Saved`
+
+---
+
 ## 🛠️ Tech Stack
 
 | Layer | Technology |
 |---|---|
-| **Frontend** | React 18, Vite, Vanilla CSS |
+| **Frontend** | React 18, Vite, Tailwind CSS |
 | **Backend** | Node.js, Express.js |
 | **Database** | MongoDB, Mongoose |
 | **AI Model** | Groq API — LLaMA 3.3 70B |
+
+---
+
+## 🏗️ Project Structure
+
+```text
+ai-code-review-tool/
+├── backend/                  ← Node.js + Express API
+│   ├── controllers/          ← API logic (AI Analysis, History)
+│   ├── models/               ← Mongoose schemas
+│   ├── routes/               ← Express routes
+│   └── services/             ← Groq API integration
+├── frontend/                 ← React + Vite (Premium UI)
+│   ├── src/
+│   │   ├── components/       ← Reusable UI parts
+│   │   ├── pages/            ← Main & History views
+│   │   └── App.jsx           ← Main application component
+```
 
 ---
 
@@ -33,7 +55,7 @@ An AI-powered application that analyzes source code for bugs, performance bottle
 Before you begin, ensure you have the following installed:
 - **Node.js** (v18 or higher)
 - **Git**
-- **MongoDB** (Local instance or a [MongoDB Atlas](https://www.mongodb.com/atlas) account)
+- **MongoDB** (Local instance or Atlas account)
 - **Groq API Key** (Get yours at [console.groq.com](https://console.groq.com/keys))
 
 ### Installation
@@ -51,6 +73,7 @@ Before you begin, ensure you have the following installed:
    MONGO_URI=your_mongodb_connection_string
    GROQ_API_KEY=your_groq_api_key
    ```
+   *(If your frontend needs a custom API URL later, you can add a `.env` in the `frontend/` directory with `VITE_API_BASE_URL`)*
 
 3. **Run the Backend:**
    Open a terminal and run:
@@ -81,11 +104,3 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
 4. Push to the branch (`git push origin feature/AmazingFeature`).
 5. Open a Pull Request.
-
----
-
-## 🙏 Acknowledgements
-
-- [Groq](https://groq.com) for the blazing-fast LLaMA inference API
-- [React Syntax Highlighter](https://github.com/react-syntax-highlighter/react-syntax-highlighter) for in-editor code highlighting
-- [MongoDB Atlas](https://www.mongodb.com/atlas) for cloud database hosting
