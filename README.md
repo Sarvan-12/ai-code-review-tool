@@ -48,6 +48,17 @@ ai-code-review-tool/
 
 ---
 
+## 🔌 API Endpoints
+
+### Review Routes
+- `POST /api/review` - Sends source code to Groq LLaMA 3.3, returns analysis, and saves the result.
+
+### History Routes
+- `GET /api/history` - Fetches all historical code reviews from MongoDB.
+- `DELETE /api/history` - Clears past review logs.
+
+---
+
 ## 🚀 Getting Started
 
 ### Prerequisites
