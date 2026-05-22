@@ -18,3 +18,10 @@ npm-debug.log*
 Thumbs.db
 
 frontend/.vite/
+
+# ─── Internal Documentation ───────────────────────────────────────────────────
+docs/
+prd.md
+DOCUMENTATION.md
+PROJECT_LIFECYCLE.md
+Project_Handover_Roadmap.pdf
