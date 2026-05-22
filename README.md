@@ -1,25 +1,25 @@
-# 🤖 AI Code Review Tool
+# AI Code Review Tool
 
 An AI-powered application that analyzes source code for bugs, performance bottlenecks, and quality issues using the **Groq API**. Featuring a modern UI with real-time syntax highlighting, advanced history dashboards, and actionable feedback.
 
 ---
 
-## ✨ Features
+## Features
 
-- **🌈 Real-Time Highlighting**: Pro-IDE feel with `react-syntax-highlighter` integrated directly into the input box.
-- **📊 Advanced Dashboards**: Comprehensive history view for side-by-side comparison of original and refactored code.
-- **🚀 Ultra-Fast AI**: Powered by Groq's LLaMA 3.3 70B model for high-speed, intelligent reviews.
-- **💎 Modern Aesthetic**: Clean, responsive, and beautiful UI designed for developer productivity.
+- **Real-Time Highlighting**: Pro-IDE feel with `react-syntax-highlighter` integrated directly into the input box.
+- **Advanced Dashboards**: Comprehensive history view for side-by-side comparison of original and refactored code.
+- **Ultra-Fast AI**: Powered by Groq's LLaMA 3.3 70B model for high-speed, intelligent reviews.
+- **Modern Aesthetic**: Clean, responsive, and beautiful UI designed for developer productivity.
 
 ---
 
-## ⚙️ How It Works
+## How It Works
 
 `Paste Code` ➔ `Groq AI Analyzes` ➔ `Review Displayed + Saved`
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |---|---|
@@ -30,7 +30,7 @@ An AI-powered application that analyzes source code for bugs, performance bottle
 
 ---
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```text
 ai-code-review-tool/
@@ -48,7 +48,7 @@ ai-code-review-tool/
 
 ---
 
-## 🔌 API Endpoints
+## API Endpoints
 
 ### Review Routes
 - `POST /api/review` - Sends source code to Groq LLaMA 3.3, returns analysis, and saves the result.
@@ -59,7 +59,7 @@ ai-code-review-tool/
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -106,7 +106,7 @@ The application will be available at `http://localhost:5173`.
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
@@ -119,5 +119,5 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ---
 
 <div align="center">
-  <h3>⭐ If you like this project or find it helpful, please consider giving it a star!</h3>
+  <h3>If you like this project or find it helpful, please consider giving it a star!</h3>
 </div>
