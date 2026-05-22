@@ -1,25 +1,25 @@
-# AI Code Review Tool
+# <img src="https://api.iconify.design/lucide/bot.svg?color=%233b82f6" width="32" height="32" align="absmiddle" /> AI Code Review Tool
 
 An AI-powered application that analyzes source code for bugs, performance bottlenecks, and quality issues using the **Groq API**. Featuring a modern UI with real-time syntax highlighting, advanced history dashboards, and actionable feedback.
 
 ---
 
-## Features
+## <img src="https://api.iconify.design/lucide/sparkles.svg?color=%233b82f6" width="24" height="24" align="absmiddle" /> Features
 
-- **Real-Time Highlighting**: Pro-IDE feel with `react-syntax-highlighter` integrated directly into the input box.
-- **Advanced Dashboards**: Comprehensive history view for side-by-side comparison of original and refactored code.
-- **Ultra-Fast AI**: Powered by Groq's LLaMA 3.3 70B model for high-speed, intelligent reviews.
-- **Modern Aesthetic**: Clean, responsive, and beautiful UI designed for developer productivity.
+- <img src="https://api.iconify.design/lucide/palette.svg?color=%233b82f6" width="18" height="18" align="absmiddle" /> **Real-Time Highlighting**: Pro-IDE feel with `react-syntax-highlighter` integrated directly into the input box.
+- <img src="https://api.iconify.design/lucide/bar-chart-2.svg?color=%233b82f6" width="18" height="18" align="absmiddle" /> **Advanced Dashboards**: Comprehensive history view for side-by-side comparison of original and refactored code.
+- <img src="https://api.iconify.design/lucide/zap.svg?color=%233b82f6" width="18" height="18" align="absmiddle" /> **Ultra-Fast AI**: Powered by Groq's LLaMA 3.3 70B model for high-speed, intelligent reviews.
+- <img src="https://api.iconify.design/lucide/gem.svg?color=%233b82f6" width="18" height="18" align="absmiddle" /> **Modern Aesthetic**: Clean, responsive, and beautiful UI designed for developer productivity.
 
 ---
 
-## How It Works
+## <img src="https://api.iconify.design/lucide/settings.svg?color=%233b82f6" width="24" height="24" align="absmiddle" /> How It Works
 
 `Paste Code` ➔ `Groq AI Analyzes` ➔ `Review Displayed + Saved`
 
 ---
 
-## Tech Stack
+## <img src="https://api.iconify.design/lucide/layers.svg?color=%233b82f6" width="24" height="24" align="absmiddle" /> Tech Stack
 
 | Layer | Technology |
 |---|---|
@@ -30,7 +30,7 @@ An AI-powered application that analyzes source code for bugs, performance bottle
 
 ---
 
-## Project Structure
+## <img src="https://api.iconify.design/lucide/folder-tree.svg?color=%233b82f6" width="24" height="24" align="absmiddle" /> Project Structure
 
 ```text
 ai-code-review-tool/
@@ -48,7 +48,7 @@ ai-code-review-tool/
 
 ---
 
-## API Endpoints
+## <img src="https://api.iconify.design/lucide/plug-2.svg?color=%233b82f6" width="24" height="24" align="absmiddle" /> API Endpoints
 
 ### Review Routes
 - `POST /api/review` - Sends source code to Groq LLaMA 3.3, returns analysis, and saves the result.
@@ -59,7 +59,7 @@ ai-code-review-tool/
 
 ---
 
-## Getting Started
+## <img src="https://api.iconify.design/lucide/rocket.svg?color=%233b82f6" width="24" height="24" align="absmiddle" /> Getting Started
 
 ### Prerequisites
 
@@ -106,7 +106,7 @@ The application will be available at `http://localhost:5173`.
 
 ---
 
-## Contributing
+## <img src="https://api.iconify.design/lucide/users.svg?color=%233b82f6" width="24" height="24" align="absmiddle" /> Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
@@ -119,5 +119,5 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ---
 
 <div align="center">
-  <h3>If you like this project or find it helpful, please consider giving it a star!</h3>
+  <h3><img src="https://api.iconify.design/lucide/star.svg?color=%233b82f6" width="22" height="22" align="absmiddle" /> If you like this project or find it helpful, please consider giving it a star!</h3>
 </div>
