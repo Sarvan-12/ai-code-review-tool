@@ -27,45 +27,35 @@ const LANGUAGE_MAP = {
 };
 
 export const LANGUAGE_SAMPLES = {
-  'C': `int find(int arr[], int n) {
-    for (int i = 0; i <= n; i++) {
-        if (arr[i] = 10) {
-            return i;
-        }
+  'C': `int checkPasscode(int code) {
+    if (code = 1234) { // Bug: Using '=' instead of '=='
+        return 1;
     }
-    return -1;
+    return 0;
 }`,
-  'C++': `int getSum(int arr[], int n) {
-    int sum;
-    for (int i = 0; i < n; i++) {
-        sum = sum + arr[i];
-    }
-    return sum;
+  'C++': `double calculatePercentage(int score, int total) {
+    // Bug: Integer division will always result in 0 (e.g., 80 / 100 = 0)
+    return (score / total) * 100;
 }`,
   'Go': `func check(n int) {
     if (n = 10) {
         fmt.Println("Ten")
     }
 }`,
-  'Java': `public int findMax(int[] arr) {
-    int max = 0;
-    for (int i = 0; i < arr.length; i++) {
-        if (arr[i] > max) max = arr[i];
+  'Java': `public boolean isAdmin(String role) {
+    // Bug: Compares String objects using '==' instead of '.equals()'
+    if (role == "admin") {
+        return true;
     }
-    return max;
+    return false;
 }`,
-  'JavaScript': `function reverse(str) {
-  let rev = "";
-  for (let i = str.length; i >= 0; i--) {
-    rev += str[i];
-  }
-  return rev;
+  'JavaScript': `function getAverage(num1, num2) {
+  // Bug: Missing parentheses. Order of operations will divide num2 by 2 first.
+  return num1 + num2 / 2;
 }`,
-  'Python': `def calculate_sum(numbers):
-    total = 0
-    for n in numbers:
-        total == n
-    return total`,
+  'Python': `def divide_pizza(slices, people):
+    # Bug: Will crash with a DivisionByZero error if people is 0
+    return slices / people`,
   'TypeScript': `function greet(name: string) {
   return "Hello " + names;
 }`
