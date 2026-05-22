@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import MainPage from './pages/MainPage';
 import HistoryPage from './pages/HistoryPage';
-import { BgradientAnim } from './components/ui/soft-gradient-background-animation';
+import { BgradientAnim } from './components/ui/BgradientAnim';
 import CustomCursor from './components/ui/CustomCursor';
 import './App.css';
 

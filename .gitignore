@@ -17,11 +17,10 @@ npm-debug.log*
 .DS_Store
 Thumbs.db
 
-frontend/.vite/
-
 # ─── Internal Documentation ───────────────────────────────────────────────────
 docs/
+PROJECT_LIFECYCLE.md
 prd.md
 DOCUMENTATION.md
-PROJECT_LIFECYCLE.md
-Project_Handover_Roadmap.pdf
+
+frontend/.vite/
