@@ -42,6 +42,7 @@ CRITICAL RULES:
 5. If there are no items for a category, return an empty array []. Do not use strings like "None".
 6. Ensure code inside "refactored_code" uses proper indentation (2 or 4 spaces) and newlines for readability. Do NOT return the code as a single line. Use real newlines characters.
 7. CRITICAL: The "refactored_code" field must contain ONLY the raw source code. Do NOT include any introductory text, conversational remarks, or markdown code fences (like \`\`\`) inside this specific JSON string value. Any explanations should be in the issues/improvements arrays instead.
+8. CRITICAL: Categorize issues strictly. General coding style, readability, comments, and variable/class naming conventions MUST go in the "improvements" array (Best Practices). Do NOT put them in the "issues" array, which is reserved strictly for logic flaws, semantic bugs, and security vulnerabilities.
 
 \`\`\`${language}
 ${code}
