@@ -22,10 +22,10 @@ Respond strictly in JSON format exactly like this structure:
   "bugs": [ // empty array [] if none. Array of objects with "issue" and "fix" keys
     { "issue": "Description of the problem", "fix": "How to fix it" }
   ],
-  "issues": [ // empty array [] if none. General quality or readability issues
+  "issues": [ // empty array [] if none. Logical flaws, semantic bugs, or potential security/edge-case concerns.
     { "issue": "Description of the problem", "fix": "How to fix it" }
   ],
-  "improvements": [ // empty array [] if none. Best practices not followed
+  "improvements": [ // empty array [] if none. General code quality, readability, naming conventions, and best practices.
     { "issue": "Best practice not followed", "fix": "Suggested best practice" }
   ],
   "performance": [ // empty array [] if none. Performance bottlenecks
