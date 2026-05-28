@@ -34,12 +34,15 @@ Respond strictly in JSON format exactly like this structure:
   "refactored_code": "String containing the fully refactored and improved code, or empty string if no refactor is needed."
 }
 
+Return ONLY valid JSON. No markdown, no explanatory text before or after. Start directly with the opening brace {.
+
 CRITICAL RULES:
 1. ONLY include meaningful issues. Do not suggest unnecessary improvements for simple code.
 2. Avoid generic advice. Be specific to the provided code.
-3. If the code is already correct, return empty arrays and say "No major issues found" in the refactored_code section if no refactor is needed.
-4. Every object inside the arrays MUST include BOTH the "issue" property and the "fix" property as strings. Do not omit the "fix" key.
+3. If the code is already correct and requires no improvements or fixes, return empty arrays for bugs, issues, improvements, and performance.
+4. Every object inside bugs, issues, improvements, and performance arrays MUST have exactly two properties: "issue" (string describing the problem) and "fix" (string describing the solution).
 5. If there are no items for a category, return an empty array []. Do not use strings like "None".
+5b. If the refactored_code would be identical to the input code (no refactoring needed), set refactored_code to "No refactoring needed" instead of returning the same code.
 6. Ensure code inside "refactored_code" uses proper indentation (2 or 4 spaces) and newlines for readability. Do NOT return the code as a single line. Use real newlines characters.
 7. CRITICAL: The "refactored_code" field must contain ONLY the raw source code. Do NOT include any introductory text, conversational remarks, or markdown code fences (like \`\`\`) inside this specific JSON string value. Any explanations should be in the issues/improvements arrays instead.
 8. CRITICAL: Categorize issues strictly. General coding style, readability, comments, and variable/class naming conventions MUST go in the "improvements" array (Best Practices). Do NOT put them in the "issues" array, which is reserved strictly for logic flaws, semantic bugs, and security vulnerabilities.
