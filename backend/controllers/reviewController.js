@@ -2,6 +2,34 @@ const Review = require("../models/Review");
 const { getCodeReview } = require("../services/groqService");
 
 /**
+ * Helper to deduplicate AI suggestions across and within categories.
+ * Preserves top-level fields like score and refactored_code.
+ * 
+ * @param {Object} suggestions - The raw suggestions object.
+ * @returns {Object} Deduplicated suggestions.
+ */
+const deduplicateSuggestions = (suggestions) => {
+  if (!suggestions) return suggestions;
+
+  const seen = new Set();
+  const deduped = { ...suggestions };
+
+  Object.keys(suggestions).forEach((category) => {
+    if (Array.isArray(suggestions[category])) {
+      deduped[category] = suggestions[category].filter((item) => {
+        const key = item.issue ? item.issue.toLowerCase().trim() : "";
+        if (!key) return true;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+    }
+  });
+
+  return deduped;
+};
+
+/**
  * Handles the submission of code for AI review.
  * Validates input, calls the AI service, saves the result to the database, and returns the review.
  * 
@@ -32,7 +60,8 @@ const submitReview = async (req, res) => {
     const startTime = Date.now();
 
     // Call Groq API via the service layer
-    const suggestions = await getCodeReview(code, language);
+    const rawSuggestions = await getCodeReview(code, language);
+    const suggestions = deduplicateSuggestions(rawSuggestions);
 
     const endTime = Date.now();
     const responseTime = endTime - startTime;
