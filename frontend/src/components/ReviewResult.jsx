@@ -55,9 +55,11 @@ const ReviewResult = ({ result }) => {
     }
   };
 
+  const displayScore = score <= 10 ? score * 10 : score;
+
   const getScoreColor = (s) => {
-    if (s >= 8) return '#10b981'; // Green
-    if (s >= 5) return '#f59e0b'; // Amber
+    if (s >= 80) return '#10b981'; // Green
+    if (s >= 50) return '#f59e0b'; // Amber
     return '#ef4444'; // Red
   };
 
@@ -92,11 +94,11 @@ const ReviewResult = ({ result }) => {
           <div style={{ 
             fontSize: '2.5rem', 
             fontWeight: '900', 
-            color: getScoreColor(score),
+            color: getScoreColor(displayScore),
             lineHeight: 1,
             marginTop: '4px'
           }}>
-            {score * 10}<span style={{ fontSize: '1.25rem', color: '#94a3b8', fontWeight: '500' }}>/100</span>
+            {displayScore}<span style={{ fontSize: '1.25rem', color: '#94a3b8', fontWeight: '500' }}>/100</span>
           </div>
         </div>
       </div>

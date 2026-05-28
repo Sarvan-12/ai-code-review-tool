@@ -9,14 +9,14 @@ import { Trash2, Calendar, FileCode, Check, Copy } from 'lucide-react';
  * ScoreRing component — renders a refined circular progress bar for the quality score.
  */
 const ScoreRing = ({ score }) => {
+  const displayScore = score <= 10 ? score * 10 : score;
   const radius = 16;
   const circumference = 2 * Math.PI * radius;
-  const percentage = (score || 0) * 10;
-  const offset = circumference - (percentage / 100) * circumference;
+  const offset = circumference - (displayScore / 100) * circumference;
   
   const getColor = (s) => {
-    if (s >= 8) return '#10b981';
-    if (s >= 5) return '#f59e0b';
+    if (s >= 80) return '#10b981';
+    if (s >= 50) return '#f59e0b';
     return '#ef4444';
   };
 
@@ -30,7 +30,7 @@ const ScoreRing = ({ score }) => {
         <circle 
           cx="20" cy="20" r={radius} 
           fill="transparent" 
-          stroke={getColor(score)} 
+          stroke={getColor(displayScore)} 
           strokeWidth="3" 
           strokeDasharray={circumference} 
           strokeDashoffset={offset}
@@ -38,8 +38,8 @@ const ScoreRing = ({ score }) => {
           style={{ transition: 'stroke-dashoffset 0.5s ease' }}
         />
       </svg>
-      <span style={{ position: 'absolute', fontSize: '0.75rem', fontWeight: '800', color: getColor(score) }}>
-        {percentage}
+      <span style={{ position: 'absolute', fontSize: '0.75rem', fontWeight: '800', color: getColor(displayScore) }}>
+        {displayScore}
       </span>
     </div>
   );
@@ -93,8 +93,9 @@ function HistoryPage() {
   };
 
   const getScoreClass = (s) => {
-    if (s >= 8) return '#10b981';
-    if (s >= 5) return '#f59e0b';
+    const scoreVal = s <= 10 ? s * 10 : s;
+    if (scoreVal >= 80) return '#10b981';
+    if (scoreVal >= 50) return '#f59e0b';
     return '#ef4444';
   };
 
@@ -249,7 +250,7 @@ function HistoryPage() {
                   <div style={{ 
                     fontSize: '1.75rem', fontWeight: '900', color: getScoreClass(activeReview.suggestions?.score || 0)
                   }}>
-                    {(activeReview.suggestions?.score || 0) * 10}<span style={{ fontSize: '1rem', color: '#94a3b8' }}>/100</span>
+                    {activeReview.suggestions?.score <= 10 ? (activeReview.suggestions?.score || 0) * 10 : activeReview.suggestions?.score}<span style={{ fontSize: '1rem', color: '#94a3b8' }}>/100</span>
                   </div>
                 </div>
 

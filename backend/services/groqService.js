@@ -18,7 +18,7 @@ const getCodeReview = async (code, language = "plaintext") => {
   const prompt = `You are an expert code reviewer. Review the following ${language} code.
 Respond strictly in JSON format exactly like this structure:
 {
-  "score": 0, // A score from 0-10 rating the overall code quality
+  "score": 0, // A score from 0-100 rating the overall code quality. Be granular and precise (e.g., 73, 86, 91).
   "bugs": [ // empty array [] if none. Array of objects with "issue" and "fix" keys
     { "issue": "Description of the problem", "fix": "How to fix it" }
   ],
