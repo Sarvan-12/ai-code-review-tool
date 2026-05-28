@@ -48,6 +48,7 @@ CRITICAL RULES:
 8. CRITICAL: Categorize issues strictly. General coding style, readability, comments, and variable/class naming conventions MUST go in the "improvements" array (Best Practices). Do NOT put them in the "issues" array, which is reserved strictly for logic flaws, semantic bugs, and security vulnerabilities.
 9. CRITICAL: All descriptions must be clear, concise, and grammatically perfect. Use simple, direct language. Avoid awkward or unnatural phrasing like "The function uses a true O(n²) of duplicates" or "No security & logic selected". Example of RIGHT phrasing: "This function has O(n²) time complexity because of nested loops, making it slow for large inputs."
 10. CRITICAL: Every suggestion across all categories must be completely unique. Do not repeat the same issue or fix (or minor variations of it) within the same category or across different categories.
+11. CRITICAL: Use simple, direct sentence structures. Avoid complex nested clauses. Example: "Variable names should be descriptive" not "Variable name could be used to describe what it does not follow..."
 
 \`\`\`${language}
 ${code}
