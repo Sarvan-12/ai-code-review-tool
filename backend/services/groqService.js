@@ -43,6 +43,8 @@ CRITICAL RULES:
 6. Ensure code inside "refactored_code" uses proper indentation (2 or 4 spaces) and newlines for readability. Do NOT return the code as a single line. Use real newlines characters.
 7. CRITICAL: The "refactored_code" field must contain ONLY the raw source code. Do NOT include any introductory text, conversational remarks, or markdown code fences (like \`\`\`) inside this specific JSON string value. Any explanations should be in the issues/improvements arrays instead.
 8. CRITICAL: Categorize issues strictly. General coding style, readability, comments, and variable/class naming conventions MUST go in the "improvements" array (Best Practices). Do NOT put them in the "issues" array, which is reserved strictly for logic flaws, semantic bugs, and security vulnerabilities.
+9. CRITICAL: All descriptions must be clear, concise, and grammatically perfect. Use simple, direct language. Avoid awkward or unnatural phrasing like "The function uses a true O(n²) of duplicates" or "No security & logic selected". Example of RIGHT phrasing: "This function has O(n²) time complexity because of nested loops, making it slow for large inputs."
+10. CRITICAL: Every suggestion across all categories must be completely unique. Do not repeat the same issue or fix (or minor variations of it) within the same category or across different categories.
 
 \`\`\`${language}
 ${code}
