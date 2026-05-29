@@ -298,6 +298,8 @@ function HistoryPage() {
                     <SyntaxHighlighter
                       language={getLanguageAlias(activeReview.language)}
                       style={vscDarkPlus}
+                      showLineNumbers={true}
+                      lineNumberStyle={{ color: '#475569', minWidth: '2em', paddingRight: '1em', textAlign: 'right', userSelect: 'none' }}
                       customStyle={{ margin: 0, padding: '1rem', fontSize: '0.75rem', backgroundColor: 'transparent', height: '100%' }}
                     >
                       {activeReview.code || ''}
@@ -328,6 +330,8 @@ function HistoryPage() {
                     <SyntaxHighlighter
                       language={getLanguageAlias(activeReview.language)}
                       style={vscDarkPlus}
+                      showLineNumbers={true}
+                      lineNumberStyle={{ color: '#475569', minWidth: '2em', paddingRight: '1em', textAlign: 'right', userSelect: 'none' }}
                       customStyle={{ margin: 0, padding: '1rem', fontSize: '0.75rem', backgroundColor: 'transparent', height: '100%' }}
                     >
                       {cleanCode(activeReview.suggestions.refactored_code)}

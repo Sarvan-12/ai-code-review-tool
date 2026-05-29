@@ -145,6 +145,8 @@ const ReviewResult = ({ result }) => {
               language={getLanguageAlias(language)}
               style={vscDarkPlus}
               wrapLongLines={true}
+              showLineNumbers={true}
+              lineNumberStyle={{ color: '#475569', minWidth: '2em', paddingRight: '1em', textAlign: 'right', userSelect: 'none' }}
               customStyle={{
                 margin: 0,
                 padding: '1.5rem',
