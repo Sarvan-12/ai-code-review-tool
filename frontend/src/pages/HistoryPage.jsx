@@ -3,7 +3,7 @@ import axios from 'axios';
 import IssueList from '../components/IssueList';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { Trash2, Calendar, FileCode, Check, Copy } from 'lucide-react';
+import { Trash2, Calendar, FileCode, Check, Copy, Clock } from 'lucide-react';
 
 /**
  * ScoreRing component — renders a refined circular progress bar for the quality score.
@@ -253,6 +253,51 @@ function HistoryPage() {
                     {activeReview.suggestions?.score <= 10 ? (activeReview.suggestions?.score || 0) * 10 : activeReview.suggestions?.score}<span style={{ fontSize: '1rem', color: '#94a3b8' }}>/100</span>
                   </div>
                 </div>
+
+                {/* Complexity Card in History Page */}
+                {activeReview.suggestions?.complexity && (activeReview.suggestions.complexity.original || activeReview.suggestions.complexity.optimized) && (
+                  <div style={{
+                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(238, 242, 255, 0.6) 100%)',
+                    backdropFilter: 'blur(24px)',
+                    borderRadius: '24px',
+                    border: '1px solid rgba(99, 102, 241, 0.2)',
+                    padding: '1.5rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.75rem'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <Clock size={16} color="#4f46e5" />
+                      <span style={{ color: '#64748b', fontSize: '0.85rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.025em' }}>Complexity Analysis</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                      {activeReview.suggestions.complexity.original && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                          <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: '600' }}>Original</span>
+                          <span style={{ fontSize: '1rem', color: '#ef4444', fontWeight: '800', fontFamily: "'Fira Code', monospace" }}>
+                            {activeReview.suggestions.complexity.original}
+                          </span>
+                        </div>
+                      )}
+                      {activeReview.suggestions.complexity.original && activeReview.suggestions.complexity.optimized && (
+                        <span style={{ color: '#94a3b8', fontSize: '1.25rem', marginTop: '0.75rem' }}>➔</span>
+                      )}
+                      {activeReview.suggestions.complexity.optimized && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                          <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: '600' }}>Optimized</span>
+                          <span style={{ fontSize: '1rem', color: '#10b981', fontWeight: '800', fontFamily: "'Fira Code', monospace" }}>
+                            {activeReview.suggestions.complexity.optimized}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    {activeReview.suggestions.complexity.explanation && (
+                      <p style={{ margin: 0, color: '#475569', fontSize: '0.8rem', lineHeight: '1.5' }}>
+                        {activeReview.suggestions.complexity.explanation}
+                      </p>
+                    )}
+                  </div>
+                )}
 
                 <div style={{
                   background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(238, 242, 255, 0.6) 100%)',
