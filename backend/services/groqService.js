@@ -46,6 +46,11 @@ Respond strictly in JSON format exactly like this structure:
   "performance": [ // empty array [] if none. Performance bottlenecks
     { "line": 8, "issue": "Performance bottleneck", "fix": "Optimization suggestion" }
   ],
+  "complexity": {
+    "original": "O(n²)", // Time complexity of original code, or null if not applicable/non-algorithmic (e.g. HTML/CSS)
+    "optimized": "O(n log n)", // Time complexity of refactored code, or null if not applicable
+    "explanation": "Why the complexity improved." // A brief explanation of the change, or null if not applicable
+  },
   "refactored_code": "String containing the fully refactored and improved code, or empty string if no refactor is needed."
 }
 
@@ -66,6 +71,7 @@ CRITICAL RULES:
 11. CRITICAL: Use simple, direct sentence structures. Avoid complex nested clauses. Example: "Variable names should be descriptive" not "Variable name could be used to describe what it does not follow..."
 12. CRITICAL: The code provided to you below has line numbers prepended (e.g., "1: public class Solution {"). You MUST reference these exact line numbers in the "line" property of your suggestions.
 13. CRITICAL: The "refactored_code" field MUST NOT contain any line numbers. It must be clean, compile-ready code without the line number prefixes.
+14. CRITICAL: Analyze the time complexity of the input code and the refactored code. Provide these in the "complexity" object. If complexity analysis is not applicable to the submitted code (e.g. for HTML, CSS, assets, or simple configuration files), set all properties of the "complexity" object to null.
 
 Here is the code with line numbers prepended:
 \`\`\`${language}
