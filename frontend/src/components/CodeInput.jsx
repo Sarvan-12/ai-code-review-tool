@@ -131,71 +131,100 @@ const CodeInput = ({ code, setCode, language, setLanguage, onSubmit, isLoading }
             boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.2)',
             position: 'relative',
             minHeight: '200px',
+            display: 'flex',
             overflow: 'hidden'
           }}>
-            {/* Syntax Highlighting Layer (Bottom) */}
-            <SyntaxHighlighter
-              language={LANGUAGE_MAP[language] || 'javascript'}
-              style={vscDarkPlus}
-              customStyle={{
-                margin: 0,
-                padding: 0,
-                backgroundColor: 'transparent',
-                fontSize: '0.9rem',
-                lineHeight: '1.7',
-                fontFamily: "'Fira Code', 'Consolas', monospace",
-                minHeight: '200px',
-                pointerEvents: 'none',
-                width: '100%',
-                whiteSpace: 'pre-wrap',
-                wordBreak: 'break-all'
-              }}
-              codeTagProps={{
-                style: {
-                  fontFamily: 'inherit',
-                  fontSize: 'inherit',
-                  lineHeight: 'inherit'
-                }
-              }}
-            >
-              {code || ' '}
-            </SyntaxHighlighter>
+            {/* Dynamic Line Numbers Column */}
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-end',
+              paddingRight: '0.75rem',
+              marginRight: '0.75rem',
+              borderRight: '1px solid rgba(255, 255, 255, 0.1)',
+              color: '#475569',
+              fontFamily: "'Fira Code', 'Consolas', monospace",
+              fontSize: '0.9rem',
+              lineHeight: '1.7',
+              userSelect: 'none',
+              textAlign: 'right',
+              minWidth: '2.25rem'
+            }}>
+              {Array.from({ length: Math.max(1, code.split('\n').length) }, (_, i) => (
+                <div key={i}>{i + 1}</div>
+              ))}
+            </div>
 
-            {/* Hidden Input Layer (Top) */}
-            <textarea
-              id="code-input"
-              value={code}
-              onChange={(e) => {
-                setCode(e.target.value);
-                setLocalError('');
-              }}
-              placeholder="Paste your code here for AI analysis..."
-              maxLength={5000}
-              spellCheck="false"
-              style={{
-                position: 'absolute',
-                top: '1.25rem',
-                left: '1.25rem',
-                right: '1.25rem',
-                bottom: '1.25rem',
-                width: 'calc(100% - 2.5rem)',
-                height: 'calc(100% - 2.5rem)',
-                backgroundColor: 'transparent',
-                color: 'transparent', // Make text transparent so highlighter shows through
-                caretColor: '#f1f5f9', // Keep the cursor visible
-                border: 'none',
-                outline: 'none',
-                fontSize: '0.9rem',
-                lineHeight: '1.7',
-                fontFamily: "'Fira Code', 'Consolas', monospace",
-                resize: 'none',
-                margin: 0,
-                padding: 0,
-                zIndex: 1,
-                whiteSpace: 'pre-wrap',
-                wordBreak: 'break-all'
-              }}
-            />
+            {/* Editor Container (Highlighter + Textarea) */}
+            <div style={{
+              position: 'relative',
+              flex: 1,
+              minHeight: '200px'
+            }}>
+              {/* Syntax Highlighting Layer (Bottom) */}
+              <SyntaxHighlighter
+                language={LANGUAGE_MAP[language] || 'javascript'}
+                style={vscDarkPlus}
+                customStyle={{
+                  margin: 0,
+                  padding: 0,
+                  backgroundColor: 'transparent',
+                  fontSize: '0.9rem',
+                  lineHeight: '1.7',
+                  fontFamily: "'Fira Code', 'Consolas', monospace",
+                  minHeight: '100%',
+                  pointerEvents: 'none',
+                  width: '100%',
+                  whiteSpace: 'pre-wrap',
+                  wordBreak: 'break-all'
+                }}
+                codeTagProps={{
+                  style: {
+                    fontFamily: 'inherit',
+                    fontSize: 'inherit',
+                    lineHeight: 'inherit'
+                  }
+                }}
+              >
+                {code || ' '}
+              </SyntaxHighlighter>
+
+              {/* Hidden Input Layer (Top) */}
+              <textarea
+                id="code-input"
+                value={code}
+                onChange={(e) => {
+                  setCode(e.target.value);
+                  setLocalError('');
+                }}
+                placeholder="Paste your code here for AI analysis..."
+                maxLength={5000}
+                spellCheck="false"
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  width: '100%',
+                  height: '100%',
+                  backgroundColor: 'transparent',
+                  color: 'transparent', // Make text transparent so highlighter shows through
+                  caretColor: '#f1f5f9', // Keep the cursor visible
+                  border: 'none',
+                  outline: 'none',
+                  fontSize: '0.9rem',
+                  lineHeight: '1.7',
+                  fontFamily: "'Fira Code', 'Consolas', monospace",
+                  resize: 'none',
+                  margin: 0,
+                  padding: 0,
+                  zIndex: 1,
+                  whiteSpace: 'pre-wrap',
+                  wordBreak: 'break-all'
+                }}
+              />
+            </div>
           </div>
           {localError && (
             <p className="local-error-text">

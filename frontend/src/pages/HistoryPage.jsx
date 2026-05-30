@@ -3,20 +3,20 @@ import axios from 'axios';
 import IssueList from '../components/IssueList';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { Trash2, Calendar, FileCode, Check, Copy } from 'lucide-react';
+import { Trash2, Calendar, FileCode, Check, Copy, Clock } from 'lucide-react';
 
 /**
  * ScoreRing component — renders a refined circular progress bar for the quality score.
  */
 const ScoreRing = ({ score }) => {
+  const displayScore = score <= 10 ? score * 10 : score;
   const radius = 16;
   const circumference = 2 * Math.PI * radius;
-  const percentage = (score || 0) * 10;
-  const offset = circumference - (percentage / 100) * circumference;
+  const offset = circumference - (displayScore / 100) * circumference;
   
   const getColor = (s) => {
-    if (s >= 8) return '#10b981';
-    if (s >= 5) return '#f59e0b';
+    if (s >= 80) return '#10b981';
+    if (s >= 50) return '#f59e0b';
     return '#ef4444';
   };
 
@@ -30,7 +30,7 @@ const ScoreRing = ({ score }) => {
         <circle 
           cx="20" cy="20" r={radius} 
           fill="transparent" 
-          stroke={getColor(score)} 
+          stroke={getColor(displayScore)} 
           strokeWidth="3" 
           strokeDasharray={circumference} 
           strokeDashoffset={offset}
@@ -38,8 +38,8 @@ const ScoreRing = ({ score }) => {
           style={{ transition: 'stroke-dashoffset 0.5s ease' }}
         />
       </svg>
-      <span style={{ position: 'absolute', fontSize: '0.75rem', fontWeight: '800', color: getColor(score) }}>
-        {percentage}
+      <span style={{ position: 'absolute', fontSize: '0.75rem', fontWeight: '800', color: getColor(displayScore) }}>
+        {displayScore}
       </span>
     </div>
   );
@@ -93,8 +93,9 @@ function HistoryPage() {
   };
 
   const getScoreClass = (s) => {
-    if (s >= 8) return '#10b981';
-    if (s >= 5) return '#f59e0b';
+    const scoreVal = s <= 10 ? s * 10 : s;
+    if (scoreVal >= 80) return '#10b981';
+    if (scoreVal >= 50) return '#f59e0b';
     return '#ef4444';
   };
 
@@ -249,9 +250,54 @@ function HistoryPage() {
                   <div style={{ 
                     fontSize: '1.75rem', fontWeight: '900', color: getScoreClass(activeReview.suggestions?.score || 0)
                   }}>
-                    {(activeReview.suggestions?.score || 0) * 10}<span style={{ fontSize: '1rem', color: '#94a3b8' }}>/100</span>
+                    {activeReview.suggestions?.score <= 10 ? (activeReview.suggestions?.score || 0) * 10 : activeReview.suggestions?.score}<span style={{ fontSize: '1rem', color: '#94a3b8' }}>/100</span>
                   </div>
                 </div>
+
+                {/* Complexity Card in History Page */}
+                {activeReview.suggestions?.complexity && (activeReview.suggestions.complexity.original || activeReview.suggestions.complexity.optimized) && (
+                  <div style={{
+                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(238, 242, 255, 0.6) 100%)',
+                    backdropFilter: 'blur(24px)',
+                    borderRadius: '24px',
+                    border: '1px solid rgba(99, 102, 241, 0.2)',
+                    padding: '1.5rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.75rem'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <Clock size={16} color="#4f46e5" />
+                      <span style={{ color: '#64748b', fontSize: '0.85rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.025em' }}>Complexity Analysis</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                      {activeReview.suggestions.complexity.original && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                          <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: '600' }}>Original</span>
+                          <span style={{ fontSize: '1rem', color: '#ef4444', fontWeight: '800', fontFamily: "'Fira Code', monospace" }}>
+                            {activeReview.suggestions.complexity.original}
+                          </span>
+                        </div>
+                      )}
+                      {activeReview.suggestions.complexity.original && activeReview.suggestions.complexity.optimized && (
+                        <span style={{ color: '#94a3b8', fontSize: '1.25rem', marginTop: '0.75rem' }}>➔</span>
+                      )}
+                      {activeReview.suggestions.complexity.optimized && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                          <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: '600' }}>Optimized</span>
+                          <span style={{ fontSize: '1rem', color: '#10b981', fontWeight: '800', fontFamily: "'Fira Code', monospace" }}>
+                            {activeReview.suggestions.complexity.optimized}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    {activeReview.suggestions.complexity.explanation && (
+                      <p style={{ margin: 0, color: '#475569', fontSize: '0.8rem', lineHeight: '1.5' }}>
+                        {activeReview.suggestions.complexity.explanation}
+                      </p>
+                    )}
+                  </div>
+                )}
 
                 <div style={{
                   background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(238, 242, 255, 0.6) 100%)',
@@ -297,6 +343,8 @@ function HistoryPage() {
                     <SyntaxHighlighter
                       language={getLanguageAlias(activeReview.language)}
                       style={vscDarkPlus}
+                      showLineNumbers={true}
+                      lineNumberStyle={{ color: '#475569', minWidth: '2em', paddingRight: '1em', textAlign: 'right', userSelect: 'none' }}
                       customStyle={{ margin: 0, padding: '1rem', fontSize: '0.75rem', backgroundColor: 'transparent', height: '100%' }}
                     >
                       {activeReview.code || ''}
@@ -327,6 +375,8 @@ function HistoryPage() {
                     <SyntaxHighlighter
                       language={getLanguageAlias(activeReview.language)}
                       style={vscDarkPlus}
+                      showLineNumbers={true}
+                      lineNumberStyle={{ color: '#475569', minWidth: '2em', paddingRight: '1em', textAlign: 'right', userSelect: 'none' }}
                       customStyle={{ margin: 0, padding: '1rem', fontSize: '0.75rem', backgroundColor: 'transparent', height: '100%' }}
                     >
                       {cleanCode(activeReview.suggestions.refactored_code)}

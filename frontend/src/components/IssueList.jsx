@@ -74,9 +74,30 @@ const IssueList = ({ title, items, type }) => {
                 color: '#1e293b', 
                 fontSize: '0.95rem', 
                 lineHeight: '1.5',
-                fontWeight: '500'
+                fontWeight: '500',
+                display: 'flex',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: '8px'
               }}>
-                {item.issue}
+                {item.line != null && (
+                  <span style={{
+                    fontSize: '0.7rem',
+                    backgroundColor: styles.bg,
+                    color: styles.color,
+                    padding: '2px 8px',
+                    borderRadius: '6px',
+                    border: `1px solid ${styles.border}`,
+                    fontWeight: '700',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.025em',
+                    display: 'inline-flex',
+                    alignItems: 'center'
+                  }}>
+                    Line {item.line}
+                  </span>
+                )}
+                <span>{item.issue}</span>
               </p>
               <div style={{ 
                 backgroundColor: styles.bg, 

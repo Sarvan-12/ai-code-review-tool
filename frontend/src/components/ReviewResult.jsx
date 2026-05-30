@@ -55,9 +55,11 @@ const ReviewResult = ({ result }) => {
     }
   };
 
+  const displayScore = score <= 10 ? score * 10 : score;
+
   const getScoreColor = (s) => {
-    if (s >= 8) return '#10b981'; // Green
-    if (s >= 5) return '#f59e0b'; // Amber
+    if (s >= 80) return '#10b981'; // Green
+    if (s >= 50) return '#f59e0b'; // Amber
     return '#ef4444'; // Red
   };
 
@@ -92,11 +94,11 @@ const ReviewResult = ({ result }) => {
           <div style={{ 
             fontSize: '2.5rem', 
             fontWeight: '900', 
-            color: getScoreColor(score),
+            color: getScoreColor(displayScore),
             lineHeight: 1,
             marginTop: '4px'
           }}>
-            {score * 10}<span style={{ fontSize: '1.25rem', color: '#94a3b8', fontWeight: '500' }}>/100</span>
+            {displayScore}<span style={{ fontSize: '1.25rem', color: '#94a3b8', fontWeight: '500' }}>/100</span>
           </div>
         </div>
       </div>
@@ -108,6 +110,55 @@ const ReviewResult = ({ result }) => {
         <IssueList title="Performance" items={suggestions.performance} type="performance" />
         <IssueList title="Best Practices" items={suggestions.improvements} type="improvement" />
       </div>
+
+      {/* Complexity Analysis Card */}
+      {suggestions.complexity && (suggestions.complexity.original || suggestions.complexity.optimized) && (
+        <div style={{
+          marginTop: '2rem',
+          padding: '1.5rem',
+          background: 'rgba(99, 102, 241, 0.03)',
+          backdropFilter: 'blur(8px)',
+          borderRadius: '16px',
+          border: '1px solid rgba(99, 102, 241, 0.15)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.75rem',
+          animation: 'fadeIn 0.5s ease-out'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Clock size={18} color="#4f46e5" />
+            <h4 style={{ margin: 0, fontSize: '0.9rem', fontWeight: '800', color: '#1e293b', textTransform: 'uppercase', letterSpacing: '0.025em' }}>
+              Complexity Analysis
+            </h4>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap', marginTop: '0.25rem' }}>
+            {suggestions.complexity.original && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: '600' }}>Original Time Complexity</span>
+                <span style={{ fontSize: '1.15rem', color: '#ef4444', fontWeight: '800', fontFamily: "'Fira Code', monospace" }}>
+                  {suggestions.complexity.original}
+                </span>
+              </div>
+            )}
+            {suggestions.complexity.original && suggestions.complexity.optimized && (
+              <div style={{ fontSize: '1.5rem', color: '#94a3b8', fontWeight: '300' }}>➔</div>
+            )}
+            {suggestions.complexity.optimized && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: '600' }}>Optimized Time Complexity</span>
+                <span style={{ fontSize: '1.15rem', color: '#10b981', fontWeight: '800', fontFamily: "'Fira Code', monospace" }}>
+                  {suggestions.complexity.optimized}
+                </span>
+              </div>
+            )}
+          </div>
+          {suggestions.complexity.explanation && (
+            <p style={{ margin: '0.25rem 0 0 0', color: '#475569', fontSize: '0.85rem', lineHeight: '1.6' }}>
+              {suggestions.complexity.explanation}
+            </p>
+          )}
+        </div>
+      )}
 
       {/* Refactored Code Section */}
       {finalCode && (
@@ -143,6 +194,8 @@ const ReviewResult = ({ result }) => {
               language={getLanguageAlias(language)}
               style={vscDarkPlus}
               wrapLongLines={true}
+              showLineNumbers={true}
+              lineNumberStyle={{ color: '#475569', minWidth: '2em', paddingRight: '1em', textAlign: 'right', userSelect: 'none' }}
               customStyle={{
                 margin: 0,
                 padding: '1.5rem',

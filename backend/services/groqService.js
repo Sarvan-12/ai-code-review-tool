@@ -7,6 +7,20 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 const MODEL = "llama-3.3-70b-versatile"; // Default model — can be swapped here centrally
 
 /**
+ * Helper to prepend line numbers to code to allow line-specific feedback.
+ * 
+ * @param {string} code - The original source code.
+ * @returns {string} The code with line numbers prepended.
+ */
+const addLineNumbers = (code) => {
+  if (!code) return "";
+  return code
+    .split("\n")
+    .map((line, index) => `${index + 1}: ${line}`)
+    .join("\n");
+};
+
+/**
  * Sends a code snippet to the Groq AI API for review.
  * Returns a structured JSON object containing a score, bugs, issues, and refactored code.
  * 
@@ -15,36 +29,53 @@ const MODEL = "llama-3.3-70b-versatile"; // Default model — can be swapped her
  * @returns {Promise<Object>} A promise that resolves to the structured AI review object.
  */
 const getCodeReview = async (code, language = "plaintext") => {
+  const numberedCode = addLineNumbers(code);
   const prompt = `You are an expert code reviewer. Review the following ${language} code.
 Respond strictly in JSON format exactly like this structure:
 {
-  "score": 0, // A score from 0-10 rating the overall code quality
-  "bugs": [ // empty array [] if none. Array of objects with "issue" and "fix" keys
-    { "issue": "Description of the problem", "fix": "How to fix it" }
+  "score": 0, // A score from 0-100 rating the overall code quality. Be granular and precise (e.g., 73, 86, 91).
+  "bugs": [ // empty array [] if none. Array of objects
+    { "line": 12, "issue": "Description of the problem", "fix": "How to fix it" }
   ],
-  "issues": [ // empty array [] if none. General quality or readability issues
-    { "issue": "Description of the problem", "fix": "How to fix it" }
+  "issues": [ // empty array [] if none. Logical flaws, semantic bugs, or potential security/edge-case concerns.
+    { "line": 24, "issue": "Description of the problem", "fix": "How to fix it" }
   ],
-  "improvements": [ // empty array [] if none. Best practices not followed
-    { "issue": "Best practice not followed", "fix": "Suggested best practice" }
+  "improvements": [ // empty array [] if none. General code quality, readability, naming conventions, and best practices.
+    { "line": null, "issue": "Best practice not followed", "fix": "Suggested best practice" }
   ],
   "performance": [ // empty array [] if none. Performance bottlenecks
-    { "issue": "Performance bottleneck", "fix": "Optimization suggestion" }
+    { "line": 8, "issue": "Performance bottleneck", "fix": "Optimization suggestion" }
   ],
+  "complexity": {
+    "original": "O(n²)", // Time complexity of original code, or null if not applicable/non-algorithmic (e.g. HTML/CSS)
+    "optimized": "O(n log n)", // Time complexity of refactored code, or null if not applicable
+    "explanation": "Why the complexity improved." // A brief explanation of the change, or null if not applicable
+  },
   "refactored_code": "String containing the fully refactored and improved code, or empty string if no refactor is needed."
 }
+
+Return ONLY valid JSON. No markdown, no explanatory text before or after. Start directly with the opening brace {.
 
 CRITICAL RULES:
 1. ONLY include meaningful issues. Do not suggest unnecessary improvements for simple code.
 2. Avoid generic advice. Be specific to the provided code.
-3. If the code is already correct, return empty arrays and say "No major issues found" in the refactored_code section if no refactor is needed.
-4. Every object inside the arrays MUST include BOTH the "issue" property and the "fix" property as strings. Do not omit the "fix" key.
+3. If the code is already correct and requires no improvements or fixes, return empty arrays for bugs, issues, improvements, and performance.
+4. Every object inside bugs, issues, improvements, and performance arrays MUST have exactly three properties: "line" (integer representing the 1-based line number of the code where the issue occurs, or null if it applies to the whole file), "issue" (string describing the problem), and "fix" (string describing the solution). Do not add any other fields.
 5. If there are no items for a category, return an empty array []. Do not use strings like "None".
+5b. If the refactored_code would be identical to the input code (no refactoring needed), set refactored_code to "No refactoring needed" instead of returning the same code.
 6. Ensure code inside "refactored_code" uses proper indentation (2 or 4 spaces) and newlines for readability. Do NOT return the code as a single line. Use real newlines characters.
 7. CRITICAL: The "refactored_code" field must contain ONLY the raw source code. Do NOT include any introductory text, conversational remarks, or markdown code fences (like \`\`\`) inside this specific JSON string value. Any explanations should be in the issues/improvements arrays instead.
+8. CRITICAL: Categorize issues strictly. General coding style, readability, comments, and variable/class naming conventions MUST go in the "improvements" array (Best Practices). Do NOT put them in the "issues" array, which is reserved strictly for logic flaws, semantic bugs, and security vulnerabilities.
+9. CRITICAL: All descriptions must be clear, concise, and grammatically perfect. Use simple, direct language. Avoid awkward or unnatural phrasing like "The function uses a true O(n²) of duplicates" or "No security & logic selected". Example of RIGHT phrasing: "This function has O(n²) time complexity because of nested loops, making it slow for large inputs."
+10. CRITICAL: Every suggestion across all categories must be completely unique. Do not repeat the same issue or fix (or minor variations of it) within the same category or across different categories.
+11. CRITICAL: Use simple, direct sentence structures. Avoid complex nested clauses. Example: "Variable names should be descriptive" not "Variable name could be used to describe what it does not follow..."
+12. CRITICAL: The code provided to you below has line numbers prepended (e.g., "1: public class Solution {"). You MUST reference these exact line numbers in the "line" property of your suggestions.
+13. CRITICAL: The "refactored_code" field MUST NOT contain any line numbers. It must be clean, compile-ready code without the line number prefixes.
+14. CRITICAL: Analyze the time complexity of the input code and the refactored code. Provide these in the "complexity" object. If complexity analysis is not applicable to the submitted code (e.g. for HTML, CSS, assets, or simple configuration files), set all properties of the "complexity" object to null.
 
+Here is the code with line numbers prepended:
 \`\`\`${language}
-${code}
+${numberedCode}
 \`\`\``;
 
   let content = "{}";
