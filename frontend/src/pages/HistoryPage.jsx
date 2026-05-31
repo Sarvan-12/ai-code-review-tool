@@ -147,8 +147,8 @@ function HistoryPage() {
           border: '1px solid rgba(99, 102, 241, 0.2)',
           boxShadow: '0 20px 40px -15px rgba(99, 102, 241, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.5)',
           padding: '1.5rem',
-          height: 'fit-content',
-          maxHeight: 'calc(100vh - 150px)',
+          height: activeReviewId ? '100%' : 'fit-content',
+          maxHeight: activeReviewId ? '100%' : 'calc(100vh - 150px)',
           overflowY: 'auto'
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: '1px solid rgba(99, 102, 241, 0.1)' }}>
