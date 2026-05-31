@@ -527,6 +527,7 @@ textarea:focus {
 .history-content {
   flex-grow: 0;
   height: 100%;
+  min-height: 0;
   display: grid;
   grid-template-columns: 1fr 1fr; /* Col 2 and Col 3: Equal 40% each */
   gap: 1.5rem;
@@ -551,6 +552,7 @@ textarea:focus {
   flex-direction: column;
   gap: 1rem;
   height: 100%;
+  min-height: 0;
   overflow: hidden;
 }
 
@@ -589,15 +591,17 @@ textarea:focus {
 
 .history-sidebar::-webkit-scrollbar-thumb,
 .scrollable-panel-content::-webkit-scrollbar-thumb,
-.syntax-highlighter-wrapper::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.1);
+.syntax-highlighter-wrapper::-webkit-scrollbar-thumb,
+.code-scroll-panel::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.15);
   border-radius: 10px;
 }
 
 .history-sidebar:hover::-webkit-scrollbar-thumb,
 .scrollable-panel-content:hover::-webkit-scrollbar-thumb,
-.syntax-highlighter-wrapper:hover::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.2);
+.syntax-highlighter-wrapper:hover::-webkit-scrollbar-thumb,
+.code-scroll-panel:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.28);
 }
 
 /* Tab Navigation (Glass Toggle Style) */

@@ -62,7 +62,7 @@ CRITICAL RULES:
 3. If the code is already correct and requires no improvements or fixes, return empty arrays for bugs, issues, improvements, and performance.
 4. Every object inside bugs, issues, improvements, and performance arrays MUST have exactly three properties: "line" (integer representing the 1-based line number of the code where the issue occurs, or null if it applies to the whole file), "issue" (string describing the problem), and "fix" (string describing the solution). Do not add any other fields.
 5. If there are no items for a category, return an empty array []. Do not use strings like "None".
-5b. If the refactored_code would be identical to the input code (no refactoring needed), set refactored_code to "No refactoring needed" instead of returning the same code.
+5b. If any bugs, issues, improvements, or performance problems are detected (any of their arrays are not empty), you MUST generate the fully refactored code in the "refactored_code" field. You are ONLY allowed to set "refactored_code" to "No refactoring needed" if there are absolutely zero bugs, issues, improvements, or performance problems detected (all arrays are completely empty).
 6. Ensure code inside "refactored_code" uses proper indentation (2 or 4 spaces) and newlines for readability. Do NOT return the code as a single line. Use real newlines characters.
 7. CRITICAL: The "refactored_code" field must contain ONLY the raw source code. Do NOT include any introductory text, conversational remarks, or markdown code fences (like \`\`\`) inside this specific JSON string value. Any explanations should be in the issues/improvements arrays instead.
 8. CRITICAL: Categorize issues strictly. General coding style, readability, comments, and variable/class naming conventions MUST go in the "improvements" array (Best Practices). Do NOT put them in the "issues" array, which is reserved strictly for logic flaws, semantic bugs, and security vulnerabilities.
@@ -87,6 +87,7 @@ ${numberedCode}
         messages: [{ role: "user", content: prompt }],
         response_format: { type: "json_object" },
         max_tokens: 2048, // 1. Setting the token limit per request here
+        temperature: 0,
       },
       { timeout: 30000 }
     );
