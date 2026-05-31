@@ -237,7 +237,7 @@ function HistoryPage() {
             <>
               
               {/* Column 2: Analysis Dashboard */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', height: '100%', overflow: 'hidden' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', height: '100%', overflow: 'hidden', minHeight: 0 }}>
                 <div style={{
                   background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(238, 242, 255, 0.6) 100%)',
                   backdropFilter: 'blur(24px)',
@@ -308,10 +308,11 @@ function HistoryPage() {
                   flex: 1,
                   display: 'flex',
                   flexDirection: 'column',
-                  overflow: 'hidden'
+                  overflow: 'hidden',
+                  minHeight: 0
                 }}>
                   <h3 style={{ margin: '0 0 1.5rem 0', color: '#1e293b', fontSize: '1rem', fontWeight: '800', borderBottom: '1px solid rgba(99, 102, 241, 0.1)', paddingBottom: '0.75rem' }}>Bugs & Suggestions</h3>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', overflowY: 'auto', flex: 1, paddingRight: '0.5rem' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', overflowY: 'auto', flex: 1, paddingRight: '0.5rem', minHeight: 0 }}>
                     <IssueList title="Critical Bugs" items={activeReview.suggestions?.bugs} type="bug" />
                     <IssueList title="Security Issues" items={activeReview.suggestions?.issues} type="issue" />
                     <IssueList title="Performance" items={activeReview.suggestions?.performance} type="performance" />
@@ -321,7 +322,7 @@ function HistoryPage() {
               </div>
 
               {/* Column 3: Code Comparison Dashboard */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', height: '100%', overflow: 'hidden' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', height: '100%', overflow: 'hidden', minHeight: 0 }}>
                 {/* Original Source */}
                 <div style={{
                   background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(238, 242, 255, 0.6) 100%)',
@@ -330,7 +331,8 @@ function HistoryPage() {
                   border: '1px solid rgba(99, 102, 241, 0.2)',
                   padding: '1.5rem',
                   flex: 1,
-                  display: 'flex', flexDirection: 'column'
+                  display: 'flex', flexDirection: 'column',
+                  overflow: 'hidden', minHeight: 0
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                     <h3 style={{ margin: 0, color: '#4f46e5', fontSize: '0.9rem', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '6px' }}><FileCode size={16}/> Original Source</h3>
@@ -341,13 +343,13 @@ function HistoryPage() {
                       {copiedCode ? <Check size={14}/> : <Copy size={14}/>}
                     </button>
                   </div>
-                  <div style={{ backgroundColor: '#0f172a', borderRadius: '12px', overflowY: 'auto', flex: 1 }}>
+                  <div style={{ backgroundColor: '#0f172a', borderRadius: '12px', overflowY: 'auto', flex: 1, minHeight: 0 }}>
                     <SyntaxHighlighter
                       language={getLanguageAlias(activeReview.language)}
                       style={vscDarkPlus}
                       showLineNumbers={true}
                       lineNumberStyle={{ color: '#475569', minWidth: '2em', paddingRight: '1em', textAlign: 'right', userSelect: 'none' }}
-                      customStyle={{ margin: 0, padding: '1rem', fontSize: '0.75rem', backgroundColor: 'transparent', height: '100%' }}
+                      customStyle={{ margin: 0, padding: '1rem', fontSize: '0.75rem', backgroundColor: 'transparent' }}
                     >
                       {activeReview.code || ''}
                     </SyntaxHighlighter>
@@ -362,7 +364,8 @@ function HistoryPage() {
                   border: '1px solid rgba(99, 102, 241, 0.2)',
                   padding: '1.5rem',
                   flex: 1,
-                  display: 'flex', flexDirection: 'column'
+                  display: 'flex', flexDirection: 'column',
+                  overflow: 'hidden', minHeight: 0
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                     <h3 style={{ margin: 0, color: '#10b981', fontSize: '0.9rem', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '6px' }}><FileCode size={16}/> Refactored Result</h3>
@@ -373,13 +376,13 @@ function HistoryPage() {
                       {copiedRefactor ? <Check size={14}/> : <Copy size={14}/>}
                     </button>
                   </div>
-                  <div style={{ backgroundColor: '#0f172a', borderRadius: '12px', overflowY: 'auto', flex: 1 }}>
+                  <div style={{ backgroundColor: '#0f172a', borderRadius: '12px', overflowY: 'auto', flex: 1, minHeight: 0 }}>
                     <SyntaxHighlighter
                       language={getLanguageAlias(activeReview.language)}
                       style={vscDarkPlus}
                       showLineNumbers={true}
                       lineNumberStyle={{ color: '#475569', minWidth: '2em', paddingRight: '1em', textAlign: 'right', userSelect: 'none' }}
-                      customStyle={{ margin: 0, padding: '1rem', fontSize: '0.75rem', backgroundColor: 'transparent', height: '100%' }}
+                      customStyle={{ margin: 0, padding: '1rem', fontSize: '0.75rem', backgroundColor: 'transparent' }}
                     >
                       {cleanCode(activeReview.suggestions.refactored_code)}
                     </SyntaxHighlighter>
