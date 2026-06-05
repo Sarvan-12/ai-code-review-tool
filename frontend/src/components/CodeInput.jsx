@@ -26,7 +26,7 @@ const LANGUAGE_MAP = {
   'TypeScript': 'typescript'
 };
 
-export const LANGUAGE_SAMPLES = {
+const LANGUAGE_SAMPLES = {
   'C': `int checkPasscode(int code) {
     if (code = 1234) {
         return 1;
@@ -251,10 +251,10 @@ const CodeInput = ({ code, setCode, language, setLanguage, onSubmit, isLoading }
           </p>
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+        <div className="editor-controls-row">
           
           {/* Left Side: Language Select */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div className="language-select-container" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <div style={{ position: 'relative' }}>
               <select
                 id="language-input"
@@ -288,7 +288,7 @@ const CodeInput = ({ code, setCode, language, setLanguage, onSubmit, isLoading }
           </div>
 
           {/* Right Side: Actions */}
-          <div style={{ display: 'flex', gap: '0.75rem' }}>
+          <div className="action-buttons-container" style={{ display: 'flex', gap: '0.75rem' }}>
             <button
               type="button"
               onClick={() => {

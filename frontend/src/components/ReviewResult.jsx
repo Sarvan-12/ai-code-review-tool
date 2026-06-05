@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Check, Copy, Code, Terminal, Cpu, Clock, Globe } from 'lucide-react';
+import { Check, Copy, Code, Cpu, Clock, Globe } from 'lucide-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import IssueList from './IssueList';

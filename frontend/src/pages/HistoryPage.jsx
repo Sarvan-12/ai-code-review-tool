@@ -74,7 +74,7 @@ function HistoryPage() {
         await axios.delete(`/api/history/${id}`);
         setReviews(reviews.filter(r => r._id !== id));
         if (activeReviewId === id) setActiveReviewId(null);
-      } catch (err) {
+      } catch {
         alert("Failed to delete history item.");
       }
     }
@@ -86,7 +86,7 @@ function HistoryPage() {
         await axios.delete('/api/history/all');
         setReviews([]);
         setActiveReviewId(null);
-      } catch (err) {
+      } catch {
         alert("Failed to clear history.");
       }
     }
