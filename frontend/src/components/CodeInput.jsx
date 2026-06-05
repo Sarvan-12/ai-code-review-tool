@@ -123,7 +123,7 @@ const CodeInput = ({ code, setCode, language, setLanguage, onSubmit, isLoading }
               <X size={14} /> Clear
             </button>
           </div>
-          <div style={{
+          <div className="editor-input-container" style={{
             backgroundColor: '#0f172a',
             borderRadius: '16px',
             padding: '1.25rem',
