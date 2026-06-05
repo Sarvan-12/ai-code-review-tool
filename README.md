@@ -23,7 +23,7 @@ An AI-powered application that analyzes source code for bugs, performance bottle
 
 | Layer | Technology |
 |---|---|
-| **Frontend** | React 18, Vite, Tailwind CSS |
+| **Frontend** | React 19, Vite, Tailwind CSS |
 | **Backend** | Node.js, Express.js |
 | **Database** | MongoDB, Mongoose |
 | **AI Model** | Groq API — LLaMA 3.3 70B |
@@ -54,8 +54,9 @@ ai-code-review-tool/
 - `POST /api/review` - Sends source code to Groq LLaMA 3.3, returns analysis, and saves the result.
 
 ### History Routes
-- `GET /api/history` - Fetches all historical code reviews from MongoDB.
-- `DELETE /api/history` - Clears past review logs.
+- `GET /api/reviews` - Fetches all historical code reviews from MongoDB.
+- `DELETE /api/history/:id` - Deletes a specific review from history.
+- `DELETE /api/history/all` - Clears all past review logs.
 
 ---
 
@@ -82,9 +83,15 @@ Before you begin, ensure you have the following installed:
    ```env
    PORT=5000
    MONGO_URI=your_mongodb_connection_string
-   GROQ_API_KEY=your_groq_api_key
+   GROQ_API_KEYS=key1,key2                  # Comma-separated pool of Groq API keys for failover rotation
+   GROQ_API_KEY=your_single_key_here        # OR define a single Groq key
+   CLIENT_URL=your_production_frontend_url  # Allows CORS calls from frontend (defaults to http://localhost:5173)
    ```
-   *(If your frontend needs a custom API URL later, you can add a `.env` in the `frontend/` directory with `VITE_API_BASE_URL`)*
+   
+   If deploying the frontend to a production host (like Vercel), configure the environment variable in the frontend hosting panel or in a `.env` inside `frontend/`:
+   ```env
+   VITE_API_URL=your_production_backend_url # Directs frontend API calls to production server
+   ```
 
 3. **Run the Backend:**
    Open a terminal and run:

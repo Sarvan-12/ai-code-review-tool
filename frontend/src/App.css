@@ -368,10 +368,12 @@ textarea:focus {
   transform: scale(0.95);
 }
 
-.refactored-code-container pre {
+.refactored-code-container pre,
+.code-viewer-container pre {
   margin: 0 !important;
-  white-space: pre-wrap !important;
-  word-break: break-word !important;
+  white-space: pre !important;
+  word-break: normal !important;
+  overflow-x: auto !important;
 }
 
 .meta-info {
@@ -842,16 +844,161 @@ textarea:focus {
   display: none;
 }
 
+/* Responsive adjustments for code editor controls */
+.editor-controls-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0,0,0,0.06);
+}
+
+.history-mobile-header-bar {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .editor-controls-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 1rem !important;
+  }
+  .language-select-container {
+    width: 100% !important;
+  }
+  .language-select-container > div,
+  .language-select-container select {
+    width: 100% !important;
+  }
+  .action-buttons-container {
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+  .action-buttons-container button {
+    flex: 1 !important;
+    justify-content: center !important;
+  }
+}
+
+/* History Layout Mobile & Tablet View */
+@media (max-width: 1024px) {
+  .history-content {
+    grid-template-columns: 1fr !important; /* Stack Col 2 and Col 3 */
+    height: auto !important;
+    overflow-y: visible !important;
+  }
+}
+
 @media (max-width: 768px) {
-  .history-layout {
+  /* Dynamic visibility for tabs */
+  .mobile-hidden {
+    display: none !important;
+  }
+  .mobile-visible {
+    display: flex !important;
+  }
+  
+  /* Shrink code editor containers on mobile */
+  .editor-input-container {
+    min-height: 140px !important;
+  }
+  
+  .editor-input-container textarea,
+  .editor-input-container pre,
+  .editor-input-container code,
+  .code-viewer-container pre,
+  .code-viewer-container code,
+  .refactored-code-container pre,
+  .refactored-code-container code {
+    font-size: 0.75rem !important;
+    line-height: 1.5 !important;
+  }
+  
+  .code-viewer-container {
+    max-height: 250px !important;
+  }
+  
+  .refactored-code-container {
+    max-height: 280px !important;
+    overflow-y: auto !important;
+  }
+
+  /* History mobile header & navigation switcher */
+  .history-mobile-header-bar {
+    display: flex !important;
     flex-direction: column;
-    height: auto;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    width: 100%;
+  }
+
+  .btn-back-history {
+    align-self: flex-start;
+    background: rgba(99, 102, 241, 0.1);
+    color: #4f46e5;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-back-history:hover {
+    background: rgba(99, 102, 241, 0.2);
+  }
+
+  .history-mobile-tab-switch {
+    display: inline-flex;
+    background: rgba(15, 23, 42, 0.05);
+    padding: 3px;
+    border-radius: 100px;
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    width: 100%;
+  }
+
+  .history-mobile-tab-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #64748b;
+    font-weight: 700;
+    font-size: 0.8rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 100px;
+    transition: all 0.2s ease;
+    text-align: center;
+  }
+  .history-mobile-tab-btn.active {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: white;
+    box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25);
+  }
+
+  .history-layout {
+    flex-direction: column !important;
+    height: auto !important;
+    width: 95vw !important;
   }
   .history-sidebar {
     width: 100% !important;
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    max-height: 400px;
+    max-width: 100% !important;
+    max-height: 350px !important;
+  }
+  .history-layout.has-active {
+    flex-direction: column !important;
+  }
+  
+  /* HIDE sidebar completely on mobile when a detail record is active */
+  .history-layout.has-active .history-sidebar {
+    display: none !important;
+  }
+  
+  .history-layout.has-active .history-content {
+    width: 100% !important;
+    height: auto !important;
   }
 }
 

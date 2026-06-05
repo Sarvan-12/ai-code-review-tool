@@ -38,8 +38,8 @@ function MainPage() {
         });
       }, 200);
     } catch (err) {
-      let errorMsg = '';
-      let type = 'generic';
+      let errorMsg;
+      let type;
 
       if (err.code === 'ECONNABORTED' || (err.message && err.message.toLowerCase().includes('timeout'))) {
         errorMsg = 'The AI is taking too long to respond. Please try again.';

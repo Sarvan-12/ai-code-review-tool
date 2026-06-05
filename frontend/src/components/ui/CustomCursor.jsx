@@ -15,15 +15,10 @@ const CustomCursor = () => {
     let mouse = { x: width / 2, y: height / 2 };
     let pos = { x: width / 2, y: height / 2 }; 
     let particles = [];
-    let isHovering = false;
 
     const onMouseMove = (e) => {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
-      // Check if hovering over interactive elements
-      if (e.target) {
-        isHovering = e.target.closest('a, button, input, textarea, select, .history-item, .btn-clear-corner') !== null;
-      }
     };
 
     const onResize = () => {
@@ -66,10 +61,7 @@ const CustomCursor = () => {
       }
     }
 
-    let targetRadius = 4;
-    let currentRadius = 4;
-    let colorIndex = 0;
-    let colorTimer = 0;
+
 
     const loop = () => {
       ctx.clearRect(0, 0, width, height);

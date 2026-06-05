@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Check, Copy, Code, Terminal, Cpu, Clock, Globe } from 'lucide-react';
+import { Check, Copy, Code, Cpu, Clock, Globe } from 'lucide-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import IssueList from './IssueList';
@@ -193,7 +193,7 @@ const ReviewResult = ({ result }) => {
             <SyntaxHighlighter
               language={getLanguageAlias(language)}
               style={vscDarkPlus}
-              wrapLongLines={true}
+              wrapLongLines={false}
               showLineNumbers={true}
               lineNumberStyle={{ color: '#475569', minWidth: '2em', paddingRight: '1em', textAlign: 'right', userSelect: 'none' }}
               customStyle={{
