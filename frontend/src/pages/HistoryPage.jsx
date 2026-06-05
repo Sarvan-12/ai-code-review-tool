@@ -52,6 +52,7 @@ function HistoryPage() {
   const [activeReviewId, setActiveReviewId] = useState(null);
   const [copiedCode, setCopiedCode] = useState(false);
   const [copiedRefactor, setCopiedRefactor] = useState(false);
+  const [mobileTab, setMobileTab] = useState('analysis'); // 'analysis' or 'code'
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -74,7 +75,7 @@ function HistoryPage() {
         await axios.delete(`/api/history/${id}`);
         setReviews(reviews.filter(r => r._id !== id));
         if (activeReviewId === id) setActiveReviewId(null);
-      } catch (err) {
+      } catch {
         alert("Failed to delete history item.");
       }
     }
@@ -86,7 +87,7 @@ function HistoryPage() {
         await axios.delete('/api/history/all');
         setReviews([]);
         setActiveReviewId(null);
-      } catch (err) {
+      } catch {
         alert("Failed to clear history.");
       }
     }
@@ -235,9 +236,32 @@ function HistoryPage() {
         <div className="history-content">
           {activeReview && (
             <>
+              {/* Mobile Navigation Header */}
+              <div className="history-mobile-header-bar">
+                <button 
+                  onClick={() => setActiveReviewId(null)}
+                  className="btn-back-history"
+                >
+                  ← Back to List
+                </button>
+                <div className="history-mobile-tab-switch">
+                  <button 
+                    onClick={() => setMobileTab('analysis')}
+                    className={`history-mobile-tab-btn ${mobileTab === 'analysis' ? 'active' : ''}`}
+                  >
+                    Suggestions
+                  </button>
+                  <button 
+                    onClick={() => setMobileTab('code')}
+                    className={`history-mobile-tab-btn ${mobileTab === 'code' ? 'active' : ''}`}
+                  >
+                    Code Compare
+                  </button>
+                </div>
+              </div>
               
               {/* Column 2: Analysis Dashboard */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', height: '100%', overflow: 'hidden', minHeight: 0 }}>
+              <div className={`dashboard-col-wrapper ${mobileTab === 'analysis' ? 'mobile-visible' : 'mobile-hidden'}`} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', height: '100%', overflow: 'hidden', minHeight: 0 }}>
                 <div style={{
                   background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(238, 242, 255, 0.6) 100%)',
                   backdropFilter: 'blur(24px)',
@@ -322,7 +346,7 @@ function HistoryPage() {
               </div>
 
               {/* Column 3: Code Comparison Dashboard */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', height: '100%', overflow: 'hidden', minHeight: 0 }}>
+              <div className={`code-col-wrapper ${mobileTab === 'code' ? 'mobile-visible' : 'mobile-hidden'}`} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', height: '100%', overflow: 'hidden', minHeight: 0 }}>
                 {/* Original Source */}
                 <div style={{
                   background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(238, 242, 255, 0.6) 100%)',
@@ -343,7 +367,7 @@ function HistoryPage() {
                       {copiedCode ? <Check size={14}/> : <Copy size={14}/>}
                     </button>
                   </div>
-                  <div style={{ backgroundColor: '#0f172a', borderRadius: '12px', overflowY: 'auto', flex: 1, minHeight: 0 }}>
+                  <div className="code-viewer-container" style={{ backgroundColor: '#0f172a', borderRadius: '12px', overflowY: 'auto', flex: 1, minHeight: 0 }}>
                     <SyntaxHighlighter
                       language={getLanguageAlias(activeReview.language)}
                       style={vscDarkPlus}
@@ -376,7 +400,7 @@ function HistoryPage() {
                       {copiedRefactor ? <Check size={14}/> : <Copy size={14}/>}
                     </button>
                   </div>
-                  <div style={{ backgroundColor: '#0f172a', borderRadius: '12px', overflowY: 'auto', flex: 1, minHeight: 0 }}>
+                  <div className="code-viewer-container" style={{ backgroundColor: '#0f172a', borderRadius: '12px', overflowY: 'auto', flex: 1, minHeight: 0 }}>
                     <SyntaxHighlighter
                       language={getLanguageAlias(activeReview.language)}
                       style={vscDarkPlus}
