@@ -2,6 +2,8 @@
 
 An AI-powered application that analyzes source code for bugs, performance bottlenecks, and quality issues using the **Groq API**. Featuring a modern UI with real-time syntax highlighting, advanced history dashboards, and actionable feedback.
 
+🚀 **Live Demo:** [code-cook.netlify.app](https://code-cook.netlify.app)
+
 ---
 
 ## <img src="https://api.iconify.design/lucide/sparkles.svg?color=%233b82f6" width="24" height="24" align="absmiddle" /> Features
