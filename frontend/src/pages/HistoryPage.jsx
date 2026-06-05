@@ -261,7 +261,7 @@ function HistoryPage() {
               </div>
               
               {/* Column 2: Analysis Dashboard */}
-              <div className={`dashboard-col-wrapper ${mobileTab === 'analysis' ? 'mobile-visible' : 'mobile-hidden'}`} style={{ flexDirection: 'column', gap: '1.5rem', height: '100%', overflow: 'hidden', minHeight: 0 }}>
+              <div className={`dashboard-col-wrapper ${mobileTab === 'analysis' ? 'mobile-visible' : 'mobile-hidden'}`} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', height: '100%', overflow: 'hidden', minHeight: 0 }}>
                 <div style={{
                   background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(238, 242, 255, 0.6) 100%)',
                   backdropFilter: 'blur(24px)',
@@ -346,7 +346,7 @@ function HistoryPage() {
               </div>
 
               {/* Column 3: Code Comparison Dashboard */}
-              <div className={`code-col-wrapper ${mobileTab === 'code' ? 'mobile-visible' : 'mobile-hidden'}`} style={{ flexDirection: 'column', gap: '1.5rem', height: '100%', overflow: 'hidden', minHeight: 0 }}>
+              <div className={`code-col-wrapper ${mobileTab === 'code' ? 'mobile-visible' : 'mobile-hidden'}`} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', height: '100%', overflow: 'hidden', minHeight: 0 }}>
                 {/* Original Source */}
                 <div style={{
                   background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(238, 242, 255, 0.6) 100%)',
