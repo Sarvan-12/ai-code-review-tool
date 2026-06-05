@@ -193,7 +193,7 @@ const ReviewResult = ({ result }) => {
             <SyntaxHighlighter
               language={getLanguageAlias(language)}
               style={vscDarkPlus}
-              wrapLongLines={true}
+              wrapLongLines={false}
               showLineNumbers={true}
               lineNumberStyle={{ color: '#475569', minWidth: '2em', paddingRight: '1em', textAlign: 'right', userSelect: 'none' }}
               customStyle={{

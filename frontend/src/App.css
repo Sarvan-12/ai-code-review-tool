@@ -368,10 +368,12 @@ textarea:focus {
   transform: scale(0.95);
 }
 
-.refactored-code-container pre {
+.refactored-code-container pre,
+.code-viewer-container pre {
   margin: 0 !important;
-  white-space: pre-wrap !important;
-  word-break: break-word !important;
+  white-space: pre !important;
+  word-break: normal !important;
+  overflow-x: auto !important;
 }
 
 .meta-info {
@@ -900,6 +902,17 @@ textarea:focus {
   /* Shrink code editor containers on mobile */
   .editor-input-container {
     min-height: 140px !important;
+  }
+  
+  .editor-input-container textarea,
+  .editor-input-container pre,
+  .editor-input-container code,
+  .code-viewer-container pre,
+  .code-viewer-container code,
+  .refactored-code-container pre,
+  .refactored-code-container code {
+    font-size: 0.75rem !important;
+    line-height: 1.5 !important;
   }
   
   .code-viewer-container {
