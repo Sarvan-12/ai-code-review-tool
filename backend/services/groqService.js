@@ -1,10 +1,23 @@
 const Groq = require("groq-sdk");
 
-// ─── Groq Client ──────────────────────────────────────────────────────────────
-// GROQ_API_KEY is loaded from the .env file
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-
 const MODEL = "llama-3.3-70b-versatile"; // Default model — can be swapped here centrally
+
+/**
+ * Helper to retrieve all configured Groq API keys from the environment.
+ * Supports a comma-separated list GROQ_API_KEYS or a single GROQ_API_KEY.
+ * 
+ * @returns {string[]} An array of Groq API keys.
+ */
+const getApiKeys = () => {
+  const keys = [];
+  if (process.env.GROQ_API_KEYS) {
+    keys.push(...process.env.GROQ_API_KEYS.split(",").map(k => k.trim()).filter(Boolean));
+  }
+  if (process.env.GROQ_API_KEY && !keys.includes(process.env.GROQ_API_KEY)) {
+    keys.push(process.env.GROQ_API_KEY);
+  }
+  return keys;
+};
 
 /**
  * Helper to prepend line numbers to code to allow line-specific feedback.
@@ -23,6 +36,7 @@ const addLineNumbers = (code) => {
 /**
  * Sends a code snippet to the Groq AI API for review.
  * Returns a structured JSON object containing a score, bugs, issues, and refactored code.
+ * Supports automatic key rotation failover if rate limits are hit.
  * 
  * @param {string} code - The source code to be reviewed.
  * @param {string} [language="plaintext"] - The programming language of the code.
@@ -78,81 +92,110 @@ Here is the code with line numbers prepended:
 ${numberedCode}
 \`\`\``;
 
-  let content = "{}";
+  const keys = getApiKeys();
+  if (keys.length === 0) {
+    throw new Error("No Groq API keys configured in the .env file.");
+  }
 
-  try {
-    const response = await groq.chat.completions.create(
-      {
-        model: MODEL,
-        messages: [{ role: "user", content: prompt }],
-        response_format: { type: "json_object" },
-        max_tokens: 2048, // 1. Setting the token limit per request here
-        temperature: 0,
-      },
-      { timeout: 30000 }
-    );
+  let lastError = null;
 
-    content = response.choices[0]?.message?.content || "{}";
-  } catch (apiError) {
-    console.error("Groq API error:", apiError.message);
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i];
+    const groq = new Groq({ apiKey: key });
 
-    // 2. Detect Rate Limit (HTTP 429)
-    if (apiError.status === 429) {
-      const err = new Error("API Rate limit reached. Please wait a few seconds before trying again.");
-      err.status = 429;
-      err.type = 'rate_limit';
-      throw err;
-    }
+    try {
+      const response = await groq.chat.completions.create(
+        {
+          model: MODEL,
+          messages: [{ role: "user", content: prompt }],
+          response_format: { type: "json_object" },
+          max_tokens: 2048,
+          temperature: 0,
+        },
+        { timeout: 30000 }
+      );
 
-    if (
-      apiError.name === "APITimeoutError" ||
-      apiError.code === "ETIMEDOUT" ||
-      (apiError.message && apiError.message.toLowerCase().includes("timeout"))
-    ) {
-      const err = new Error("The AI is taking too long to respond. Please try again.");
-      err.status = 504;
-      err.type = 'timeout';
-      throw err;
-    }
+      const content = response.choices[0]?.message?.content || "{}";
+      const raw = content.replace(/```json|```/g, "").trim();
+      return JSON.parse(raw);
 
-    // Extract failed_generation from the API message if the SDK embeds it as a string
-    let failedGen =
-      apiError?.error?.failed_generation || apiError?.failed_generation;
-    if (!failedGen && apiError.message) {
-      try {
-        const match = apiError.message.match(/\{"error":.*\}/);
-        if (match) {
-          const parsedErr = JSON.parse(match[0]);
-          failedGen = parsedErr.error?.failed_generation;
+    } catch (apiError) {
+      console.error(`Groq API key at index ${i} failed:`, apiError.message);
+      lastError = apiError;
+
+      // Rate limit or Auth issue triggers failover
+      if (apiError.status === 429 || apiError.status === 401 || apiError.status === 403) {
+        console.warn(`Key at index ${i} is unavailable. Trying next key in the pool...`);
+        continue;
+      }
+
+      // Timeouts can also be retried if there are more keys
+      if (
+        apiError.name === "APITimeoutError" ||
+        apiError.code === "ETIMEDOUT" ||
+        (apiError.message && apiError.message.toLowerCase().includes("timeout"))
+      ) {
+        if (i < keys.length - 1) {
+          console.warn(`Key at index ${i} timed out. Trying next key...`);
+          continue;
         }
-      } catch (e) {
-        // Ignore extraction errors
+      }
+
+      // For any other unexpected errors, try the next key if one is available
+      if (i < keys.length - 1) {
+        console.warn(`Unexpected error with key at index ${i}. Retrying with next key...`);
+        continue;
       }
     }
+  }
 
-    if (failedGen) {
-      content = failedGen;
-    } else {
-      const err = new Error("The AI failed to generate a valid response. Try submitting the code again.");
-      err.status = 502;
-      err.type = 'server';
-      throw err;
+  // If all keys failed, format and throw the appropriate error
+  if (lastError.status === 429) {
+    const err = new Error("API Rate limit reached on all keys. Please wait a few seconds before trying again.");
+    err.status = 429;
+    err.type = 'rate_limit';
+    throw err;
+  }
+
+  if (
+    lastError.name === "APITimeoutError" ||
+    lastError.code === "ETIMEDOUT" ||
+    (lastError.message && lastError.message.toLowerCase().includes("timeout"))
+  ) {
+    const err = new Error("The AI is taking too long to respond. Please try again.");
+    err.status = 504;
+    err.type = 'timeout';
+    throw err;
+  }
+
+  // Handle fallback content generation from API errors if embedded
+  let failedGen =
+    lastError?.error?.failed_generation || lastError?.failed_generation;
+  if (!failedGen && lastError.message) {
+    try {
+      const match = lastError.message.match(/\{"error":.*\}/);
+      if (match) {
+        const parsedErr = JSON.parse(match[0]);
+        failedGen = parsedErr.error?.failed_generation;
+      }
+    } catch (e) {
+      // Ignore extraction errors
     }
   }
 
-  // Strip markdown fences (`` `json ... `` `) if Groq returns them
-  const raw = content.replace(/```json|```/g, "").trim();
-
-  // Try to parse the JSON securely
-  try {
-    return JSON.parse(raw);
-  } catch (error) {
-    console.error("Failed to parse Groq JSON response:", error.message);
-    const err = new Error("The AI's JSON output was structurally invalid. Try submitting the code again.");
-    err.status = 500;
-    err.type = 'server';
-    throw err;
+  if (failedGen) {
+    try {
+      const raw = failedGen.replace(/```json|```/g, "").trim();
+      return JSON.parse(raw);
+    } catch (e) {
+      // Fall through to generic error
+    }
   }
+
+  const err = new Error("The AI failed to generate a valid response. Try submitting the code again.");
+  err.status = 502;
+  err.type = 'server';
+  throw err;
 };
 
 module.exports = { getCodeReview };
