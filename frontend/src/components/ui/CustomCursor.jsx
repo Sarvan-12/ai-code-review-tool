@@ -37,11 +37,11 @@ const CustomCursor = () => {
       constructor(x, y) {
         this.x = x;
         this.y = y;
-        this.size = Math.random() * 2 + 1; // Increased size slightly (1 to 3px)
-        this.speedX = Math.random() * 2 - 1;
-        this.speedY = Math.random() * 2 - 1;
+        this.size = Math.random() * 1.2 + 0.8; // Middle-ground size (0.8 to 2.0px)
+        this.speedX = Math.random() * 1.6 - 0.8; // Moderate horizontal spread
+        this.speedY = Math.random() * 1.6 - 0.8; // Moderate vertical spread
         this.life = 1;
-        this.decay = Math.random() * 0.02 + 0.015; // Slower fade
+        this.decay = Math.random() * 0.03 + 0.02; // Moderate fade (medium trail)
         this.color = colors[Math.floor(Math.random() * colors.length)];
       }
       update() {
@@ -52,7 +52,7 @@ const CustomCursor = () => {
       draw(ctx) {
         ctx.globalAlpha = Math.max(0, this.life);
         ctx.fillStyle = this.color; 
-        ctx.shadowBlur = 6; // Stronger glow
+        ctx.shadowBlur = 4; // Moderate glow
         ctx.shadowColor = this.color;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
@@ -75,10 +75,9 @@ const CustomCursor = () => {
       const dy = mouse.y - pos.y;
       const dist = Math.sqrt(dx * dx + dy * dy);
       
-      if (dist > 1) { // Lowered threshold to spawn more particles
+      if (dist > 1.5) { // Moderate threshold
         particles.push(new Particle(pos.x, pos.y));
-        particles.push(new Particle(pos.x + dx * 0.33, pos.y + dy * 0.33));
-        particles.push(new Particle(pos.x + dx * 0.66, pos.y + dy * 0.66));
+        particles.push(new Particle(pos.x + dx * 0.5, pos.y + dy * 0.5));
       }
 
       // Update and draw trail
