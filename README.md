@@ -2,7 +2,11 @@
 
 An AI-powered application that analyzes source code for bugs, performance bottlenecks, and quality issues using the **Groq API**. Featuring a modern UI with real-time syntax highlighting, advanced history dashboards, and actionable feedback.
 
-🚀 **Live Demo:** [code-cook.netlify.app](https://code-cook.netlify.app)
+<img src="https://api.iconify.design/lucide/globe.svg?color=%233b82f6" width="20" height="20" align="absmiddle" /> **Live Demo:** [codecook.sarvan.me](https://codecook.sarvan.me) <img src="https://api.iconify.design/lucide/external-link.svg?color=%233b82f6" width="14" height="14" align="absmiddle" />
+
+<div align="center">
+  <h3><img src="https://api.iconify.design/lucide/star.svg?color=%233b82f6" width="22" height="22" align="absmiddle" /> If you like this project or find it helpful, please consider giving it a star!</h3>
+</div>
 
 ---
 
@@ -125,8 +129,3 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4. Push to the branch (`git push origin feature/AmazingFeature`).
 5. Open a Pull Request.
 
----
-
-<div align="center">
-  <h3><img src="https://api.iconify.design/lucide/star.svg?color=%233b82f6" width="22" height="22" align="absmiddle" /> If you like this project or find it helpful, please consider giving it a star!</h3>
-</div>
