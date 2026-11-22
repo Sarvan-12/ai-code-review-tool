@@ -88,9 +88,21 @@ const submitReview = async (req, res) => {
     });
   } catch (error) {
     console.error("submitReview error:", error.message);
+
+    // groqService attaches `status` and `type` (rate_limit | timeout | server)
+    // to the errors it throws. Pass them through so the frontend can show the
+    // right message instead of a generic one.
+    if (error.type) {
+      return res.status(error.status || 500).json({
+        success: false,
+        error: error.message,
+        type: error.type,
+      });
+    }
+
     return res
       .status(500)
-      .json({ success: false, error: "Failed to process review" });
+      .json({ success: false, error: "Failed to process review", type: "server" });
   }
 };
 
