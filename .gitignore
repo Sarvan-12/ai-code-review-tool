@@ -5,7 +5,8 @@ node_modules/
 # Catches .env at any directory depth (backend/.env, root/.env, etc.)
 .env
 .env.*
-!.env.example        # Allow the template to be committed — it has no real secrets
+# Allow the template to be committed — it has no real secrets
+!.env.example
 
 # ─── Logs ─────────────────────────────────────────────────────────────────────
 logs/
